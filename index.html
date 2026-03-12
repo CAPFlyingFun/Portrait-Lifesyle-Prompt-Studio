@@ -1,14 +1,3782 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Portrait & Lifestyle Prompt Studio v1.15</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #12100E;
+  --bg-card: #1C1917;
+  --bg-surface: #262220;
+  --bg-elevated: #302C28;
+  --border-subtle: #3D3733;
+  --border-accent: #8B7355;
+  --text-primary: #F5EDE4;
+  --text-secondary: #C4B49A;
+  --text-muted: #8B7E6E;
+  --accent-gold: #D4A853;
+  --accent-warm: #C9845C;
+  --accent-rose: #C47070;
+  --accent-sage: #7BA68A;
+  --accent-sky: #6B9FBF;
+  --accent-violet: #9B87B2;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+  --nav-height: 64px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+body {
+font-family: var(--font-body);
+background: #12100E;
+background: var(--bg-deep, #12100E);
+color: #F5EDE4;
+color: var(--text-primary, #F5EDE4);
+min-height: 100vh;
+min-height: 100dvh;
+padding-bottom: calc(var(--nav-height) + 16px);
+overscroll-behavior: none;
+}
+
+/* ===== HEADER ===== */
+.app-header {
+text-align: center;
+padding: 24px 16px 16px;
+background: linear-gradient(180deg, rgba(212,168,83,0.08) 0%, transparent 100%);
+}
+.app-header h1 {
+font-family: var(--font-display);
+font-size: 1.6em;
+font-weight: 700;
+color: var(--accent-gold);
+letter-spacing: 0.02em;
+}
+.app-header .version {
+font-size: 0.75em;
+color: var(--text-muted);
+margin-top: 4px;
+letter-spacing: 0.04em;
+}
+
+/* ===== CONTAINER ===== */
+.container { max-width: 600px; margin: 0 auto; padding: 0 12px; }
+
+/* ===== CARDS ===== */
+.card {
+background: #1C1917;
+background: var(--bg-card, #1C1917);
+border: 1px solid #3D3733;
+border: 1px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-lg);
+padding: 16px;
+margin-bottom: 12px;
+}
+.card-title {
+font-family: var(--font-display);
+font-size: 1.1em;
+color: var(--accent-gold);
+margin-bottom: 12px;
+}
+
+/* ===== PLATFORM SELECTOR ===== */
+.platform-bar {
+display: flex;
+gap: 6px;
+overflow-x: auto;
+padding: 2px 0 8px;
+scrollbar-width: none;
+}
+.platform-bar::-webkit-scrollbar { display: none; }
+.platform-chip {
+flex-shrink: 0;
+padding: 6px 12px;
+border-radius: 999px;
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+background: #262220;
+background: var(--bg-surface, #262220);
+color: #C4B49A;
+color: var(--text-secondary, #C4B49A);
+font-size: 12px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s;
+white-space: nowrap;
+}
+.platform-chip.active {
+border-color: #D4A853;
+background: rgba(212,168,83,0.12);
+color: #D4A853;
+}
+.char-bar {
+height: 4px;
+background: var(--bg-surface);
+border-radius: 999px;
+margin-top: 6px;
+overflow: hidden;
+}
+.char-bar-fill {
+height: 100%;
+border-radius: 999px;
+transition: width 0.3s, background 0.3s;
+background: var(--accent-sage);
+}
+.char-bar-fill.warn { background: var(--accent-warm); }
+.char-bar-fill.danger { background: var(--accent-rose); }
+.char-info {
+display: flex;
+justify-content: space-between;
+font-size: 10px;
+color: var(--text-muted);
+margin-top: 4px;
+}
+
+/* ===== PROMPT DISPLAY ===== */
+.prompt-display[contenteditable="true"] {
+white-space: pre-wrap;
+outline: none;
+cursor: text;
+}
+
+.prompt-mode-bar {
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+margin-bottom:8px;
+}
+.prompt-mode-chip {
+padding: 6px 10px;
+border-radius: 999px;
+border: 1.5px solid var(--border-subtle);
+background: var(--bg-surface);
+color: var(--text-secondary);
+font-size: 11px;
+font-weight: 600;
+cursor: pointer;
+}
+.prompt-mode-chip.active {
+border-color: var(--accent-gold);
+background: rgba(212,168,83,0.12);
+color: var(--accent-gold);
+}
+
+.prompt-display {
+background: #262220;
+background: var(--bg-surface, #262220);
+border-radius: var(--radius-md);
+padding: 14px;
+margin: 10px 0;
+line-height: 1.55;
+font-size: 13px;
+min-height: 80px;
+color: #F5EDE4;
+color: var(--text-primary, #F5EDE4);
+position: relative;
+}
+.prompt-tag {
+font-weight: 600;
+font-size: 11px;
+letter-spacing: 0.03em;
+}
+.tag-camera { color: var(--accent-sky); }
+.tag-subject { color: var(--accent-rose); }
+.tag-hair { color: var(--accent-violet); }
+.tag-outfit { color: var(--accent-sage); }
+.tag-items { color: var(--accent-warm); }
+.tag-scene { color: var(--accent-gold); }
+.tag-mood { color: #D4A0D4; }
+
+/* ===== ACTION BUTTONS ===== */
+.actions-row {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+}
+.act-btn {
+flex: 1;
+min-width: 0;
+padding: 10px 6px;
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-sm);
+background: #262220;
+background: var(--bg-surface, #262220);
+color: #C4B49A;
+color: var(--text-secondary, #C4B49A);
+font-size: 12px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s;
+text-align: center;
+font-family: var(--font-body);
+}
+.act-btn:active { transform: scale(0.96); }
+.act-btn:hover { border-color: var(--border-accent); color: var(--text-primary); }
+.act-btn.primary {
+background: linear-gradient(135deg, #D4A853, #C9845C);
+color: #12100E;
+border-color: transparent;
+font-weight: 600;
+}
+
+/* ===== STYLE MODE ===== */
+.style-row {
+display: flex;
+gap: 6px;
+flex-wrap: wrap;
+margin: 8px 0;
+}
+.style-chip {
+padding: 6px 10px;
+border-radius: 999px;
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+background: #262220;
+background: var(--bg-surface, #262220);
+color: #8B7E6E;
+color: var(--text-muted, #8B7E6E);
+font-size: 11px;
+font-weight: 500;
+cursor: pointer;
+transition: all 0.2s;
+font-family: var(--font-body);
+}
+.style-chip.active {
+border-color: #D4A853;
+background: rgba(212,168,83,0.1);
+color: #D4A853;
+}
+
+/* ===== THEME SEARCH ===== */
+.search-input {
+width: 100%;
+padding: 10px 14px 10px 36px;
+background: #262220;
+background: var(--bg-surface, #262220);
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-md);
+color: #F5EDE4;
+color: var(--text-primary, #F5EDE4);
+font-size: 15px;
+font-family: var(--font-body);
+transition: border-color 0.2s;
+}
+.search-input:focus { outline: none; border-color: var(--accent-gold); }
+.search-wrap {
+position: relative;
+margin-bottom: 10px;
+}
+.search-icon {
+position: absolute;
+left: 12px;
+top: 50%;
+transform: translateY(-50%);
+font-size: 14px;
+color: var(--text-muted);
+pointer-events: none;
+}
+
+/* ===== THEME GRID ===== */
+.theme-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 6px;
+}
+.theme-card {
+background: #262220;
+background: var(--bg-surface, #262220);
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-sm);
+padding: 8px 4px;
+cursor: pointer;
+transition: all 0.2s;
+text-align: center;
+position: relative;
+}
+.theme-card:active { transform: scale(0.97); }
+.theme-card.selected {
+border-color: var(--accent-gold);
+background: rgba(212,168,83,0.1);
+}
+.theme-emoji { font-size: 20px; }
+.theme-name { font-size: 10px; font-weight: 600; color: var(--text-secondary); margin-top: 2px; }
+.theme-confirm {
+display: none;
+position: absolute;
+inset: 0;
+background: rgba(18,16,14,0.92);
+border-radius: var(--radius-sm);
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 6px;
+z-index: 2;
+}
+.theme-card.selected .theme-confirm { display: flex; }
+.theme-apply-btn {
+padding: 6px 16px;
+border-radius: 999px;
+border: none;
+font-size: 11px;
+font-weight: 700;
+cursor: pointer;
+font-family: var(--font-body);
+}
+.theme-apply-btn.yes {
+background: var(--accent-gold);
+color: var(--bg-deep);
+}
+.theme-apply-btn.no {
+background: var(--bg-surface);
+color: var(--text-muted);
+border: 1px solid var(--border-subtle);
+}
+
+/* ===== BOTTOM NAV ===== */
+.bottom-nav {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+height: var(--nav-height);
+background: #1C1917;
+background: var(--bg-card, #1C1917);
+border-top: 1px solid #3D3733;
+border-top: 1px solid var(--border-subtle, #3D3733);
+display: flex;
+justify-content: space-around;
+align-items: center;
+z-index: 1000;
+padding-bottom: env(safe-area-inset-bottom, 0);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+}
+.nav-btn {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 2px;
+background: none;
+border: none;
+color: #8B7E6E;
+color: var(--text-muted, #8B7E6E);
+font-size: 22px;
+cursor: pointer;
+padding: 6px 12px;
+border-radius: var(--radius-sm);
+transition: color 0.2s;
+font-family: var(--font-body);
+}
+.nav-btn span {
+font-size: 9px;
+font-weight: 600;
+letter-spacing: 0.04em;
+}
+.nav-btn.active { color: #D4A853; color: var(--accent-gold, #D4A853); }
+
+/* ===== SLIDE PANELS ===== */
+.panel-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.5);
+z-index: 1001;
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.25s;
+}
+.panel-overlay.show { opacity: 1; pointer-events: auto; }
+.slide-panel {
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+max-height: 88vh;
+max-height: 88dvh;
+background: #1C1917;
+background: var(--bg-card, #1C1917);
+border-top-left-radius: var(--radius-xl);
+border-top-right-radius: var(--radius-xl);
+z-index: 1002;
+transform: translateY(100%);
+transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+.slide-panel.show { transform: translateY(0); }
+.panel-handle {
+width: 36px;
+height: 4px;
+background: var(--border-subtle);
+border-radius: 999px;
+margin: 10px auto 6px;
+flex-shrink: 0;
+}
+.panel-head {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 6px 16px 12px;
+flex-shrink: 0;
+}
+.panel-head-title {
+font-family: var(--font-display);
+font-size: 1.15em;
+color: #D4A853;
+color: var(--accent-gold, #D4A853);
+}
+.panel-close {
+background: none;
+border: none;
+color: var(--text-muted);
+font-size: 24px;
+cursor: pointer;
+padding: 4px;
+line-height: 1;
+}
+.panel-body {
+flex: 1;
+overflow-y: auto;
+padding: 0 16px 24px;
+-webkit-overflow-scrolling: touch;
+}
+
+/* ===== BUILDER FIELDS ===== */
+.field-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 16px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.field-row {
+  margin-bottom: 10px;
+}
+
+.field-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.field-label-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.lock-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.lock-btn.unlocked {
+  background: rgba(123, 166, 138, 0.12);
+  color: var(--accent-sage);
+}
+
+.lock-btn.locked {
+  background: rgba(196, 112, 112, 0.15);
+  color: var(--accent-rose);
+}
+
+.field-input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 15px;
+  font-family: var(--font-body);
+  transition: border-color 0.2s;
+  position: relative;
+  z-index: 5;
+}
+
+.field-input:focus { 
+  outline: none; 
+  border-color: var(--accent-gold); 
+}
+
+.field-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-color: rgba(196, 112, 112, 0.3);
+}
+
+.ac-wrap { position: relative; }
+
+.ac-list {
+  position: absolute;
+  left: 0; 
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 9999;
+  background: #1C1917 !important;
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  max-height: 250px;
+  overflow-y: auto;
+  display: none;
+}
+
+.ac-list.show { display: block; }
+
+.ac-item {
+  padding: 12px;
+  font-size: 14px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle);
+  background: #1C1917;
+}
+
+.ac-item:hover, .ac-item.active { 
+  background: var(--accent-gold); 
+  color: #12100E; 
+}
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chip {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover { 
+  border-color: var(--accent-gold); 
+  color: var(--text-secondary); 
+}
+
+.clothing-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.clothing-opt {
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.clothing-opt.active {
+  border-color: var(--accent-sage);
+  background: rgba(123, 166, 138, 0.1);
+  color: var(--accent-sage);
+}
+
+/* ===== AI PANEL ===== */
+.ai-card {
+background: var(--bg-surface);
+border: 1px solid var(--border-subtle);
+border-radius: var(--radius-md);
+padding: 12px;
+margin-bottom: 10px;
+}
+.ai-card-head {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 6px;
+}
+.ai-card-num {
+font-size: 10px;
+font-weight: 700;
+color: var(--accent-gold);
+text-transform: uppercase;
+letter-spacing: 0.06em;
+}
+.ai-card-text {
+font-size: 12px;
+line-height: 1.5;
+color: var(--text-secondary);
+margin-bottom: 8px;
+max-height: 80px;
+overflow: hidden;
+transition: max-height 0.3s;
+position: relative;
+}
+.ai-card-text.expanded { max-height: 600px; }
+.ai-card-text.truncated::after {
+content: '';
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 24px;
+background: linear-gradient(transparent, var(--bg-surface));
+}
+.ai-expand-btn {
+background: none;
+border: none;
+color: var(--accent-gold);
+font-size: 11px;
+cursor: pointer;
+padding: 2px 0;
+font-family: var(--font-body);
+font-weight: 600;
+margin-bottom: 6px;
+}
+.ai-card-actions {
+display: flex;
+gap: 4px;
+}
+.ai-card-actions .act-btn { font-size: 11px; padding: 6px 4px; }
+
+/* ===== SETTINGS ===== */
+.setting-group { margin-bottom: 14px; }
+.setting-label {
+font-size: 12px;
+font-weight: 600;
+color: var(--text-secondary);
+margin-bottom: 4px;
+}
+.setting-select {
+width: 100%;
+padding: 10px 12px;
+background: #262220;
+background: var(--bg-surface, #262220);
+border: 1.5px solid #3D3733;
+border: 1.5px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-sm);
+color: #F5EDE4;
+color: var(--text-primary, #F5EDE4);
+font-size: 15px;
+font-family: var(--font-body);
+-webkit-appearance: none;
+}
+.setting-select:focus { outline: none; border-color: var(--accent-gold); }
+.setting-hint {
+font-size: 10px;
+color: var(--text-muted);
+margin-top: 3px;
+}
+
+/* ===== FAVORITES ===== */
+.fav-item {
+background: var(--bg-surface);
+border: 1px solid var(--border-subtle);
+border-radius: var(--radius-md);
+padding: 12px;
+margin-bottom: 8px;
+}
+.fav-preview {
+font-size: 12px;
+color: var(--text-secondary);
+line-height: 1.4;
+margin-bottom: 6px;
+}
+.fav-time { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
+.fav-actions { display: flex; gap: 6px; }
+.fav-actions .act-btn { font-size: 11px; padding: 6px 8px; }
+
+/* ===== HISTORY DROPDOWN ===== */
+.history-select {
+width: 100%;
+padding: 8px 10px;
+background: var(--bg-surface);
+border: 1px solid var(--border-subtle);
+border-radius: 6px;
+color: var(--text-secondary);
+font-size: 11px;
+font-family: var(--font-body);
+margin-bottom: 8px;
+}
+
+/* ===== NOTIFICATION ===== */
+.toast {
+position: fixed;
+top: 16px;
+left: 50%;
+transform: translateX(-50%) translateY(-80px);
+background: var(--bg-elevated);
+color: var(--text-primary);
+border: 1px solid var(--border-accent);
+padding: 10px 20px;
+border-radius: 999px;
+font-size: 13px;
+font-weight: 500;
+z-index: 2000;
+transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+box-shadow: var(--shadow-md);
+pointer-events: none;
+white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ===== UNDO BAR ===== */
+.undo-bar {
+position: fixed;
+bottom: calc(var(--nav-height) + 8px);
+left: 50%;
+transform: translateX(-50%) translateY(60px);
+background: var(--bg-elevated);
+border: 1px solid var(--border-accent);
+border-radius: 999px;
+padding: 6px 6px 6px 16px;
+display: flex;
+align-items: center;
+gap: 10px;
+z-index: 999;
+transition: transform 0.3s;
+box-shadow: var(--shadow-md);
+font-size: 12px;
+color: var(--text-secondary);
+}
+.undo-bar.show { transform: translateX(-50%) translateY(0); }
+.undo-btn {
+padding: 6px 14px;
+border-radius: 999px;
+border: none;
+background: var(--accent-gold);
+color: var(--bg-deep);
+font-size: 12px;
+font-weight: 700;
+cursor: pointer;
+font-family: var(--font-body);
+}
+
+/* ===== NEGATIVE PROMPT ===== */
+.neg-input {
+width: 100%;
+padding: 8px 10px;
+background: var(--bg-surface);
+border: 1px solid var(--border-subtle);
+border-radius: 6px;
+color: var(--text-secondary);
+font-size: 12px;
+font-family: var(--font-body);
+margin-top: 8px;
+}
+.neg-input:focus { outline: none; border-color: var(--accent-gold); }
+
+/* ===== BATCH PANEL ===== */
+.batch-item {
+background: #262220;
+background: var(--bg-surface, #262220);
+border: 1px solid #3D3733;
+border: 1px solid var(--border-subtle, #3D3733);
+border-radius: var(--radius-sm);
+padding: 10px;
+margin-bottom: 6px;
+font-size: 12px;
+color: #C4B49A;
+color: var(--text-secondary, #C4B49A);
+line-height: 1.4;
+}
+.batch-item-head {
+display: flex;
+justify-content: space-between;
+margin-bottom: 4px;
+}
+.batch-num { font-weight: 700; color: #D4A853; color: var(--accent-gold, #D4A853); font-size: 10px; }
+
+/* Responsive tweaks */
+@media (max-width: 380px) {
+.theme-grid { grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.theme-card { padding: 6px 2px; }
+.theme-emoji { font-size: 18px; }
+.theme-name { font-size: 9px; }
+}
+@media (min-width: 500px) {
+.theme-grid { grid-template-columns: repeat(4, 1fr); }
+}
+</style>
+
+  <script src="https://js.puter.com/v2/"></script>
 </head>
 <body>
-    <h1>Hello, World!</h1>
-    <script>
-        console.log('This is a sample HTML file.');
-    </script>
+
+<!-- HEADER -->
+
+<div class="app-header">
+  <h1>✨ Portrait &amp; Lifestyle Prompt Studio</h1>
+  <div class="version">v1.01 — Stable Image &amp; AI Tools</div>
+</div>
+
+<div class="container" id="main-content">
+
+  <!-- PLATFORM + CHAR LIMIT -->
+
+  <div class="card" id="card-platform">
+    <div class="platform-bar" id="platform-bar"></div>
+    <div class="char-bar"><div class="char-bar-fill" id="char-fill"></div></div>
+    <div class="char-info">
+      <span id="char-count">0 chars</span>
+      <span id="char-limit">/ 1000</span>
+    </div>
+  </div>
+
+  <!-- PROMPT DISPLAY -->
+
+  <div class="card" id="card-prompt">
+    <select class="history-select" id="history-dropdown" onchange="loadFromHistory(this.value)">
+      <option value="">📜 Recent History</option>
+    </select>
+    <!-- Active theme indicator -->
+    <div id="active-theme-bar" style="display:none;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(212,168,83,0.08);border:1px solid var(--accent-gold);border-radius:var(--radius-sm);">
+        <span style="font-size:12px;color:var(--accent-gold);font-weight:600;" id="active-theme-label">🎭 No theme</span>
+        <button class="act-btn" onclick="clearTheme()" style="flex:none;padding:4px 10px;font-size:11px;">✕ Clear</button>
+      </div>
+    </div>
+    <div class="prompt-mode-bar">
+      <button class="prompt-mode-chip active" id="mode-builder-chip" onclick="setPromptMode('builder')">🧩 Builder Mode</button>
+      <button class="prompt-mode-chip" id="mode-manual-chip" onclick="setPromptMode('manual')">⌨️ Manual Prompt</button>
+      <button class="act-btn" style="flex:none;padding:6px 10px;font-size:11px;" onclick="openPanel('builder')">🧥 Clothing &amp; Details</button>
+    </div>
+    <div class="prompt-display" id="prompt-display"></div>
+    <!-- Image Preview -->
+    <div id="preview-wrap" style="margin:8px 0;text-align:center;">
+      <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">
+        <select id="preview-engine" onchange="setImageEngine(this.value)" style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);font-size:11px;padding:4px 8px;">
+          <option value="auto">Auto (Recommended)</option>
+          <option value="openai">OpenAI</option>
+          <option value="pollinations">Pollinations</option>
+          <option value="puter">Puter</option>
+        </select>
+        <select id="preview-size" onchange="setPreviewSize(this.value)" style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);font-size:11px;padding:4px 8px;">
+          <option value="square">1:1 Square</option>
+          <option value="portrait">2:3 Portrait</option>
+          <option value="landscape">3:2 Landscape</option>
+        </select>
+      </div>
+      <div style="position:relative;border-radius:var(--radius-md);overflow:hidden;background:#1a1815;min-height:60px;">
+        <img id="preview-img" style="width:100%;border-radius:var(--radius-md);display:none;max-width:512px;">
+        <div id="preview-loading" style="padding:30px;color:#8B7E6E;font-size:12px;">Click Preview to generate image</div>
+      </div>
+      <div style="font-size:9px;color:#8B7E6E;margin-top:4px;">AI Image Preview</div>
+      <div class="actions-row" style="margin-top:8px;justify-content:center;">
+        <button class="act-btn" onclick="setPromptMode('manual'); focusPromptDisplay();">✏️ Write Your Own</button>
+        <button class="act-btn" onclick="openPanel('image')">🖼️ Image Tools</button>
+      </div>
+    </div>
+    <input class="neg-input" id="negative-prompt" placeholder="Negative prompt (optional): blurry, low quality...">
+    <div class="actions-row" style="margin-top:10px;">
+      <button class="act-btn" onclick="copyPrompt()">📋 Copy</button>
+      <button class="act-btn" onclick="toggleFavorite()">⭐ Save</button>
+      <button class="act-btn" onclick="openPanel('builder')">✍️ Edit</button>
+      <button class="act-btn primary" onclick="randomizeAll()">🎲 Random</button>
+    </div>
+    <div class="actions-row" style="margin-top:6px;">
+      <button class="act-btn" onclick="randomizeChaos()">🌀 Chaos</button>
+      <button class="act-btn" onclick="batchGenerate()">📦 Batch 5</button>
+      <button class="act-btn" onclick="undoState()">↩️ Undo</button>
+      <button class="act-btn" onclick="generatePreview()">🖼️ Preview</button>
+    </div>
+  </div>
+
+  <!-- STYLE + THEMES COMBINED -->
+
+  <div class="card">
+    <div class="card-title">🎨 Style & Themes</div>
+    <div class="style-row" id="style-row"></div>
+    <div style="margin-top:10px;">
+      <div class="search-wrap">
+        <span class="search-icon">🔎</span>
+        <input class="search-input" id="theme-search" placeholder="Search themes..." oninput="filterThemes(this.value)">
+      </div>
+      <div id="search-count" style="font-size:10px;color:var(--text-muted);margin-bottom:8px;">Showing all themes</div>
+      <div class="theme-grid" id="theme-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="nav-btn active" onclick="showMain()" id="nav-home">🏠<span>Home</span></button>
+  <button class="nav-btn" onclick="openPanel('builder')" id="nav-builder">⚡<span>Builder</span></button>
+  <button class="nav-btn" onclick="openPanel('image')" id="nav-image">🖼️<span>Image</span></button>
+  <button class="nav-btn" onclick="openPanel('ai')" id="nav-ai">🤖<span>AI</span></button>
+  <button class="nav-btn" onclick="openPanel('favorites')" id="nav-fav">⭐<span>Favs</span></button>
+  <button class="nav-btn" onclick="openPanel('settings')" id="nav-settings">⚙️<span>Settings</span></button>
+</nav>
+
+<!-- OVERLAY -->
+
+<div class="panel-overlay" id="panel-overlay" onclick="closeAllPanels()"></div>
+
+<!-- BUILDER PANEL -->
+
+<div class="slide-panel" id="panel-builder">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">⚡ Builder</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body" id="builder-body"></div>
+</div>
+
+<!-- AI PANEL -->
+
+<div class="slide-panel" id="panel-ai">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">🤖 AI Assistant</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div style="margin-bottom:12px;">
+      <textarea id="ai-prompt-input" readonly rows="3" style="width:100%;font-size:12px;padding:10px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-secondary);resize:vertical;font-family:var(--font-body);"></textarea>
+    </div>
+    <div class="actions-row" style="margin-bottom:12px;">
+      <button class="act-btn" onclick="aiAction('shorten')">✂️ Shorten</button>
+      <button class="act-btn" onclick="aiAction('detail')">➕ Detail</button>
+      <button class="act-btn" onclick="aiAction('style')">🎨 Styles</button>
+      <button class="act-btn" onclick="aiAction('variations')">🔀 Vary</button>
+    </div>
+    <div style="margin-bottom:12px;">
+      <input class="field-input" id="custom-ai-request" placeholder="Custom request...">
+      <button class="act-btn primary" onclick="aiAction('custom')" style="width:100%;margin-top:6px;">🚀 Send</button>
+    </div>
+    <button class="act-btn" onclick="copyAllAI()" style="width:100%;margin-bottom:10px;">📋 Copy All AI Prompts</button>
+    <div id="ai-response"></div>
+  </div>
+</div>
+
+
+<!-- IMAGE TOOLS PANEL -->
+
+<div class="slide-panel" id="panel-image">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">🖼️ Image Tools</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div class="setting-group">
+      <div class="setting-label">What this does</div>
+      <div class="setting-hint">Upload an image, describe it literally, or turn it into a portrait/lifestyle prompt. Results land here first, then you can move them into Manual Prompt when you want.</div>
+    </div>
+    <input type="file" id="image-prompt-input" data-mode="literal" accept="image/*" style="display:none;" onchange="handleSelectedImageFile(event)">
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="act-btn" onclick="triggerImagePick()">🖼️ Choose Image</button>
+      <button class="act-btn" onclick="changeSelectedImage()">🔁 Change</button>
+      <button class="act-btn" onclick="clearSelectedImage(true)">✕ Remove</button>
+    </div>
+    <div id="image-picked-wrap" style="display:none;margin-bottom:10px;padding:10px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:var(--bg-surface);">
+      <img id="image-picked-preview" style="display:none;max-width:100%;max-height:180px;margin:0 auto 8px auto;border-radius:8px;" alt="Selected image preview">
+      <div id="image-picked-name" style="font-size:11px;color:var(--text-secondary);text-align:center;word-break:break-word;">No image selected</div>
+    </div>
+    <div class="actions-row" style="margin-bottom:10px;">
+      <button class="act-btn" onclick="triggerImagePrompt('literal')">🧾 Literal Describe</button>
+      <button class="act-btn primary" onclick="triggerImagePrompt('creative')">🎨 Creative Prompt</button>
+    </div>
+    <div class="setting-group" style="margin-bottom:10px;">
+      <div class="setting-label">Creative Type</div>
+      <select class="setting-select" id="creative-prompt-type" onchange="setCreativePromptType(this.value)">
+        <option value="merge_saved">Merge with Saved Character — blend image with your saved person</option>
+        <option value="lifestyle">Lifestyle Scene — person interacting with the subject</option>
+        <option value="portrait">Portrait Scene — person becomes the main focus</option>
+        <option value="product">Product Display — object-focused scene</option>
+        <option value="background">Background Only — use only the environment</option>
+        <option value="inspire">Inspire Prompt — artistic reinterpretation</option>
+      </select>
+    </div>
+    <div id="image-prompt-status" style="display:none;margin-top:6px;font-size:11px;color:var(--accent-gold);text-align:center;"></div>
+    <div class="setting-group" style="margin-top:10px;">
+      <div class="setting-label">Image Tool Output</div>
+      <textarea id="image-tool-output" rows="8" style="width:100%;font-size:12px;padding:10px;background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:8px;color:var(--text-secondary);resize:vertical;font-family:var(--font-body);" placeholder="Literal or creative image prompt will appear here..." oninput="handleImageToolOutputInput()"></textarea>
+      <div class="char-info" style="margin-top:6px;">
+        <span id="image-tool-char-count">0 chars</span>
+        <span id="image-tool-char-limit">/ 1000</span>
+      </div>
+      <div class="setting-hint" id="image-tool-char-hint" style="margin-top:4px;">Uses the currently selected platform limit.</div>
+    </div>
+    <div class="actions-row">
+      <button class="act-btn" onclick="useImageToolOutput()">⬅️ Use as Main Prompt</button>
+      <button class="act-btn" onclick="copyImageToolOutput()">📋 Copy Result</button>
+      <button class="act-btn" onclick="clearImageToolOutput()">🧹 Clear</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAVORITES PANEL -->
+
+<div class="slide-panel" id="panel-favorites">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">⭐ Favorites</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div class="actions-row" style="margin-bottom:12px;">
+      <button class="act-btn" onclick="exportFavorites()">📤 Export</button>
+      <button class="act-btn" onclick="document.getElementById('import-file').click()">📥 Import</button>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none;" onchange="importFavorites(event)">
+    <div id="favorites-list"></div>
+  </div>
+</div>
+
+<!-- BATCH PANEL -->
+
+<div class="slide-panel" id="panel-batch" style="max-height:100vh;max-height:100dvh;top:0;border-radius:0;">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">📦 Batch Results</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body">
+    <button class="act-btn primary" onclick="copyAllBatch()" style="width:100%;margin-bottom:12px;">📋 Copy All 5 Prompts</button>
+    <div id="batch-list"></div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+
+<div class="slide-panel" id="panel-settings">
+  <div class="panel-handle"></div>
+  <div class="panel-head">
+    <div class="panel-head-title">⚙️ Settings</div>
+    <button class="panel-close" onclick="closeAllPanels()">✕</button>
+  </div>
+  <div class="panel-body">
+    <div class="setting-group">
+      <div class="setting-label">Default Gender</div>
+      <select class="setting-select" id="pref-gender" onchange="validateSettings()">
+        <option value="">-- Select --</option>
+        <option value="female">Female ✓</option>
+        <option value="male">Male</option>
+      </select>
+      <div class="setting-hint">✓ = Pregnancy available</div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Default Pregnancy</div>
+      <select class="setting-select" id="pref-pregnancy" onchange="validateSettings()">
+        <option value="">-- Select --</option>
+        <option value="not pregnant">Not Pregnant</option>
+        <option value="pregnant">Pregnant</option>
+        <option value="heavily pregnant">Heavily Pregnant</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Default Age</div>
+      <select class="setting-select" id="pref-age" onchange="validateSettings()">
+        <option value="">-- Select --</option>
+    <option value="baby">Baby (0-1)</option>
+    <option value="toddler">Toddler (1-3)</option>
+    <option value="young child">Young Child (3-5)</option>
+    <option value="child">Child (6-9)</option>
+    <option value="preteen">Preteen (10-12)</option>
+    <option value="early teenager">Early Teenager (13-14)</option>
+    <option value="mid teenager">Mid Teenager (15-16)</option>
+    <option value="late teenager">Late Teenager (17-19) ✓</option>
+    <option value="young adult">Young Adult (20-24) ✓</option>
+    <option value="mid twenties">Mid Twenties (25-27) ✓</option>
+    <option value="late twenties">Late Twenties (28-29) ✓</option>
+    <option value="early thirties">Early Thirties (30-34) ✓</option>
+    <option value="mid thirties">Mid Thirties (35-39) ✓</option>
+    <option value="early forties">Early Forties (40-44) ✓</option>
+    <option value="mid forties">Mid Forties (45-49) ✓</option>
+    <option value="early fifties">Early Fifties (50-54) ✓</option>
+    <option value="mid fifties">Mid Fifties (55-59) ✓</option>
+    <option value="early sixties">Early Sixties (60-64) ✓</option>
+    <option value="mid sixties">Mid Sixties (65-69) ✓</option>
+    <option value="late sixties">Late Sixties (67-69) ✓</option>
+    <option value="early seventies">Early Seventies (70-74) ✓</option>
+    <option value="mid seventies">Mid Seventies (75-79) ✓</option>
+    <option value="senior">Senior (80+) ✓</option>
+  </select>
+      <div class="setting-hint">✓ = Pregnancy available</div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">Prompt Format</div>
+      <select class="setting-select" id="pref-format">
+        <option value="grouped">Smart Grouped (recommended)</option>
+        <option value="standard">Standard (flowing sentence)</option>
+        <option value="labeled">Labeled (all categories separate)</option>
+        <option value="tags">Tags (comma-separated)</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">App Theme</div>
+      <div class="style-row" id="app-theme-row" style="margin-bottom:8px;"></div>
+      <div id="custom-color-wrap" style="display:none;margin-top:8px;">
+        <div class="setting-label" style="margin-top:8px;">Custom Accent Color</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="color" id="custom-accent-picker" value="#D4A853" style="width:50px;height:36px;border:none;border-radius:8px;cursor:pointer;background:transparent;">
+          <span id="custom-accent-hex" style="font-size:12px;color:#C4B49A;">#D4A853</span>
+          <button class="act-btn" onclick="applyCustomAccent()" style="flex:none;padding:6px 12px;font-size:11px;">Apply</button>
+        </div>
+        <div class="setting-label" style="margin-top:10px;">Custom Background</div>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="color" id="custom-bg-picker" value="#12100E" style="width:50px;height:36px;border:none;border-radius:8px;cursor:pointer;background:transparent;">
+          <span id="custom-bg-hex" style="font-size:12px;color:#C4B49A;">#12100E</span>
+          <button class="act-btn" onclick="applyCustomBg()" style="flex:none;padding:6px 12px;font-size:11px;">Apply</button>
+        </div>
+        <div class="setting-hint">Pick any colors you like. Saved locally.</div>
+      </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">API Key</div>
+      <input class="field-input" type="password" id="pref-api-key" placeholder="Paste your OpenAI API key">
+      <div class="setting-hint">Stored locally on this device only. Never shared.</div>
+    </div>
+    <button class="act-btn primary" onclick="saveSettings()" style="width:100%;margin-top:12px;padding:14px;">💾 Save Settings</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+
+<div class="toast" id="toast"></div>
+
+<!-- UNDO BAR -->
+
+<div class="undo-bar" id="undo-bar">
+  <span>Prompt changed</span>
+  <button class="undo-btn" onclick="undoState()">Undo</button>
+</div>
+
+<script>
+'use strict';
+
+// ==========================================
+// PLATFORMS
+// ==========================================
+const PLATFORMS = [
+  { id:'wonder', name:'Wonder AI', limit:1000 },
+  { id:'collart', name:'Collart', limit:1500 },
+  { id:'pollinations', name:'Pollinations', limit:2000 },
+  { id:'midjourney', name:'Midjourney', limit:2000 },
+  { id:'dalle', name:'DALL-E', limit:4000 },
+];
+
+// ==========================================
+// STATE
+// ==========================================
+let STATE = {
+  prompt: {
+    camera:'professional portrait photography', shot:'full body portrait', gender:'female',
+    pregnancy:'heavily pregnant', age:'mid twenties',
+    hairColor:'brown', hairLength:'long', hairStyle:'flowing',
+    skin:'fair skin', occupation:'', expression:'soft smile',
+    makeup:'natural makeup', clothingStyle:'One-Piece',
+    onePiece:'sundress', onePieceColor:'', onePieceFabric:'',
+    top:'', topColor:'', topFabric:'',
+    bottom:'', bottomColor:'', bottomFabric:'',
+    hosiery:'', hosieryColor:'', hosieryFabric:'',
+    footwear:'', footwearColor:'', footwearFabric:'',
+    clothingPreset:'', clothingPresetType:'',
+    accessories:'', props:'',
+    environment:'park', lighting:'golden hour sunset',
+    pose:'standing confidently', mood:'joyful happy mood'
+  },
+  settings: { defaultGender:'', defaultPregnancy:'', defaultAge:'', promptFormat:'grouped' },
+  favorites: [],
+  history: [],
+  aiPrompts: [],
+  batchPrompts: [],
+  styleMode: 'Default',
+  platform: 'wonder',
+  locks: {},
+  currentTheme: null,
+  promptMode: 'builder',
+  manualPrompt: '',
+  lastImagePromptSource: '',
+  showClothingDetails: false,
+  autoClothingPresetSync: true
+};
+
+let undoStack = [];
+const MAX_UNDO = 15;
+
+// ==========================================
+// EXPANDED FIELD DEFINITIONS
+// ==========================================
+const FIELDS = {
+  camera: ['action sports photography', 'aerial drone photography', 'beauty editorial photography', 'boudoir portrait photography', 'candid lifestyle photography', 'cinematic portrait photography', 'commercial campaign photography', 'documentary lifestyle photography', 'editorial fashion photography', 'environmental portrait photography', 'family portrait photography', 'fashion catalog photography', 'film-inspired portrait photography', 'fine art portrait photography', 'glamour portrait photography', 'high-end lifestyle photography', 'high-fashion editorial photography', 'indoor natural light photography', 'luxury campaign photography', 'magazine cover photography', 'moody portrait photography', 'newborn portrait photography', 'outdoor golden hour photography', 'petite studio portrait photography', 'professional portrait photography', 'raw street style photography', 'romantic portrait photography', 'runway backstage photography', 'soft natural light portrait photography', 'sports editorial photography', 'storytelling lifestyle photography', 'street style photography', 'studio beauty photography', 'studio portrait photography', 'travel editorial photography', 'vintage film photography', 'wedding portrait photography'],
+
+  shot: ['3/4 view shot', 'Aerial shot', 'Bird\'s eye view', 'Close-up shot', 'Detail shot', 'Dutch angle shot', 'Environmental portrait', 'Establishing shot', 'Extreme close-up', 'Eye-level shot', 'Fish-eye shot', 'Full body portrait', 'Full length shot', 'Ground level shot', 'Head-and-shoulders portrait', 'High angle shot', 'Low angle shot', 'Macro shot', 'Medium close-up shot', 'Medium shot', 'Over-the-shoulder shot', 'Panoramic shot', 'Point-of-view shot', 'Profile shot', 'Rear view shot', 'Side profile portrait', 'Symmetrical front shot', 'Three-quarter portrait', 'Top-down shot', 'Waist-up portrait', 'Wide lifestyle shot'],
+
+  gender: ['female', 'male'],
+
+  pregnancy: ['heavily pregnant', 'not pregnant', 'pregnant'],
+
+  age: ['baby', 'child', 'early fifties', 'early forties', 'early sixties', 'early teenager', 'early thirties', 'early twenties', 'late fifties', 'late forties', 'late sixties', 'late teenager', 'late thirties', 'late twenties', 'mid fifties', 'mid forties', 'mid sixties', 'mid teenager', 'mid thirties', 'mid twenties', 'newborn', 'older adult', 'preteen', 'senior citizen', 'teenager', 'toddler', 'young adult', 'young child'],
+
+  hairColor: ['Ash blonde', 'Auburn', 'Black', 'Blonde', 'Blue', 'Brown', 'Burgundy', 'Caramel brown', 'Champagne blonde', 'Charcoal', 'Chestnut', 'Chocolate brown', 'Copper', 'Dark brown', 'Dirty blonde', 'Ginger', 'Gray', 'Green', 'Honey blonde', 'Indigo', 'Jet black', 'Lavender', 'Light brown', 'Lilac', 'Mahogany', 'Neon green', 'Ombre', 'Pastel blue', 'Pastel pink', 'Pink', 'Platinum blonde', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Sandy blonde', 'Silver', 'Strawberry blonde', 'Teal', 'White', 'Wine red'],
+
+  hairLength: ['Bald', 'Buzz cut', 'Chin-length', 'Ear-length', 'Hip-length', 'Long', 'Medium', 'Pixie length', 'Short', 'Shoulder-length', 'Very long', 'Very short', 'Waist-length'],
+
+  hairStyle: ['Afro', 'Bangs', 'Beach waves', 'Blunt bob', 'Bob', 'Box braids', 'Braided', 'Braided crown', 'Bun', 'Buzz cut', 'Coily', 'Cornrows', 'Curly', 'Curtain bangs', 'Dreadlocks', 'Faux hawk', 'Feathered layers', 'Finger waves', 'Flowing', 'French braid', 'Half-up half-down', 'High bun', 'High ponytail', 'Layered', 'Locs', 'Loose curls', 'Low bun', 'Messy bun', 'Mohawk', 'Mullet', 'Pigtails', 'Pixie cut', 'Ponytail', 'Ringlets', 'Shag cut', 'Side braid', 'Sleek bob', 'Slicked back', 'Space buns', 'Straight', 'Tight curls', 'Top knot', 'Twists', 'Undercut', 'Updo', 'Voluminous', 'Wavy', 'Wet look', 'Wolf cut'],
+
+  skin: ['Albino', 'Amber skin', 'Beige skin', 'Bronze skin', 'Brown skin', 'Caramel skin', 'Dark skin', 'Deep espresso skin', 'Fair skin', 'Freckled skin', 'Golden skin', 'Light brown skin', 'Medium tan skin', 'Olive skin', 'Pale skin', 'Porcelain skin', 'Rosy skin', 'Sun-kissed skin', 'Tan skin', 'Vitiligo skin', 'Warm brown skin'],
+
+  occupation: ['Actor', 'Adventurer', 'Alchemist', 'Angel', 'Architect', 'Artist', 'Astronaut', 'Athlete', 'Baker', 'Ballerina', 'Barista', 'Biker', 'Bodyguard', 'Botanist', 'Boxer', 'Chef', 'Content creator', 'Cowgirl', 'Cyberpunk hacker', 'Dancer', 'Detective', 'DJ', 'Doctor', 'Engineer', 'Explorer', 'Fairy', 'Farmer', 'Fashion designer', 'Firefighter', 'Florist', 'Gamer', 'Goddess', 'Guide', 'Influencer', 'Journalist', 'Knight', 'Librarian', 'Mage', 'Makeup artist', 'Mechanic', 'Mermaid', 'Model', 'Motorcyclist', 'Musician', 'Ninja', 'Nurse', 'Painter', 'Paramedic', 'Photographer', 'Pilot', 'Princess', 'Professor', 'Queen', 'Researcher', 'Rockstar', 'Sailor', 'Samurai', 'Scientist', 'Singer', 'Skater', 'Soldier', 'Stylist', 'Superhero', 'Surfer', 'Teacher', 'Traveler', 'Warrior', 'Witch', 'Writer', 'Yoga instructor'],
+
+  expression: ['Adoring', 'Amazed', 'Beaming', 'Bold', 'Bright smile', 'Calm', 'Cheerful', 'Confident', 'Contemplative', 'Coy smile', 'Curious', 'Defiant', 'Determined', 'Dreamy', 'Ecstatic', 'Elegant', 'Excited', 'Fierce', 'Focused', 'Gentle smile', 'Joyful', 'Laughing', 'Loving', 'Melancholic', 'Mysterious', 'Peaceful', 'Playful', 'Proud', 'Radiant smile', 'Regal', 'Relaxed', 'Serene', 'Serious', 'Shy', 'Smiling', 'Smirking', 'Soft smile', 'Stoic', 'Sultry', 'Surprised', 'Tender', 'Thoughtful', 'Wistful'],
+
+  makeup: ['80s neon makeup', 'Airbrushed glam', 'Bold makeup', 'Bronzed makeup', 'Cat eye', 'Colorful eyeliner', 'Contour makeup', 'Cosplay makeup', 'Cyberpunk face decals', 'Dewy skin', 'Dramatic makeup', 'Editorial high-fashion', 'Everyday makeup', 'Face gems', 'Face paint', 'Glitter highlights', 'Glossy lips', 'Glowing skin', 'Gothic makeup', 'Graphic eyeliner', 'Light makeup', 'Minimal makeup', 'Monochrome makeup', 'Natural makeup', 'No makeup', 'Pastel makeup', 'Peach blush', 'Red lips', 'Retro makeup', 'Shimmer makeup', 'Smokey eye', 'Soft glam', 'Sun-kissed makeup', 'Tribal markings', 'Vintage makeup', 'Winged eyeliner'],
+
+  clothingTheme: ['At Home', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel'],
+
+  clothingStyle: ['Fantasy / Armor', 'Layered', 'One-Piece', 'Swimwear', 'Two-Piece'],
+
+  clothingPresetType: ['At Home', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel'],
+  clothingPreset: ['Beach Cover-Up Set', 'Beach Lounge Set', 'Bikini Set', 'Boho Festival Set', 'Casual Coffee Run Set', 'Classic Office Set', 'Cozy At-Home Set', 'Date Night Dress Set', 'Enchanted Grove Set', 'Explorer Jungle Set', 'Fantasy Armor Set', 'Fitness Training Set', 'Flowing Party Dress Set', 'Jungle Adventure Set', 'Maternity Studio Set', 'Moonlit Sorceress Set', 'Prehistoric Huntress Set', 'Resort Swim Set', 'Safari Linen Set', 'Smart Casual Office Set', 'Studio Glam Set', 'Sunset Boardwalk Set', 'Tropical Waterfall Set', 'Travel Day Set'],
+
+  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Babydoll dress', 'Ball gown', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Corset dress', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Elegant dress', 'Empire waist dress', 'Evening gown', 'Figure skating dress', 'Floral sundress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'One-piece swimsuit', 'Overall shorts', 'Overalls', 'Pinafore dress', 'Robe', 'Romper', 'Sari', 'Sequin dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Space suit', 'Sun dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Tactical suit', 'Toga', 'Tulle dress', 'Uniform', 'Velvet gown', 'Wedding dress', 'Witch robes', 'Wrap dress'],
+
+  onePieceColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Bronze', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Chocolate', 'Copper', 'Coral', 'Cream', 'Dusty rose', 'Emerald green', 'Floral print', 'Forest green', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Iridescent', 'Ivory', 'Lavender', 'Leopard print', 'Lilac', 'Magenta', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy blue', 'Neon orange', 'Olive', 'Orange', 'Pastel pink', 'Peach', 'Pearl white', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Royal blue', 'Sage green', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
+
+  onePieceFabric: ['Brocade', 'Burlap', 'Canvas', 'Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Crepe', 'Denim', 'Faux fur', 'Flannel', 'Fleece', 'Holographic foil', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Neoprene', 'Nylon', 'Organza', 'PVC', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Taffeta', 'Tulle', 'Tweed', 'Velvet', 'Wool'],
+
+  top: ['Bikini top', 'Blazer', 'Blouse', 'Bolero jacket', 'Bralette', 'Button-up shirt', 'Camisole', 'Cape', 'Cardigan', 'Chainmail', 'Coat', 'Corset', 'Crop top', 'Denim jacket', 'Flannel shirt', 'Halter top', 'Henley shirt', 'Hoodie', 'Jacket', 'Kimono jacket', 'Leather jacket', 'Long-sleeve tee', 'Off-shoulder top', 'Oversized sweater', 'Polo shirt', 'Poncho', 'Rash guard', 'Shawl', 'Shirt', 'Sports bra', 'Sweater', 'Tankini top', 'T-shirt', 'Tank top', 'Trench coat', 'Triangle bikini top', 'Tunic top', 'Turtleneck', 'Utility jacket', 'V-neck shirt', 'Vest', 'Windbreaker', 'Wrap top'],
+
+  topColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Coral', 'Cream', 'Dusty rose', 'Emerald', 'Floral', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Ivory', 'Khaki', 'Lavender', 'Leopard print', 'Lilac', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy', 'Olive', 'Orange', 'Pastel', 'Peach', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Sage', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
+
+  topFabric: ['Boucle', 'Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Crochet', 'Denim', 'Faux fur', 'Fleece', 'Fur', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Neoprene', 'Nylon', 'Organza', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Tulle', 'Velvet', 'Wool'],
+
+  bottom: ['A-line skirt', 'Athletic shorts', 'Bikini bottoms', 'Bike shorts', 'Board shorts', 'Capri pants', 'Capris', 'Cargo pants', 'Chinos', 'Culottes', 'Denim shorts', 'Dress pants', 'Flared pants', 'Harem pants', 'High-waisted shorts', 'Jeans', 'Joggers', 'Leather pants', 'Leggings', 'Linen pants', 'Maxi skirt', 'Midi skirt', 'Mini skirt', 'Palazzo pants', 'Pencil skirt', 'Pleated skirt', 'Sarong', 'Shorts', 'Skater skirt', 'Skirt', 'Swim skirt', 'Sweatpants', 'Tattered jeans', 'Wide-leg pants', 'Yoga pants'],
+
+  bottomColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Chocolate', 'Cream', 'Denim blue', 'Emerald', 'Gray', 'Green', 'Khaki', 'Lavender', 'Mocha', 'Navy', 'Olive', 'Orange', 'Pink', 'Plum', 'Purple', 'Red', 'Sage', 'Silver', 'Sky blue', 'Tan', 'Taupe', 'White', 'Wine red', 'Yellow'],
+
+  bottomFabric: ['Cashmere', 'Chambray', 'Corduroy', 'Cotton', 'Denim', 'Faux leather', 'Fleece', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Nylon', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Tulle', 'Velvet', 'Wool'],
+
+  outerwear: ['blazer', 'bolero jacket', 'cape', 'cardigan', 'coat', 'cropped jacket', 'denim jacket', 'hoodie', 'kimono jacket', 'leather jacket', 'poncho', 'shawl', 'trench coat', 'utility jacket', 'vest', 'windbreaker'],
+
+  outerwearColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Coral', 'Cream', 'Dusty rose', 'Emerald', 'Gold', 'Gray', 'Green', 'Ivory', 'Lavender', 'Mint', 'Navy', 'Olive', 'Peach', 'Pink', 'Plum', 'Purple', 'Red', 'Rose gold', 'Royal blue', 'Sage', 'Silver', 'Sky blue', 'Tan', 'Taupe', 'Turquoise', 'White', 'Yellow'],
+
+  outerwearFabric: ['Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Denim', 'Faux fur', 'Fleece', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Nylon', 'Satin', 'Silk', 'Suede', 'Tweed', 'Velvet', 'Wool'],
+
+  hosiery: ['ankle socks', 'compression socks', 'fishnet stockings', 'footless tights', 'knee high socks', 'leg warmers', 'pantyhose', 'patterned tights', 'sheer stockings', 'sheer tights', 'thigh high stockings', 'wool socks'],
+
+  hosieryColor: ['beige', 'black', 'blue', 'blush pink', 'brown', 'burgundy', 'charcoal', 'cream', 'gray', 'green', 'ivory', 'lavender', 'navy', 'nude', 'olive', 'pink', 'purple', 'red', 'tan', 'teal', 'white'],
+
+  hosieryFabric: ['cashmere blend', 'cotton', 'fishnet', 'lace', 'merino wool', 'mesh', 'microfiber', 'nylon', 'ribbed knit', 'sheer nylon', 'silk blend', 'spandex blend', 'wool'],
+
+  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'platform heels', 'running shoes', 'sandals', 'slip on shoes', 'snow boots', 'stilettos', 'tennis shoes', 'wedges', 'work boots'],
+
+  footwearColor: ['beige', 'black', 'blue', 'brown', 'burgundy', 'charcoal', 'cream', 'gold', 'gray', 'green', 'ivory', 'navy', 'pink', 'purple', 'red', 'silver', 'tan', 'teal', 'white', 'yellow'],
+
+  footwearFabric: ['canvas', 'denim', 'fabric', 'faux leather', 'felt', 'knit', 'lace', 'leather', 'mesh', 'nubuck', 'patent leather', 'rubber', 'satin', 'suede', 'synthetic', 'velvet', 'wool'],
+
+  accessories: ['Anklet', 'Aura glow', 'Backpack', 'Bangle bracelet', 'Belt', 'Body chain', 'Bracelet', 'Brooch', 'Cape', 'Choker', 'Clutch bag', 'Cowboy hat', 'Crown', 'Cuff bracelet', 'Drop earrings', 'Earrings', 'Flower crown', 'Gas mask', 'Glasses', 'Gloves', 'Hair bow', 'Hair clip', 'Handbag', 'Hat', 'Headband', 'Headphones', 'Hoop earrings', 'Jewelry', 'Leather gloves', 'Neck scarf', 'Necklace', 'Pearl necklace', 'Rings', 'Scarf', 'Statement earrings', 'Sunglasses', 'Sword', 'Tiara', 'Umbrella', 'Veil', 'Waist chain', 'Wand', 'Watch'],
+
+  props: ['Acoustic guitar', 'Artifact', 'Baby blanket', 'Balloon', 'Balloons', 'Blanket', 'Book', 'Bouquet', 'Briefcase', 'Camera', 'Camp lantern', 'Candles', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Designer shopping bags', 'Dumbbells', 'Fairy lights', 'Film camera', 'Flowers', 'Gift box', 'Guitar', 'Lantern', 'Laptop', 'Luggage', 'Microphone', 'Mirror', 'Paint palette', 'Phone', 'Picnic basket', 'Pillow', 'Polaroid camera', 'Purse', 'Rose', 'Shield', 'Shopping bags', 'Single flower', 'Skateboard', 'Staff', 'Stuffed animal', 'Suitcase', 'Sun hat', 'Tea cup', 'Teddy bear', 'Towel', 'Umbrella', 'Violin', 'Water bottle', 'Wine glass', 'Yoga mat'],
+
+  environment: ['Abandoned amusement park', 'Abandoned asylum', 'Airport', 'Ancient Egypt', 'Ancient library', 'Ancient temple ruins', 'Aquarium tunnel', 'Art gallery', 'Art studio', 'Autumn forest', 'Backyard garden', 'Balcony overlook', 'Ballroom', 'Bamboo forest', 'Barn', 'Beach', 'Beach resort', 'Boardwalk', 'Bookstore', 'Botanical garden', 'Boutique', 'Cafe', 'Calm lake', 'Candy land', 'Canyon', 'Cathedral', 'Cave', 'Cherry blossom garden', 'City alley', 'City rooftop', 'City street', 'Cliffside overlook', 'Cloud kingdom', 'Coastal village', 'Concert hall', 'Conference room', 'Countryside', 'Cozy bedroom', 'Cozy kitchen', 'Cruise ship', 'Cyberpunk alley', 'Dance studio', 'Desert dunes', 'Dreamy greenhouse', 'Enchanted forest', 'Farm', 'Farmhouse', 'Field', 'Floating island', 'Flower field', 'Forest cabin', 'Forest clearing', 'Forest waterfall', 'Futuristic city', 'Garden', 'Glacier', 'Gothic castle', 'Grand staircase', 'Greenhouse', 'Gym', 'Harbor', 'Historic townhouse', 'Home studio', 'Hospital', 'Hotel lobby', 'Indoor pool', 'Jungle', 'Laboratory', 'Lake dock', 'Lakeside cabin', 'Lavender field', 'Library', 'Lighthouse', 'Luxury penthouse', 'Luxury yacht', 'Mars colony', 'Meadow', 'Medieval castle', 'Modern apartment', 'Modern living room', 'Monastery', 'Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Movie set', 'Museum', 'Nature trail', 'Night market', 'Nightclub', 'Oasis', 'Ocean', 'Office', 'Olive grove', 'Orchard', 'Palace', 'Parisian street', 'Park', 'Pier', 'Pine forest', 'Post-apocalyptic ruins', 'Prairie', 'Rainforest', 'Ranch', 'Recording studio', 'Restaurant', 'Rock concert', 'Rocky cliffs', 'Rolling hills', 'Rooftop bar', 'Rose garden', 'Sailboat', 'Salon', 'Savanna', 'Snowy cabin', 'Snowy landscape', 'Spa', 'Space station', 'Spring meadow', 'Stable', 'Summer garden', 'Sunflower field', 'Temple', 'Theater stage', 'Throne room', 'Train station', 'Treehouse', 'Tropical beach', 'Tropical island', 'Tundra', 'Underground cavern', 'Underwater', 'Urban loft', 'Urban street', 'Valley', 'Victorian parlor', 'Vineyard', 'Water park', 'Waterfall', 'Wheat field', 'Wildflower meadow', 'Winery', 'Winter wonderland', 'Yoga studio'],
+
+  lighting: ['Aurora glow', 'Backlit sunset', 'Bioluminescent glow', 'Blue hour light', 'Blue water reflections', 'Bright blue sky', 'Bright fluorescent', 'Bright gym lighting', 'Bright midday sunlight', 'Bright natural sunlight', 'Candlelight', 'Chandelier glow', 'Cinematic lighting', 'Clinical lighting', 'Colorful neon lights', 'Cosmic glow', 'Dappled sunlight', 'Dawn light', 'Divine golden light', 'Dramatic stage light', 'Dramatic storm lighting', 'Dramatic sunset', 'Edison bulbs', 'Fairy lights', 'Fire glow', 'Floating candles', 'Foggy atmosphere', 'Golden hour sunset', 'Hazy light', 'Holographic signs', 'Lantern light', 'Magical energy', 'Misty light', 'Moonlight', 'Natural daylight', 'Neon signs', 'Northern lights', 'Overcast light', 'Pink sunset glow', 'Purple magical energy', 'Ray tracing', 'Ring light', 'Soft diffused light', 'Soft morning light', 'Soft natural light', 'Soft studio lighting', 'Spotlights', 'Stage lighting', 'Starlight', 'String lights', 'Studio lighting', 'Sunbeam through window', 'Sunset city lights', 'Torch light', 'Twilight glow', 'Underwater sunbeams', 'Volumetric lighting', 'Warm amber lighting', 'Warm cafe lighting', 'Warm indoor lighting', 'Warm lamp light', 'Warm sunlight', 'Warm window light'],
+
+  pose: ['Arms crossed', 'Arms spread wide', 'Carrying shopping bags', 'Cradling belly', 'Dancing', 'Hands in pockets', 'Holding coffee', 'Holding flowers', 'Holding hands to face', 'Holding hat brim', 'Jumping mid-air', 'Kneeling gracefully', 'Laughing with head tilted back', 'Leaning against wall', 'Looking away thoughtfully', 'Looking down softly', 'Looking over shoulder', 'Reclining elegantly', 'Relaxed pose', 'Running lightly', 'Seated elegantly', 'Sitting comfortably', 'Sitting on floor', 'Standing confidently', 'Standing elegantly', 'Standing powerfully', 'Stretching', 'Strolling', 'Walking confidently', 'Walking naturally', 'Warrior pose', 'Windswept pose', 'Yoga pose'],
+
+  mood: ['bold daring mood', 'calm tranquil mood', 'carefree lighthearted mood', 'confident heroic mood', 'cozy intimate mood', 'dreamy ethereal mood', 'elegant sophisticated mood', 'energetic vibrant mood', 'fierce powerful mood', 'happy relaxed mood', 'healthy active mood', 'joyful happy mood', 'magical whimsical mood', 'mysterious enchanting mood', 'passionate intense mood', 'peaceful content mood', 'peaceful serene mood', 'playful adventurous mood', 'relaxed comfortable mood', 'romantic cozy mood', 'soft feminine mood', 'victorious triumphant mood']
+
+};
+
+
+const CLOTHING_PRESETS = {
+  'Beach Cover-Up Set': { tags:['Beach', 'Swimwear', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'swim cover-up', hosiery:'', footwear:'sandals' },
+  'Beach Lounge Set': { tags:['Beach', 'Travel'], clothingTheme:'Beach', clothingStyle:'Two-Piece', top:'camisole', bottom:'shorts', hosiery:'', footwear:'espadrilles' },
+  'Bikini Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'bikini bottoms', hosiery:'', footwear:'flip flops' },
+  'Boho Festival Set': { tags:['Creative', 'Events'], clothingTheme:'Creative', clothingStyle:'Layered', top:'crop top', bottom:'maxi skirt', outerwear:'kimono jacket', hosiery:'', footwear:'ankle boots' },
+  'Casual Coffee Run Set': { tags:['At Home', 'Shopping', 'Travel'], clothingTheme:'At Home', clothingStyle:'Layered', top:'cardigan', bottom:'jeans', outerwear:'utility jacket', hosiery:'ankle socks', footwear:'athletic sneakers' },
+  'Classic Office Set': { tags:['Office'], clothingTheme:'Office', clothingStyle:'Layered', top:'blouse', bottom:'dress pants', outerwear:'blazer', hosiery:'pantyhose', footwear:'high heels' },
+  'Cozy At-Home Set': { tags:['At Home'], clothingTheme:'At Home', clothingStyle:'Two-Piece', top:'oversized sweater', bottom:'leggings', hosiery:'wool socks', footwear:'barefoot' },
+  'Date Night Dress Set': { tags:['Dining', 'Events', 'Nightlife'], clothingTheme:'Nightlife', clothingStyle:'One-Piece', onePiece:'cocktail dress', hosiery:'sheer tights', footwear:'stilettos' },
+  'Enchanted Grove Set': { tags:['Fantasy'], clothingTheme:'Fantasy', clothingStyle:'Layered', top:'corset', bottom:'maxi skirt', outerwear:'cape', hosiery:'thigh high stockings', footwear:'mary janes' },
+  'Explorer Jungle Set': { tags:['Jungle', 'Travel'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'button-up shirt', bottom:'cargo pants', outerwear:'utility jacket', hosiery:'ankle socks', footwear:'hiking boots' },
+  'Fantasy Armor Set': { tags:['Fantasy'], clothingTheme:'Fantasy', clothingStyle:'Fantasy / Armor', onePiece:'armor', hosiery:'thigh high stockings', footwear:'knee high boots' },
+  'Fitness Training Set': { tags:['Fitness'], clothingTheme:'Fitness', clothingStyle:'Two-Piece', top:'sports bra', bottom:'leggings', hosiery:'ankle socks', footwear:'running shoes' },
+  'Flowing Party Dress Set': { tags:['Events', 'Nightlife', 'Studio'], clothingTheme:'Events', clothingStyle:'One-Piece', onePiece:'maxi dress', hosiery:'sheer tights', footwear:'high heels' },
+  'Jungle Adventure Set': { tags:['Jungle', 'Prehistoric'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'tank top', bottom:'shorts', outerwear:'utility jacket', hosiery:'knee high socks', footwear:'combat boots' },
+  'Maternity Studio Set': { tags:['Maternity', 'Studio'], clothingTheme:'Maternity', clothingStyle:'One-Piece', onePiece:'maternity dress', hosiery:'', footwear:'barefoot' },
+  'Moonlit Sorceress Set': { tags:['Fantasy', 'Nightlife'], clothingTheme:'Fantasy', clothingStyle:'Fantasy / Armor', onePiece:'witch robes', hosiery:'sheer tights', footwear:'ankle boots' },
+  'Prehistoric Huntress Set': { tags:['Jungle', 'Prehistoric'], clothingTheme:'Prehistoric', clothingStyle:'Layered', top:'crop top', bottom:'sarong', outerwear:'shawl', hosiery:'leg warmers', footwear:'knee high boots' },
+  'Resort Swim Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', onePiece:'one-piece swimsuit', hosiery:'', footwear:'sandals' },
+  'Safari Linen Set': { tags:['Jungle', 'Travel'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'button-up shirt', bottom:'high-waisted shorts', outerwear:'vest', hosiery:'ankle socks', footwear:'ankle boots' },
+  'Smart Casual Office Set': { tags:['Office', 'Shopping'], clothingTheme:'Office', clothingStyle:'Layered', top:'blouse', bottom:'pencil skirt', outerwear:'cardigan', hosiery:'pantyhose', footwear:'mary janes' },
+  'Studio Glam Set': { tags:['Studio'], clothingTheme:'Studio', clothingStyle:'One-Piece', onePiece:'slip dress', hosiery:'sheer tights', footwear:'stilettos' },
+  'Sunset Boardwalk Set': { tags:['Beach', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'', footwear:'wedges' },
+  'Travel Day Set': { tags:['Travel'], clothingTheme:'Travel', clothingStyle:'Layered', top:'t-shirt', bottom:'joggers', outerwear:'jacket', hosiery:'ankle socks', footwear:'slip on shoes' },
+  'Tropical Waterfall Set': { tags:['Beach', 'Jungle', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'sarong', hosiery:'', footwear:'sandals' }
+};
+
+// ==========================================
+// THEMES (with aligned clothing values)
+// ==========================================
+const THEMES = {
+  'at-home':{ emoji:'🏠', name:'At Home', environments:['modern living room','cozy bedroom'], lighting:['warm window light','soft morning light','warm lamp light'], onePieces:['robe','nightgown','maxi dress'], tops:['sweater','hoodie','t-shirt'], bottoms:['leggings','joggers','yoga pants'], poses:['sitting comfortably','relaxed pose','lounging'], moods:['peaceful content mood','relaxed comfortable mood'], clothingPresets:['Cozy At-Home Set','Casual Coffee Run Set'] },
+  'at-office':{ emoji:'💼', name:'Office', environments:['office','conference room'], lighting:['bright overhead lighting','soft professional lighting'], onePieces:['A-line dress','shift dress','jumpsuit'], tops:['blazer','blouse','shirt'], bottoms:['dress pants','skirt'], poses:['standing confidently','professional pose'], moods:['confident heroic mood','elegant sophisticated mood'], occupations:['businesswoman','lawyer','architect'], clothingPresets:['Classic Office Set','Smart Casual Office Set'] },
+  'on-vacation':{ emoji:'🏖️', name:'Vacation', environments:['tropical beach','beach resort','ocean','cruise ship deck'], lighting:['golden hour sunset','bright natural sunlight','blue water reflections'], onePieces:['sundress','beach dress','maxi dress','swim cover-up','one-piece swimsuit'], tops:['tank top','camisole','bikini top','tankini top'], bottoms:['shorts','skirt','bikini bottoms','sarong'], poses:['standing confidently','walking naturally','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','happy relaxed mood'], clothingPresets:['Beach Cover-Up Set','Beach Lounge Set','Bikini Set','Resort Swim Set','Sunset Boardwalk Set'] },
+  'beach-day':{ emoji:'🌊', name:'Beach Day', environments:['beach','boardwalk','ocean','tropical beach'], lighting:['backlit sunset','bright natural sunlight','golden hour sunset'], onePieces:['beach cover-up','one-piece swimsuit','swim cover-up'], tops:['bikini top','tankini top','triangle bikini top'], bottoms:['bikini bottoms','sarong','swim skirt'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['carefree lighthearted mood','joyful happy mood','happy relaxed mood'], clothingPresets:['Beach Cover-Up Set','Bikini Set','Resort Swim Set','Sunset Boardwalk Set'] },
+  'prehistoric-jungle':{ emoji:'🦖', name:'Prehistoric / Jungle', environments:['dense jungle','jungle river','jungle ruins','prehistoric fern valley','rainforest waterfall','tropical jungle clearing','volcanic ridge'], lighting:['dappled sunlight through trees','golden hour sunset','humid misty light','soft diffused light'], onePieces:['explorer romper','survival wrap dress','utility jumpsuit'], tops:['linen shirt','mesh cover-up top','peasant blouse','tribal halter top','utility vest'], bottoms:['cargo pants','sarong','survival skirt','tailored shorts','utility shorts'], poses:['crouching slightly','standing confidently','strolling','walking naturally'], moods:['bold daring mood','fierce powerful mood','playful adventurous mood','wild untamed mood'], occupations:['adventurer','archaeologist','explorer','survivalist'], clothingPresets:['Explorer Jungle Set','Jungle Adventure Set','Prehistoric Huntress Set','Safari Linen Set','Tropical Waterfall Set'] },
+  'coffee-cafes':{ emoji:'☕', name:'Coffee & Cafes', environments:['cafe','coffee shop','bookstore'], lighting:['warm cafe lighting','warm window light','natural daylight'], onePieces:['sundress','wrap dress','midi dress'], tops:['sweater','cardigan','blouse'], bottoms:['jeans','skirt','leggings'], poses:['sitting comfortably','relaxed pose'], moods:['peaceful content mood','relaxed comfortable mood'], clothingPresets:['Casual Coffee Run Set'] },
+  'fitness':{ emoji:'🏋️', name:'Fitness', environments:['gym','yoga studio','spa'], lighting:['bright gym lighting','soft natural light'], onePieces:['bodysuit'], tops:['sports bra','tank top'], bottoms:['leggings','yoga pants','bike shorts'], poses:['yoga pose','stretching','standing confidently','warrior pose'], moods:['energetic vibrant mood','healthy active mood','fierce powerful mood'], clothingPresets:['Fitness Training Set'] },
+  'nature':{ emoji:'🌲', name:'Nature', environments:['forest','flower field','mountain trail with pine trees','garden','meadow','lavender field'], lighting:['golden hour sunset','soft morning light','dappled sunlight through trees'], onePieces:['sundress','maxi dress'], tops:['t-shirt','cardigan'], bottoms:['jeans','shorts'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['peaceful serene mood','joyful happy mood','calm tranquil mood'], clothingPresets:['Boho Festival Set','Explorer Jungle Set','Safari Linen Set','Sunset Boardwalk Set'] },
+  'creative':{ emoji:'🎭', name:'Creative', environments:['art studio','theater stage','art gallery','dance studio'], lighting:['soft studio lighting','stage lighting','warm lamp light'], onePieces:['wrap dress','jumpsuit','kimono'], tops:['blouse','crop top'], bottoms:['wide-leg pants','skirt'], poses:['standing confidently','dancing'], moods:['passionate intense mood','bold daring mood','dreamy ethereal mood'], occupations:['artist','dancer','musician','painter'], clothingPresets:['Boho Festival Set','Flowing Party Dress Set'] },
+  'shopping':{ emoji:'🛍️', name:'Shopping', environments:['boutique','urban street','hotel lobby'], lighting:['natural daylight','bright overhead lighting'], onePieces:['midi dress','cocktail dress','A-line dress'], tops:['blazer','blouse','cardigan'], bottoms:['jeans','skirt','dress pants'], poses:['walking confidently','standing with hand on hip'], moods:['joyful happy mood','confident heroic mood','playful adventurous mood'], clothingPresets:['Casual Coffee Run Set','Smart Casual Office Set','Sunset Boardwalk Set'] },
+  'fantasy':{ emoji:'🧚', name:'Fantasy', environments:['enchanted forest','gothic castle','medieval castle','throne room'], lighting:['magical glow','dramatic lighting','divine golden light','purple magical energy'], onePieces:['gown','robes','armor','costume','witch robes'], tops:['corset'], bottoms:['skirt'], poses:['standing powerfully','warrior pose','arms spread wide'], moods:['confident heroic mood','magical whimsical mood','regal majestic mood','fierce powerful mood'], occupations:['warrior','goddess','mage','witch','angel','princess','queen','sorceress'], clothingPresets:['Enchanted Grove Set','Fantasy Armor Set','Moonlit Sorceress Set'] },
+  'movies':{ emoji:'🎬', name:'Cinematic', environments:['movie set','cyberpunk alley','futuristic city','ruins'], lighting:['dramatic lighting','neon city lights','dramatic sunset','colorful neon lights'], onePieces:['evening gown','catsuit','superhero suit','tactical suit'], tops:['jacket','coat'], bottoms:['jeans','cargo pants'], poses:['standing powerfully','looking over shoulder'], moods:['fierce powerful mood','bold daring mood','mysterious enchanting mood'], occupations:['superhero','actress'] },
+  'nightlife':{ emoji:'🌃', name:'Nightlife', environments:['rooftop bar','nightclub','concert hall'], lighting:['warm amber lighting','neon lights','colorful neon lights','chandelier glow'], onePieces:['cocktail dress','evening gown','bodycon dress','mini dress'], tops:['halter top','camisole'], bottoms:['skirt','dress pants'], poses:['standing elegantly','dancing'], moods:['elegant sophisticated mood','bold daring mood','energetic vibrant mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
+  'historical':{ emoji:'🏛️', name:'Historical', environments:['museum','cathedral','palace','monastery'], lighting:['soft diffused light','candlelight','warm amber lighting'], onePieces:['gown','elegant dress','sari','kimono'], tops:['blouse'], bottoms:['skirt'], poses:['standing elegantly','seated elegantly'], moods:['elegant sophisticated mood','contemplative thoughtful mood','regal majestic mood'], occupations:['queen','princess'] },
+  'travel':{ emoji:'🚗', name:'Travel', environments:['airport','train station','harbor','boardwalk'], lighting:['natural daylight','bright natural sunlight'], onePieces:['jumpsuit','maxi dress','romper'], tops:['jacket','t-shirt','hoodie'], bottoms:['jeans','joggers','shorts'], poses:['walking confidently','strolling'], moods:['playful adventurous mood','joyful happy mood','carefree lighthearted mood'], occupations:['traveler','photographer'], clothingPresets:['Beach Lounge Set','Casual Coffee Run Set','Sunset Boardwalk Set','Travel Day Set'] },
+  'dining':{ emoji:'🍽️', name:'Dining', environments:['restaurant','cafe','winery','hotel lobby'], lighting:['candlelight','warm amber lighting','warm cafe lighting'], onePieces:['elegant dress','cocktail dress','midi dress','slip dress'], tops:['blouse','camisole'], bottoms:['dress pants','skirt'], poses:['seated elegantly','sitting comfortably'], moods:['romantic cozy mood','elegant sophisticated mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
+  'events':{ emoji:'🎪', name:'Events', environments:['ballroom','concert hall','theater stage'], lighting:['chandelier glow','dramatic lighting','spotlights'], onePieces:['ball gown','evening gown','cocktail dress','elegant dress'], tops:['blazer','blouse'], bottoms:['dress pants','skirt'], poses:['celebrating','dancing','standing elegantly'], moods:['joyful happy mood','victorious triumphant mood','energetic vibrant mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
+  'seasons':{ emoji:'🍂', name:'Seasons', environments:['spring meadow','summer garden','sunflower field','autumn forest','snowy landscape','winter wonderland','flower field','meadow'], lighting:['golden hour sunset','soft morning light','bright natural sunlight','overcast light'], onePieces:['sundress','maxi dress','wrap dress'], tops:['sweater','cardigan','coat'], bottoms:['jeans','leggings','skirt'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','carefree lighthearted mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Casual Coffee Run Set','Cozy At-Home Set'] },
+  'flowers':{ emoji:'🌸', name:'Floral', environments:['garden','botanical garden','flower field','lavender field','sunflower field','wildflower meadow'], lighting:['golden hour sunset','soft morning light','dappled sunlight through trees'], onePieces:['sundress','maxi dress','wrap dress','slip dress'], tops:['blouse','camisole'], bottoms:['skirt','shorts'], poses:['standing confidently','walking naturally','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','romantic cozy mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Sunset Boardwalk Set'] },
+  'studio':{ emoji:'📸', name:'Studio', environments:['art studio','home studio'], lighting:['soft studio lighting','soft diffused light','dramatic lighting','ring light'], onePieces:['elegant dress','gown','maternity dress','slip dress'], tops:['camisole','bralette'], bottoms:['skirt','leggings'], poses:['standing confidently','cradling belly'], moods:['elegant sophisticated mood','confident heroic mood','dreamy ethereal mood'], clothingPresets:['Flowing Party Dress Set','Maternity Studio Set','Studio Glam Set'] }
+};
+
+const STYLE_MODES = { 'Default':'', 'Cinematic':'cinematic, dramatic', 'Fantasy':'whimsical, fantastical', 'Romantic':'romantic, dreamy', 'Epic':'epic, grand', 'Documentary':'documentary, realistic' };
+
+const SEARCH_SYNONYMS = {
+  'sunset':['golden hour','dusk'], 'beach':['seaside','shore','coast','ocean','vacation'],
+  'forest':['woods','jungle','nature','trees'], 'mountain':['alpine','peak','hiking'],
+  'city':['urban','downtown','street'], 'snow':['snowy','winter','christmas'],
+  'fantasy':['elf','fairy','dragon','enchanted','magic'], 'gym':['fitness','workout','yoga'],
+  'art':['creative','studio','gallery','paint'], 'food':['dining','restaurant','cafe','coffee']
+};
+
+// ==========================================
+// HELPERS
+// ==========================================
+const pick = arr => arr[Math.floor(Math.random() * arr.length)];
+const nonEmpty = arr => [...new Set((arr||[]).filter(Boolean))];
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+function clipCopy(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => toast('✅ Copied!'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('✅ Copied!'); } catch(e) { toast('❌ Copy failed'); }
+    document.body.removeChild(ta);
+  }
+}
+
+function getApiKey() {
+  try { return localStorage.getItem('maternity_api_key') || ''; } catch(e) { return ''; }
+}
+
+// ==========================================
+// UNDO SYSTEM
+// ==========================================
+function pushUndo() {
+  undoStack.push(JSON.parse(JSON.stringify(STATE.prompt)));
+  if (undoStack.length > MAX_UNDO) undoStack.shift();
+  showUndoBar();
+}
+
+function undoState() {
+  if (undoStack.length === 0) { toast('Nothing to undo'); return; }
+  STATE.prompt = undoStack.pop();
+  refresh();
+  toast('↩️ Undone!');
+  hideUndoBar();
+}
+
+function showUndoBar() {
+  const bar = document.getElementById('undo-bar');
+  bar.classList.add('show');
+  clearTimeout(bar._t);
+  bar._t = setTimeout(() => bar.classList.remove('show'), 4000);
+}
+function hideUndoBar() { document.getElementById('undo-bar').classList.remove('show'); }
+
+// ==========================================
+// PLATFORM
+// ==========================================
+function buildPlatformBar() {
+  const bar = document.getElementById('platform-bar');
+  bar.innerHTML = PLATFORMS.map(p =>
+    `<button class="platform-chip${STATE.platform===p.id?' active':''}" onclick="setPlatform('${p.id}')">${p.name}</button>`
+  ).join('');
+}
+
+function setPlatform(id) {
+  STATE.platform = id;
+  try { localStorage.setItem('maternity_platform', id); } catch(e){}
+  buildPlatformBar();
+  const engineSel = document.getElementById('preview-engine'); if (engineSel) engineSel.value = CURRENT_IMAGE_ENGINE;
+  const sizeSel = document.getElementById('preview-size'); if (sizeSel) sizeSel.value = CURRENT_PREVIEW_SIZE;
+  updatePreviewMeta();
+  updateCharBar();
+  updateImageToolCharBar();
+}
+
+function updateCharBar() {
+  const plat = PLATFORMS.find(p => p.id === STATE.platform) || PLATFORMS[0];
+  const text = getActivePromptText();
+  const len = text.length;
+  const pct = Math.min(100, (len / plat.limit) * 100);
+  const fill = document.getElementById('char-fill');
+  fill.style.width = pct + '%';
+  fill.className = 'char-bar-fill' + (pct > 90 ? ' danger' : pct > 70 ? ' warn' : '');
+  document.getElementById('char-count').textContent = len + ' chars';
+  document.getElementById('char-limit').textContent = '/ ' + plat.limit;
+}
+
+// ==========================================
+// STYLE MODE
+// ==========================================
+function buildStyleRow() {
+  const row = document.getElementById('style-row');
+  row.innerHTML = Object.keys(STYLE_MODES).map(m =>
+    `<button class="style-chip${STATE.styleMode===m?' active':''}" onclick="setStyle('${m}')">${m}</button>`
+  ).join('');
+}
+
+function setStyle(mode) {
+  STATE.styleMode = mode;
+  try { localStorage.setItem('maternity_style', mode); } catch(e){}
+  buildStyleRow();
+  updatePromptDisplay();
+}
+
+// ==========================================
+// THEME GRID
+// ==========================================
+function buildThemeGrid() {
+  const grid = document.getElementById('theme-grid');
+  grid.innerHTML = Object.keys(THEMES).map(id => {
+    const t = THEMES[id];
+    return `<div class="theme-card" id="tc-${id}" onclick="handleThemeClick('${id}')">
+      <div class="theme-emoji">${t.emoji}</div>
+      <div class="theme-name">${t.name}</div>
+      <div class="theme-confirm">
+        <button class="theme-apply-btn yes" onclick="event.stopPropagation();confirmTheme('${id}')">✅ Apply</button>
+        <button class="theme-apply-btn no" onclick="event.stopPropagation();cancelTheme()">✕ Cancel</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+let selectedThemeCard = null;
+function handleThemeClick(id) {
+  // If same card clicked again, apply directly
+  if (selectedThemeCard === id) { confirmTheme(id); return; }
+  // Deselect all
+  document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tc-' + id).classList.add('selected');
+  selectedThemeCard = id;
+}
+
+function confirmTheme(id) {
+  applyTheme(id);
+  cancelTheme();
+  updateThemeBar();
+  // Scroll to top so user sees the prompt
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function cancelTheme() {
+  document.querySelectorAll('.theme-card').forEach(c => c.classList.remove('selected'));
+  selectedThemeCard = null;
+}
+
+function clearTheme() {
+  STATE.currentTheme = null;
+  updateThemeBar();
+  toast('🎭 Theme cleared — randomize freely!');
+}
+
+function updateThemeBar() {
+  const bar = document.getElementById('active-theme-bar');
+  const label = document.getElementById('active-theme-label');
+  if (STATE.currentTheme && THEMES[STATE.currentTheme]) {
+    const t = THEMES[STATE.currentTheme];
+    bar.style.display = 'block';
+    label.textContent = `${t.emoji} ${t.name} theme active`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function filterThemes(q) {
+  q = (q||'').toLowerCase().trim();
+  const cards = document.querySelectorAll('.theme-card');
+  const countEl = document.getElementById('search-count');
+  if (!q) { cards.forEach(c => c.style.display=''); countEl.textContent='Showing all themes'; return; }
+  let expanded = [q];
+  Object.keys(SEARCH_SYNONYMS).forEach(k => {
+    const all = [k,...SEARCH_SYNONYMS[k]];
+    if (all.some(t => t.includes(q)||q.includes(t))) expanded.push(k,...SEARCH_SYNONYMS[k]);
+  });
+  expanded = [...new Set(expanded)];
+  let vis = 0;
+  cards.forEach(c => {
+    const text = c.textContent.toLowerCase();
+    const match = expanded.some(t => text.includes(t));
+    c.style.display = match ? '' : 'none';
+    if (match) vis++;
+  });
+  countEl.textContent = vis ? `Found ${vis} theme${vis>1?'s':''}` : 'No matches';
+}
+
+// ==========================================
+// CLOTHING RANDOMIZER (single function)
+// ==========================================
+function randomizeClothing(themeId) {
+  const theme = themeId ? THEMES[themeId] : null;
+  const themeToStyle = {
+    'At Home':'Layered',
+    'Beach':'Swimwear',
+    'Creative':'Layered',
+    'Dining':'One-Piece',
+    'Events':'One-Piece',
+    'Fantasy':'Fantasy / Armor',
+    'Fitness':'Two-Piece',
+    'Historical':'One-Piece',
+    'Jungle':'Layered',
+    'Maternity':'One-Piece',
+    'Nightlife':'One-Piece',
+    'Office':'Layered',
+    'Prehistoric':'Layered',
+    'Studio':'One-Piece',
+    'Swimwear':'Swimwear',
+    'Travel':'Layered'
+  };
+
+  let style = STATE.prompt.clothingStyle || 'One-Piece';
+  if (!STATE.locks.clothingStyle) {
+    const preferredTheme = STATE.prompt.clothingTheme || getThemeClothingTheme(themeId) || '';
+    style = themeToStyle[preferredTheme] || (Math.random() > 0.5 ? 'One-Piece' : 'Layered');
+    STATE.prompt.clothingStyle = style;
+  }
+
+  if (style === 'One-Piece' || style === 'Fantasy / Armor' || style === 'Swimwear') {
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = pick(nonEmpty(theme?.onePieces || FIELDS.onePiece));
+    if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = pick(nonEmpty(FIELDS.onePieceColor));
+    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = pick(nonEmpty(FIELDS.onePieceFabric));
+  }
+
+  if (style === 'Two-Piece' || style === 'Layered' || style === 'Swimwear') {
+    if (!STATE.locks.top) STATE.prompt.top = pick(nonEmpty(theme?.tops || FIELDS.top));
+    if (!STATE.locks.topColor) STATE.prompt.topColor = pick(nonEmpty(FIELDS.topColor));
+    if (!STATE.locks.topFabric) STATE.prompt.topFabric = pick(nonEmpty(FIELDS.topFabric));
+    if (!STATE.locks.bottom) STATE.prompt.bottom = pick(nonEmpty(theme?.bottoms || FIELDS.bottom));
+    if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = pick(nonEmpty(FIELDS.bottomColor));
+    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = pick(nonEmpty(FIELDS.bottomFabric));
+  }
+
+  if (style === 'Layered') {
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = pick(nonEmpty(FIELDS.outerwear));
+    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = pick(nonEmpty(FIELDS.outerwearColor));
+    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = pick(nonEmpty(FIELDS.outerwearFabric));
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
+    if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = '';
+    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = '';
+  } else {
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
+    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = '';
+    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = '';
+  }
+
+  if (style === 'One-Piece' || style === 'Fantasy / Armor') {
+    if (!STATE.locks.top) STATE.prompt.top = '';
+    if (!STATE.locks.topColor) STATE.prompt.topColor = '';
+    if (!STATE.locks.topFabric) STATE.prompt.topFabric = '';
+    if (!STATE.locks.bottom) STATE.prompt.bottom = '';
+    if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = '';
+    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = '';
+  }
+}
+
+function setIfUnlocked(field, val) {
+  if (!val || ['gender','pregnancy','age'].includes(field) || STATE.locks[field]) return;
+  STATE.prompt[field] = val;
+}
+
+
+function getThemeClothingTheme(themeId) {
+  const map = {
+    'at-home':'At Home',
+    'at-office':'Office',
+    'on-vacation':'Beach',
+    'beach-day':'Beach',
+    'prehistoric-jungle':'Prehistoric',
+    'nature':'Jungle',
+    'creative':'Creative',
+    'shopping':'Shopping',
+    'fitness':'Fitness',
+    'fantasy':'Fantasy',
+    'nightlife':'Nightlife',
+    'dining':'Dining',
+    'events':'Events',
+    'travel':'Travel',
+    'studio':'Studio',
+    'flowers':'Creative',
+    'seasons':'Travel',
+    'historical':'Historical'
+  };
+  return map[themeId] || '';
+}
+
+function getThemePresetType(themeId) {
+  return getThemeClothingTheme(themeId);
+}
+
+function getAvailableClothingPresets() {
+  const style = (STATE.prompt.clothingStyle || '').trim();
+  const theme = (STATE.prompt.clothingTheme || '').trim();
+  let names = Object.keys(CLOTHING_PRESETS);
+  if (style) names = names.filter(name => {
+    const preset = CLOTHING_PRESETS[name] || {};
+    return !preset.clothingStyle || preset.clothingStyle === style;
+  });
+  if (theme) names = names.filter(name => {
+    const preset = CLOTHING_PRESETS[name] || {};
+    return preset.clothingTheme === theme || (preset.tags || []).includes(theme);
+  });
+  return names.sort((a, b) => a.localeCompare(b));
+}
+
+function applyClothingPreset(name, fromAutocomplete) {
+  const preset = CLOTHING_PRESETS[name];
+  if (!preset) return;
+  if (!fromAutocomplete) pushUndo();
+  if (!STATE.locks.clothingPreset) STATE.prompt.clothingPreset = name;
+  if (!STATE.locks.clothingStyle && preset.clothingStyle) STATE.prompt.clothingStyle = preset.clothingStyle;
+  if (!STATE.locks.clothingTheme && preset.clothingTheme) STATE.prompt.clothingTheme = preset.clothingTheme;
+  const clothingFields = ['onePiece','top','bottom','outerwear','hosiery','footwear'];
+  clothingFields.forEach(f => {
+    if (!STATE.locks[f]) STATE.prompt[f] = preset[f] || '';
+  });
+  if (preset.clothingStyle === 'One-Piece' || preset.clothingStyle === 'Fantasy / Armor') {
+    if (!STATE.locks.top) STATE.prompt.top = '';
+    if (!STATE.locks.bottom) STATE.prompt.bottom = '';
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
+  } else if (preset.clothingStyle === 'Two-Piece') {
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
+  } else if (preset.clothingStyle === 'Layered') {
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
+  }
+
+  updateClothingVis();
+  syncBuilder();
+  updatePromptDisplay();
+  if (!fromAutocomplete) toast('🧥 Clothing preset applied');
+}
+
+// ==========================================
+// THEME APPLICATION
+// ==========================================
+function applyTheme(id) {
+  if (!ensureBuilderModeForEdit('Builder Mode')) return;
+  const theme = THEMES[id];
+  if (!theme) return;
+  pushUndo();
+  STATE.currentTheme = id;
+
+  setIfUnlocked('environment', pick(theme.environments));
+  setIfUnlocked('lighting', pick(theme.lighting));
+  setIfUnlocked('pose', pick(theme.poses));
+  setIfUnlocked('mood', pick(theme.moods));
+  if (!STATE.locks.camera) STATE.prompt.camera = pick(nonEmpty(FIELDS.camera));
+  if (!STATE.locks.shot) STATE.prompt.shot = pick(nonEmpty(FIELDS.shot));
+  if (!STATE.locks.hairColor) STATE.prompt.hairColor = pick(nonEmpty(FIELDS.hairColor));
+  if (!STATE.locks.hairLength) STATE.prompt.hairLength = pick(nonEmpty(FIELDS.hairLength));
+  if (!STATE.locks.hairStyle) STATE.prompt.hairStyle = pick(nonEmpty(FIELDS.hairStyle));
+  if (!STATE.locks.expression) STATE.prompt.expression = pick(nonEmpty(FIELDS.expression));
+  if (!STATE.locks.makeup) STATE.prompt.makeup = pick(nonEmpty(FIELDS.makeup));
+  if (!STATE.locks.skin) STATE.prompt.skin = pick(nonEmpty(FIELDS.skin));
+  if (!STATE.locks.accessories) STATE.prompt.accessories = pick(nonEmpty(FIELDS.accessories));
+  if (!STATE.locks.props) STATE.prompt.props = pick(nonEmpty(FIELDS.props));
+  if (!STATE.locks.occupation) STATE.prompt.occupation = theme.occupations ? pick(theme.occupations) : '';
+
+  if (!STATE.locks.clothingTheme) STATE.prompt.clothingTheme = getThemeClothingTheme(id);
+
+  randomizeClothing(id);
+  if (STATE.autoClothingPresetSync && theme.clothingPresets && theme.clothingPresets.length && !STATE.locks.clothingPreset) {
+    const filtered = theme.clothingPresets.slice();
+    const choicePool = filtered.length ? filtered : theme.clothingPresets;
+    applyClothingPreset(pick(choicePool), true);
+  }
+  applyDefaults();
+  refresh();
+  toast(`✨ ${theme.name} applied!`);
+}
+
+function randomizeTheme(id) { applyTheme(id); updateThemeBar(); }
+function copyThemePrompt(id) { applyTheme(id); updateThemeBar(); clipCopy(generatePromptText()); }
+function favoriteTheme(id) { applyTheme(id); updateThemeBar(); toggleFavorite(); }
+
+// ==========================================
+// RANDOMIZE
+// ==========================================
+function randomizeAll() {
+  if (STATE.promptMode === 'manual' && !setPromptMode('builder')) return;
+  pushUndo();
+  if (STATE.currentTheme && THEMES[STATE.currentTheme]) { applyTheme(STATE.currentTheme); return; }
+  // No theme — full random
+  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+  Object.keys(FIELDS).forEach(f => {
+    if (skip.includes(f) || STATE.locks[f]) return;
+    const opts = nonEmpty(FIELDS[f]);
+    if (opts.length) STATE.prompt[f] = pick(opts);
+  });
+  randomizeClothing(null);
+  applyDefaults();
+  refresh();
+  toast('🎲 Randomized!');
+}
+
+function randomizeChaos() {
+  if (STATE.promptMode === 'manual' && !setPromptMode('builder')) return;
+  pushUndo();
+  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+  Object.keys(FIELDS).forEach(f => {
+    if (skip.includes(f) || STATE.locks[f]) return;
+    const opts = nonEmpty(FIELDS[f]);
+    if (opts.length) STATE.prompt[f] = pick(opts);
+  });
+  randomizeClothing(null);
+  STATE.currentTheme = null;
+  updateThemeBar();
+  applyDefaults();
+  refresh();
+  toast('🌀 Chaos!');
+}
+
+// ==========================================
+// PROMPT MODE
+// ==========================================
+function getManualPromptText() {
+  const el = document.getElementById('prompt-display');
+  const live = el ? (el.innerText || el.textContent || '') : '';
+  return (STATE.manualPrompt || live || '').trim();
+}
+
+function getActivePromptText() {
+  if (STATE.promptMode === 'manual') return getManualPromptText();
+  return generateBuilderPromptText();
+}
+
+function hasManualChanges() {
+  const manual = getManualPromptText();
+  if (!manual) return false;
+  return manual.trim() !== generateBuilderPromptText().trim();
+}
+
+function confirmDiscardManualChanges(targetLabel = 'Builder Mode') {
+  if (STATE.promptMode !== 'manual' || !hasManualChanges()) return true;
+  return window.confirm(`Discard your manual prompt changes and switch to ${targetLabel}?`);
+}
+
+function ensureBuilderModeForEdit(targetLabel = 'Builder Mode') {
+  if (STATE.promptMode !== 'manual') return true;
+  return setPromptMode('builder');
+}
+
+function setPromptMode(mode) {
+  const next = mode === 'manual' ? 'manual' : 'builder';
+  if (STATE.promptMode === next) {
+    syncPromptModeUI();
+    return true;
+  }
+  if (next === 'builder' && !confirmDiscardManualChanges('Builder Mode')) return false;
+  pushUndo();
+  STATE.promptMode = next;
+  try {
+    localStorage.setItem('maternity_prompt_mode', STATE.promptMode);
+    localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || '');
+  } catch (e) {}
+  refresh();
+  toast(next === 'manual' ? 'Manual prompt mode on' : 'Builder mode on');
+  return true;
+}
+
+function syncPromptModeUI() {
+  const builderChip = document.getElementById('mode-builder-chip');
+  const manualChip = document.getElementById('mode-manual-chip');
+  const el = document.getElementById('prompt-display');
+  if (builderChip) builderChip.classList.toggle('active', STATE.promptMode !== 'manual');
+  if (manualChip) manualChip.classList.toggle('active', STATE.promptMode === 'manual');
+  if (el) {
+    el.setAttribute('contenteditable', STATE.promptMode === 'manual' ? 'true' : 'false');
+    el.setAttribute('spellcheck', 'false');
+  }
+}
+
+function handlePromptDisplayInput() {
+  if (STATE.promptMode !== 'manual') return;
+  STATE.manualPrompt = getManualPromptText();
+  try { localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || ''); } catch(e){}
+  updateCharBar();
+  updateAIInput();
+}
+
+function focusPromptDisplay() {
+  const el = document.getElementById('prompt-display');
+  if (!el) return;
+  el.focus();
+  try {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+  } catch (e) {}
+}
+
+async function handleImagePromptFile(evt) {
+  const file = evt.target.files && evt.target.files[0];
+  if (!file) return;
+  pushUndo();
+  try {
+    toast('Analyzing image...');
+    const prompt = await describeImageToPrompt(file);
+    STATE.manualPrompt = prompt;
+    STATE.promptMode = 'manual';
+    STATE.lastImagePromptSource = file.name || 'uploaded image';
+    try {
+      localStorage.setItem('maternity_prompt_mode', STATE.promptMode);
+      localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || '');
+    } catch(e){}
+    refresh();
+    toast('Image converted to prompt');
+  } catch (e) {
+    console.error(e);
+    toast('Image to prompt failed');
+  } finally {
+    evt.target.value = '';
+  }
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function localImagePromptFallback(file) {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const orientation = img.width === img.height ? 'square' : (img.width > img.height ? 'landscape' : 'portrait');
+      URL.revokeObjectURL(url);
+      const base = (file.name || 'uploaded image').replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
+      resolve(`Photorealistic ${orientation} portrait or lifestyle scene inspired by ${base || 'the uploaded image'}, natural composition, realistic lighting, human-focused details, clean background separation, high detail.`);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve('Photorealistic portrait or lifestyle image inspired by the uploaded reference, realistic lighting, natural composition, detailed human features, high detail.');
+    };
+    img.src = url;
+  });
+}
+
+async function describeImageToPrompt(file) {
+  const apiKey = getApiKey();
+  if (!apiKey) return await localImagePromptFallback(file);
+  const dataUrl = await fileToDataURL(file);
+  const body = {
+    model: 'gpt-4.1-mini',
+    input: [{
+      role: 'user',
+      content: [
+        { type: 'input_text', text: 'Turn this image into one polished image-generation prompt. Focus on people, clothing, lighting, composition, background, and photographic style. Keep it under 700 characters. Return only the prompt text with no bullets or commentary.' },
+        { type: 'input_image', image_url: dataUrl, detail: 'low' }
+      ]
+    }]
+  };
+  try {
+    const resp = await fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify(body)
+    });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message || 'OpenAI image description failed');
+    const text = (data.output_text || '').trim();
+    if (text) return text;
+    throw new Error('No description returned');
+  } catch (e) {
+    console.log('Image prompt OpenAI fallback:', e.message || e);
+    return await localImagePromptFallback(file);
+  }
+}
+
+// ==========================================
+// BATCH GENERATE
+// ==========================================
+function batchGenerate() {
+  STATE.batchPrompts = [];
+  const saved = JSON.parse(JSON.stringify(STATE.prompt));
+  for (let i = 0; i < 5; i++) {
+    const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+    Object.keys(FIELDS).forEach(f => {
+      if (skip.includes(f) || STATE.locks[f]) return;
+      const opts = nonEmpty(FIELDS[f]);
+      if (opts.length) STATE.prompt[f] = pick(opts);
+    });
+    randomizeClothing(STATE.currentTheme);
+    applyDefaults();
+    STATE.batchPrompts.push(generatePromptText());
+  }
+  STATE.prompt = saved;
+  renderBatch();
+  openPanel('batch');
+}
+
+function renderBatch() {
+  const el = document.getElementById('batch-list');
+  el.innerHTML = STATE.batchPrompts.map((p,i) =>
+    `<div class="batch-item"><div class="batch-item-head"><span class="batch-num">Prompt ${i+1}</span><button class="theme-mini-btn" onclick="clipCopy(STATE.batchPrompts[${i}])">📋</button></div><div>${escHtml(p)}</div></div>`
+  ).join('');
+}
+
+function copyAllBatch() {
+  clipCopy(STATE.batchPrompts.join('\n\n'));
+}
+
+// ==========================================
+// PROMPT GENERATION
+// ==========================================
+function assembleData(inputPrompt) {
+  const p = inputPrompt || STATE.prompt;
+  const subject = [p.age, p.pregnancy!=='not pregnant'?p.pregnancy:'', p.gender, p.skin, p.occupation].filter(Boolean).join(', ');
+  const hair = [p.hairLength, p.hairStyle, p.hairColor].filter(Boolean);
+  const hairDesc = hair.length ? hair.join(' ') + ' hair' : '';
+  const look = [p.expression, p.makeup].filter(Boolean).join(', ');
+  const onePiece = [p.onePieceColor, p.onePieceFabric, p.onePiece].filter(Boolean).join(' ');
+  const top = [p.topColor, p.topFabric, p.top].filter(Boolean).join(' ');
+  const bottom = [p.bottomColor, p.bottomFabric, p.bottom].filter(Boolean).join(' ');
+  const outerwear = [p.outerwearColor, p.outerwearFabric, p.outerwear].filter(Boolean).join(' ');
+  let baseClothing = '';
+  if (p.clothingStyle === 'One-Piece' || p.clothingStyle === 'Fantasy / Armor') {
+    baseClothing = onePiece;
+  } else if (p.clothingStyle === 'Layered') {
+    baseClothing = [top, bottom].filter(Boolean).join(' and ');
+  } else if (p.clothingStyle === 'Swimwear') {
+    baseClothing = [onePiece, [top, bottom].filter(Boolean).join(' and ')].filter(Boolean).join(' or ');
+  } else {
+    baseClothing = [top, bottom].filter(Boolean).join(' and ');
+  }
+  if (!baseClothing) baseClothing = 'casual dress';
+  const hosiery = [p.hosieryColor, p.hosieryFabric, p.hosiery].filter(Boolean).join(' ');
+  const footwear = [p.footwearColor, p.footwearFabric, p.footwear].filter(Boolean).join(' ');
+  const clothing = [baseClothing, outerwear, hosiery, footwear].filter(Boolean).join(', ');
+  const items = [p.accessories, p.props].filter(Boolean).join(', ');
+  return { subject, hairDesc, look, clothing, items, baseClothing, hosiery, footwear, outerwear, onePiece, top, bottom };
+}
+
+function generateBuilderPromptText() {
+  const p = STATE.prompt;
+  const d = assembleData();
+  const fmt = STATE.settings.promptFormat || 'grouped';
+  let r = '';
+
+  if (fmt === 'standard') {
+    r = `A ${p.shot.toLowerCase()} in ${p.camera} of a ${d.subject}${d.hairDesc?', '+d.hairDesc:''}${d.look?', '+d.look:''} wearing ${d.clothing}${d.items?', '+d.items:''}, ${p.pose} in ${p.environment} lit by ${p.lighting}, rendered in photorealistic style with ${p.mood}.`;
+  } else if (fmt === 'labeled') {
+    const parts = [`Photography Style (${p.camera})`,`Framing (${p.shot})`];
+    if(p.pregnancy!=='not pregnant') parts.push(`Pregnancy (${p.pregnancy})`);
+    parts.push(`Age (${p.age})`,`Gender (${p.gender})`);
+    if(p.skin)parts.push(`Skin (${p.skin})`); if(p.occupation)parts.push(`Occupation (${p.occupation})`);
+    if(p.expression)parts.push(`Expression (${p.expression})`); if(p.makeup)parts.push(`Makeup (${p.makeup})`);
+    if(d.hairDesc)parts.push(`Hair (${d.hairDesc})`);
+    parts.push(`Clothing (${d.clothing})`);
+    if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
+    if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
+    if(d.footwear)parts.push(`Footwear (${d.footwear})`);
+    if(p.accessories)parts.push(`Accessories (${p.accessories})`); if(p.props)parts.push(`Props (${p.props})`);
+    parts.push(`Pose (${p.pose})`,`Location (${p.environment})`,`Lighting (${p.lighting})`,`Mood (${p.mood})`);
+    r = parts.join(', ');
+  } else if (fmt === 'grouped') {
+    const parts = [`Photography Style (${p.camera}, ${p.shot})`];
+    const sg = []; if(p.pregnancy!=='not pregnant')sg.push(p.pregnancy); sg.push(p.age,p.gender); if(p.skin)sg.push(p.skin); if(p.occupation)sg.push(p.occupation);
+    parts.push(`Subject (${sg.filter(Boolean).join(', ')})`);
+    const lg = []; if(d.hairDesc)lg.push(d.hairDesc); if(p.expression)lg.push(p.expression); if(p.makeup)lg.push(p.makeup);
+    if(lg.length)parts.push(`Hair & Look (${lg.join(', ')})`);
+    if(d.baseClothing)parts.push(`Outfit (${d.baseClothing})`);
+    if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
+    if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
+    if(d.footwear)parts.push(`Footwear (${d.footwear})`);
+    const ig = []; if(p.accessories)ig.push(p.accessories); if(p.props)ig.push(p.props);
+    if(ig.length)parts.push(`Items (${ig.join(', ')})`);
+    parts.push(`Scene (${[p.pose,p.environment,p.lighting].filter(Boolean).join(', ')})`);
+    parts.push(`Mood (${p.mood})`);
+    r = parts.join(', ');
+  } else if (fmt === 'tags') {
+    const tags = [p.camera,p.shot]; if(p.pregnancy!=='not pregnant')tags.push(p.pregnancy);
+    tags.push(p.age,p.gender); if(p.skin)tags.push(p.skin); if(p.occupation)tags.push(p.occupation);
+    if(p.expression)tags.push(p.expression); if(p.makeup)tags.push(p.makeup);
+    if(d.hairDesc)tags.push(d.hairDesc);
+    if(d.baseClothing)tags.push('wearing '+d.baseClothing);
+    if(d.outerwear)tags.push(d.outerwear);
+    if(d.hosiery)tags.push(d.hosiery);
+    if(d.footwear)tags.push(d.footwear);
+    if(p.accessories)tags.push(p.accessories); if(p.props)tags.push(p.props);
+    tags.push(p.pose,p.environment,p.lighting,p.mood);
+    r = tags.filter(Boolean).join(', ');
+  }
+
+  if (!r) r = `Photography Style (${p.camera}, ${p.shot}), Subject (${p.age}, ${p.gender}), Mood (${p.mood})`;
+  if (STATE.styleMode && STATE.styleMode !== 'Default') {
+    const sd = STYLE_MODES[STATE.styleMode];
+    if (sd) r = r.endsWith('.') ? r.slice(0,-1)+', '+sd+' style.' : r+', '+sd+' style';
+  }
+  return r;
+}
+
+function generatePromptText() {
+  return getActivePromptText();
+}
+
+// ==========================================
+// DISPLAY
+// ==========================================
+function updatePromptDisplay() {
+  const el = document.getElementById('prompt-display');
+  if (!el) return;
+  syncPromptModeUI();
+
+  const activeText = getActivePromptText() || '';
+  const fmt = (STATE.settings && STATE.settings.promptFormat) || 'grouped';
+
+  if (STATE.promptMode === 'manual') {
+    el.textContent = STATE.manualPrompt || '';
+  } else if (fmt === 'grouped') {
+    const p = STATE.prompt;
+    const d = assembleData();
+    el.innerHTML = [
+      `<span class="prompt-tag tag-camera">📸</span> ${esc(p.camera)}, ${esc(p.shot)}`,
+      `<span class="prompt-tag tag-subject">👤</span> ${esc(d.subject)}`,
+      d.hairDesc ? `<span class="prompt-tag tag-hair">💇</span> ${esc(d.hairDesc)}` : '',
+      `<span class="prompt-tag tag-outfit">${STATE.prompt.clothingStyle==='Two-Piece'?'👚':'👗'}</span> ${esc(d.baseClothing || d.clothing)}`,
+      d.outerwear ? `<span class="prompt-tag tag-items">🧥</span> ${esc(d.outerwear)}` : '',
+      d.hosiery ? `<span class="prompt-tag tag-items">🧦</span> ${esc(d.hosiery)}` : '',
+      d.footwear ? `<span class="prompt-tag tag-items">👠</span> ${esc(d.footwear)}` : '',
+      d.items ? `<span class="prompt-tag tag-items">🎁</span> ${esc(d.items)}` : '',
+      `<span class="prompt-tag tag-scene">🌅</span> ${esc(p.pose)}, ${esc(p.environment)}, ${esc(p.lighting)}`,
+      `<span class="prompt-tag tag-mood">✨</span> ${esc(p.mood)}`
+    ].filter(Boolean).join('<br>');
+  } else {
+    el.textContent = activeText;
+  }
+
+  updateCharBar();
+  updateAIInput();
+  saveHistory(activeText);
+}
+
+function esc(s) { return String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escHtml(s) { return esc(s); }
+
+// ==========================================
+// PANELS
+// ==========================================
+function openPanel(name) {
+  closeAllPanels();
+  const overlay = document.getElementById('panel-overlay');
+  overlay.classList.add('show');
+  // Batch panel = full screen, hide everything behind
+  if (name === 'batch') overlay.style.background = 'rgba(0,0,0,1)';
+  else overlay.style.background = '';
+  document.getElementById('panel-' + name).classList.add('show');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const navMap = { builder:'nav-builder', ai:'nav-ai', favorites:'nav-fav', settings:'nav-settings', batch:'nav-home' };
+  const nb = document.getElementById(navMap[name]); if(nb) nb.classList.add('active');
+  if (name === 'builder') { buildBuilder(); syncBuilder(); }
+  if (name === 'ai') updateAIInput();
+  if (name === 'favorites') renderFavorites();
+  if (name === 'settings') loadSettingsToPanel();
+}
+
+function closeAllPanels() {
+  const overlay = document.getElementById('panel-overlay');
+  overlay.classList.remove('show');
+  overlay.style.background = '';
+  document.querySelectorAll('.slide-panel').forEach(p => p.classList.remove('show'));
+}
+
+function showMain() {
+  closeAllPanels();
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-home').classList.add('active');
+}
+
+// ==========================================
+// BUILDER
+// ==========================================
+function buildBuilder() {
+  const body = document.getElementById('builder-body');
+  let h = '';
+  const sections = [
+    { title:'📸 Camera', fields:['camera','shot'] },
+    { title:'👤 Subject', fields:['gender','pregnancy','age','skin','occupation'], lockedFields:['gender','pregnancy','age'] },
+    { title:'💇 Hair & Look', fields:['hairColor','hairLength','hairStyle','expression','makeup'] },
+    { title:'👗 Clothing', fields:['clothingTheme','clothingStyle'] },
+    { title:'🎁 Accessories', fields:['accessories','props'] },
+    { title:'🌅 Scene', fields:['environment','lighting','pose','mood'] }
+  ];
+  sections.forEach(sec => {
+    h += `<div class="field-section-title">${sec.title}</div>`;
+    sec.fields.forEach(f => {
+      const hardLocked = sec.lockedFields?.includes(f);
+      h += buildFieldHTML(f, hardLocked);
+    });
+    if (sec.title.includes('Clothing')) {
+      h += `<div class="field-row"><div class="field-label"><span class="field-label-text">Clothing Preset</span><button class="lock-btn ${STATE.locks.clothingPreset?'locked':'unlocked'}" onclick="toggleLock('clothingPreset')">${STATE.locks.clothingPreset?'🔒':'🔓'}</button></div><div class="ac-wrap"><input class="field-input${STATE.locks.clothingPreset?' locked-input':''}" id="fi-clothingPreset" value="${(STATE.prompt.clothingPreset||'').replace(/"/g,'&quot;')}" ${STATE.locks.clothingPreset?'disabled':''} oninput="updateField('clothingPreset',this.value);showAC('clothingPreset',this.value)" onfocus="showAC('clothingPreset',this.value)" onblur="setTimeout(()=>hideAC('clothingPreset'),150)" onkeydown="acKey('clothingPreset',event)" autocomplete="off" placeholder="Choose a preset..."><div class="ac-list" id="ac-clothingPreset"></div></div></div>`;
+      h += `<div class="setting-row" style="margin-top:6px;"><label class="setting-label">Sync preset with theme</label><label class="switch"><input type="checkbox" ${STATE.autoClothingPresetSync?'checked':''} onchange="setAutoClothingPresetSync(this.checked)"><span class="slider"></span></label></div>`;
+      h += `<div class="field-hint" style="margin-top:4px;opacity:.8;">Presets are filtered automatically by your clothing theme and style.</div>`;
+      h += `<div style="display:flex;gap:8px;margin:8px 0 10px 0;"><button class="act-btn" style="flex:1;" onclick="applyCurrentClothingPreset()">🧥 Apply Preset</button><button class="act-btn" style="flex:1;" onclick="toggleClothingDetails()">${STATE.showClothingDetails?'🔼 Hide Details':'✍️ Edit Details'}</button></div>`;
+      h += `<div class="field-section-title" style="display:${STATE.showClothingDetails?'block':'none'};">🧥 Base Outfit</div>`;
+      h += `<div class="clothing-section${STATE.showClothingDetails?' visible':''}" id="sec-onePiece">${['onePieceColor','onePieceFabric','onePiece'].map(f=>buildFieldHTML(f)).join('')}</div>`;
+      h += `<div class="clothing-section${STATE.showClothingDetails?' visible':''}" id="sec-twoPiece">${['topColor','topFabric','top','bottomColor','bottomFabric','bottom'].map(f=>buildFieldHTML(f)).join('')}</div>`;
+      h += `<div class="field-section-title" style="display:${STATE.showClothingDetails?'block':'none'};">🧥 Outerwear Layer</div><div class="clothing-section${STATE.showClothingDetails?' visible':''}" id="sec-outerwear">${['outerwearColor','outerwearFabric','outerwear'].map(f=>buildFieldHTML(f)).join('')}</div>`;
+      h += `<div class="field-section-title" style="display:${STATE.showClothingDetails?'block':'none'};">🧦 Hosiery</div><div class="clothing-section${STATE.showClothingDetails?' visible':''}" id="sec-hosiery">${['hosieryColor','hosieryFabric','hosiery'].map(f=>buildFieldHTML(f)).join('')}</div>`;
+      h += `<div class="field-section-title" style="display:${STATE.showClothingDetails?'block':'none'};">👠 Footwear</div><div class="clothing-section${STATE.showClothingDetails?' visible':''}" id="sec-footwear">${['footwearColor','footwearFabric','footwear'].map(f=>buildFieldHTML(f)).join('')}</div>`;
+    }
+  });
+  body.innerHTML = h;
+  updateClothingVis();
+}
+
+function buildFieldHTML(field, hardLocked) {
+  const label = field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g,' $1');
+  const isLocked = !!STATE.locks[field];
+  const val = (STATE.prompt[field]||'').replace(/"/g,'&quot;');
+
+  if (field === 'clothingStyle') {
+    const styles = ['One-Piece','Two-Piece','Layered','Swimwear','Fantasy / Armor'];
+    return `<div class="field-row"><div class="field-label"><span class="field-label-text">${label}</span>
+      <button class="lock-btn ${isLocked?'locked':'unlocked'}" onclick="toggleLock('${field}')">${isLocked?'🔒':'🔓'}</button>
+    </div><div class="clothing-toggle">
+      ${styles.map(style => `<button class="clothing-opt${STATE.prompt.clothingStyle === style ? ' active' : ''}" onclick='setClothingStyle(${JSON.stringify(style)})'>${style === 'One-Piece' ? '👗' : style === 'Two-Piece' ? '👚' : style === 'Layered' ? '🧥' : style === 'Swimwear' ? '🏖️' : '🛡️'} ${style}</button>`).join('')}
+    </div></div>`;
+  }
+
+  const dis = hardLocked || isLocked;
+  return `<div class="field-row"><div class="field-label">
+    <span class="field-label-text">${label}${hardLocked?' 🔐':''}${isLocked&&!hardLocked?'<span class="locked-badge">LOCKED</span>':''}</span>
+    ${!hardLocked?`<button class="lock-btn ${isLocked?'locked':'unlocked'}" onclick="toggleLock('${field}')">${isLocked?'🔒':'🔓'}</button>`:''}
+  </div><div class="ac-wrap">
+    <input class="field-input${isLocked&&!hardLocked?' locked-input':''}" id="fi-${field}" value="${val}" ${dis?'disabled':''}
+      oninput="updateField('${field}',this.value);showAC('${field}',this.value)"
+      onfocus="showAC('${field}',this.value)" onblur="setTimeout(()=>hideAC('${field}'),150)"
+      onkeydown="acKey('${field}',event)" autocomplete="off" placeholder="Type or search...">
+    <div class="ac-list" id="ac-${field}"></div>
+  </div><div class="chip-row" id="chips-${field}"></div></div>`;
+}
+
+function syncBuilder() {
+  Object.keys(FIELDS).forEach(f => {
+    const el = document.getElementById('fi-'+f);
+    if (el) el.value = STATE.prompt[f]||'';
+  });
+  updateClothingVis();
+  renderAllChips();
+}
+
+function updateClothingVis() {
+  const op = document.getElementById('sec-onePiece');
+  const tp = document.getElementById('sec-twoPiece');
+  const ow = document.getElementById('sec-outerwear');
+  const hs = document.getElementById('sec-hosiery');
+  const fw = document.getElementById('sec-footwear');
+  if (!op || !tp) return;
+  if (!STATE.showClothingDetails) {
+    [op,tp,ow,hs,fw].filter(Boolean).forEach(el => el.classList.remove('visible'));
+    return;
+  }
+  const style = STATE.prompt.clothingStyle || 'One-Piece';
+  const showOnePiece = ['Fantasy / Armor','One-Piece','Swimwear'].includes(style);
+  const showTwoPiece = ['Layered','Swimwear','Two-Piece'].includes(style);
+  const showOuterwear = style === 'Layered';
+  op.classList.toggle('visible', showOnePiece);
+  tp.classList.toggle('visible', showTwoPiece);
+  if (ow) ow.classList.toggle('visible', showOuterwear);
+  if (hs) hs.classList.add('visible');
+  if (fw) fw.classList.add('visible');
+}
+
+function setClothingStyle(s) {
+  if (STATE.locks.clothingStyle) return;
+  if (!ensureBuilderModeForEdit('Builder Mode')) return;
+  pushUndo();
+  STATE.prompt.clothingStyle = s;
+  buildBuilder(); syncBuilder(); updatePromptDisplay();
+}
+
+function toggleClothingDetails() {
+  STATE.showClothingDetails = !STATE.showClothingDetails;
+  buildBuilder();
+  syncBuilder();
+}
+
+function setAutoClothingPresetSync(val) {
+  STATE.autoClothingPresetSync = !!val;
+  try { localStorage.setItem('maternity_auto_clothing_preset_sync', STATE.autoClothingPresetSync ? '1' : '0'); } catch(e){}
+  toast(STATE.autoClothingPresetSync ? '🔗 Theme clothing sync on' : '✂️ Theme clothing sync off');
+}
+
+function applyCurrentClothingPreset() {
+  const name = (STATE.prompt.clothingPreset || '').trim();
+  if (!name) { toast('Choose a clothing preset first'); return; }
+  if (!CLOTHING_PRESETS[name]) { toast('Preset not found'); return; }
+  applyClothingPreset(name, false);
+}
+
+function updateField(f, v) {
+  if (STATE.locks[f]) return;
+  if (!ensureBuilderModeForEdit('Builder Mode')) {
+    const el = document.getElementById('fi-'+f);
+    if (el) el.value = STATE.prompt[f] || '';
+    return;
+  }
+  STATE.prompt[f] = v;
+  if (f === 'clothingTheme') {
+    if (!STATE.locks.clothingPreset) {
+      STATE.prompt.clothingPreset = '';
+      const presetEl = document.getElementById('fi-clothingPreset');
+      if (presetEl) presetEl.value = '';
+    }
+    updatePromptDisplay();
+    return;
+  }
+
+  if (f === 'clothingPreset') {
+    updatePromptDisplay();
+    return;
+  }
+  if (['onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric','hosiery','hosieryColor','hosieryFabric','footwear','footwearColor','footwearFabric'].includes(f) && !STATE.locks.clothingPreset) {
+    STATE.prompt.clothingPreset = '';
+    const presetEl = document.getElementById('fi-clothingPreset');
+    if (presetEl) presetEl.value = '';
+  }
+  updatePromptDisplay();
+}
+
+function toggleLock(f) {
+  STATE.locks[f] = !STATE.locks[f];
+  try { localStorage.setItem('maternity_locks', JSON.stringify(STATE.locks)); } catch(e){}
+  buildBuilder(); syncBuilder();
+  toast(STATE.locks[f] ? `🔒 ${f} locked` : `🔓 ${f} unlocked`);
+}
+
+// ==========================================
+// AUTOCOMPLETE
+// ==========================================
+function showAC(field, q) {
+  const list = document.getElementById('ac-'+field);
+  if (!list || STATE.locks[field]) { hideAC(field); return; }
+  q = (q||'').toLowerCase().trim();
+  const raw = field === 'clothingPreset' ? getAvailableClothingPresets() : nonEmpty(FIELDS[field]||[]);
+  let results;
+  if (!q) { results = raw.slice(0,12); }
+  else {
+    results = raw.filter(v => v.toLowerCase().includes(q))
+      .sort((a,b) => {
+        const al = a.toLowerCase(), bl = b.toLowerCase();
+        if (al.startsWith(q) && !bl.startsWith(q)) return -1;
+        if (!al.startsWith(q) && bl.startsWith(q)) return 1;
+        return al.localeCompare(bl);
+      }).slice(0,12);
+  }
+  if (!results.length) { list.classList.remove('show'); return; }
+  list.innerHTML = results.map((v,i) => {
+    const hl = q ? v.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<span class="ac-match">$1</span>') : v;
+    return `<div class="ac-item" data-val="${esc(v)}" data-i="${i}" onmousedown="event.preventDefault();pickAC('${field}','${v.replace(/'/g,"\\'")}')">${hl}</div>`;
+  }).join('');
+  list.classList.add('show');
+}
+
+function hideAC(f) { const l=document.getElementById('ac-'+f); if(l)l.classList.remove('show'); }
+
+function pickAC(f, v) {
+  if (STATE.locks[f]) return;
+  if (!ensureBuilderModeForEdit('Builder Mode')) {
+    hideAC(f);
+    const el = document.getElementById('fi-'+f);
+    if (el) el.value = STATE.prompt[f] || '';
+    return;
+  }
+  STATE.prompt[f] = v;
+  const el = document.getElementById('fi-'+f);
+  if (el) el.value = v;
+  hideAC(f);
+  recordUsage(f, v);
+  renderChips(f);
+  if (f === 'clothingPreset') {
+    applyClothingPreset(v, true);
+    syncBuilder();
+  }
+  updatePromptDisplay();
+}
+
+function acKey(f, e) {
+  const list = document.getElementById('ac-'+f);
+  if (!list || !list.classList.contains('show')) return;
+  const items = list.querySelectorAll('.ac-item');
+  let idx = -1; items.forEach((it,i) => { if(it.classList.contains('active'))idx=i; });
+  if (e.key==='ArrowDown') { e.preventDefault(); idx=idx<items.length-1?idx+1:0; }
+  else if (e.key==='ArrowUp') { e.preventDefault(); idx=idx>0?idx-1:items.length-1; }
+  else if (e.key==='Enter' && idx>=0) { e.preventDefault(); pickAC(f,items[idx].dataset.val); return; }
+  else if (e.key==='Escape') { hideAC(f); return; }
+  else return;
+  items.forEach(it=>it.classList.remove('active'));
+  if (items[idx]) items[idx].classList.add('active');
+}
+
+// ==========================================
+// FIELD CHIPS (frequent values)
+// ==========================================
+function recordUsage(f,v) {
+  if(!v)return;
+  try {
+    const s = JSON.parse(localStorage.getItem('maternity_usage')||'{}');
+    if(!s[f])s[f]={};
+    s[f][v] = (s[f][v]||0)+1;
+    localStorage.setItem('maternity_usage',JSON.stringify(s));
+  } catch(e){}
+}
+
+function getFrequent(f) {
+  try {
+    const s = JSON.parse(localStorage.getItem('maternity_usage')||'{}');
+    return Object.entries(s[f]||{}).sort((a,b)=>b[1]-a[1]).slice(0,4).map(e=>e[0]);
+  } catch(e) { return []; }
+}
+
+function renderChips(f) {
+  const wrap = document.getElementById('chips-'+f);
+  if (!wrap) return;
+  const freq = getFrequent(f);
+  wrap.innerHTML = freq.map(v =>
+    `<button class="chip" onclick="pickAC('${f}','${v.replace(/'/g,"\\'")}')">${esc(v)}</button>`
+  ).join('');
+}
+
+function renderAllChips() {
+  Object.keys(FIELDS).forEach(renderChips);
+}
+
+// ==========================================
+// SETTINGS & VALIDATION
+// ==========================================
+function validateSettings() {
+  const g = document.getElementById('pref-gender').value;
+  const p = document.getElementById('pref-pregnancy').value;
+  if (g==='male' && p!=='not pregnant') { document.getElementById('pref-pregnancy').value='not pregnant'; toast('Males cannot be pregnant'); }
+  if ((p==='pregnant'||p==='heavily pregnant') && g!=='female') { document.getElementById('pref-gender').value='female'; toast('Pregnancy requires female'); }
+}
+
+function saveSettings() {
+  const g = document.getElementById('pref-gender').value;
+  const p = document.getElementById('pref-pregnancy').value;
+  const a = document.getElementById('pref-age').value;
+  const f = document.getElementById('pref-format').value;
+  const k = document.getElementById('pref-api-key').value.trim();
+
+  const nextSettings = {
+    defaultGender: g || STATE.settings.defaultGender || '',
+    defaultPregnancy: p || STATE.settings.defaultPregnancy || '',
+    defaultAge: a || STATE.settings.defaultAge || '',
+    promptFormat: f || STATE.settings.promptFormat || 'grouped'
+  };
+
+  if (nextSettings.defaultGender === 'male' && (nextSettings.defaultPregnancy === 'pregnant' || nextSettings.defaultPregnancy === 'heavily pregnant')) {
+    nextSettings.defaultPregnancy = 'not pregnant';
+    toast('Pregnancy default reset for male setting');
+  }
+
+  STATE.settings = nextSettings;
+  try {
+    localStorage.setItem('maternity_settings', JSON.stringify(STATE.settings));
+    localStorage.setItem('maternity_preview_engine', CURRENT_IMAGE_ENGINE);
+    localStorage.setItem('maternity_preview_size', CURRENT_PREVIEW_SIZE);
+    if (k) localStorage.setItem('maternity_api_key', k);
+  } catch(e){}
+  applyDefaults();
+  refresh();
+  closeAllPanels();
+  toast('✅ Settings saved!');
+}
+
+function loadSettingsToPanel() {
+  document.getElementById('pref-gender').value = STATE.settings.defaultGender||'';
+  document.getElementById('pref-pregnancy').value = STATE.settings.defaultPregnancy||'';
+  document.getElementById('pref-age').value = STATE.settings.defaultAge||'';
+  document.getElementById('pref-format').value = STATE.settings.promptFormat||'grouped';
+  document.getElementById('pref-api-key').value = getApiKey();
+  buildAppThemeRow();
+  // Show custom color controls if custom theme
+  const customWrap = document.getElementById('custom-color-wrap');
+  if (customWrap) {
+    const current = getAppThemeName();
+    customWrap.style.display = current === 'custom' ? 'block' : 'none';
+    if (current === 'custom') {
+      const saved = getSavedCustomTheme();
+      if (saved.accent) {
+        document.getElementById('custom-accent-picker').value = saved.accent;
+        document.getElementById('custom-accent-hex').textContent = saved.accent;
+      }
+      if (saved.bg) {
+        document.getElementById('custom-bg-picker').value = saved.bg;
+        document.getElementById('custom-bg-hex').textContent = saved.bg;
+      }
+    }
+  }
+}
+
+function applyDefaults() {
+  STATE.settings = Object.assign({
+    defaultGender: '',
+    defaultPregnancy: '',
+    defaultAge: '',
+    promptFormat: 'grouped'
+  }, STATE.settings || {});
+
+  const defaults = {
+    camera: 'professional portrait photography',
+    shot: 'full body portrait',
+    gender: 'female',
+    pregnancy: 'heavily pregnant',
+    age: 'mid twenties',
+    hairColor: 'brown',
+    hairLength: 'long',
+    hairStyle: 'flowing',
+    skin: 'fair skin',
+    occupation: '',
+    expression: 'soft smile',
+    makeup: 'natural makeup',
+    clothingTheme: 'Studio',
+    clothingStyle: 'One-Piece',
+    onePiece: 'sundress',
+    onePieceColor: '',
+    onePieceFabric: '',
+    top: '',
+    topColor: '',
+    topFabric: '',
+    bottom: '',
+    bottomColor: '',
+    bottomFabric: '',
+    outerwear: '',
+    outerwearColor: '',
+    outerwearFabric: '',
+    accessories: '',
+    props: '',
+    environment: 'park',
+    lighting: 'golden hour sunset',
+    pose: 'standing confidently',
+    hosiery: '',
+    hosieryColor: '',
+    hosieryFabric: '',
+    footwear: '',
+    footwearColor: '',
+    footwearFabric: '',
+    mood: 'joyful happy mood'
+  };
+
+  STATE.prompt = Object.assign({}, defaults, STATE.prompt || {});
+  if (STATE.settings.defaultGender) STATE.prompt.gender = STATE.settings.defaultGender;
+  if (STATE.settings.defaultPregnancy) STATE.prompt.pregnancy = STATE.settings.defaultPregnancy;
+  if (STATE.settings.defaultAge) STATE.prompt.age = STATE.settings.defaultAge;
+  if (STATE.prompt.gender === 'male') STATE.prompt.pregnancy = 'not pregnant';
+  const underage = ['baby','toddler','young child','child','preteen','early teenager','mid teenager'];
+  if (underage.includes(STATE.prompt.age)) STATE.prompt.pregnancy = 'not pregnant';
+}
+
+// ==========================================
+// HISTORY
+// ==========================================
+function saveHistory(text) {
+  if (!text) return;
+  if (STATE.history.length && STATE.history[0].prompt===text) return;
+  STATE.history.unshift({ prompt:text, timestamp:new Date().toLocaleString() });
+  if (STATE.history.length>20) STATE.history.length=20;
+  try { localStorage.setItem('maternity_history',JSON.stringify(STATE.history)); } catch(e){}
+  updateHistoryDropdown();
+}
+
+function updateHistoryDropdown() {
+  const dd = document.getElementById('history-dropdown');
+  dd.innerHTML = '<option value="">📜 Recent History</option>';
+  STATE.history.forEach((e,i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = e.timestamp + ' — ' + (e.prompt.length>50?e.prompt.slice(0,50)+'…':e.prompt);
+    dd.appendChild(o);
+  });
+}
+
+function loadFromHistory(idx) {
+  if (idx===''||idx===null) return;
+  const entry = STATE.history[parseInt(idx)];
+  if (!entry) return;
+  STATE.manualPrompt = entry.prompt;
+  STATE.promptMode = 'manual';
+  try { localStorage.setItem('maternity_prompt_mode', STATE.promptMode); localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || ''); } catch(e){}
+  refresh();
+  toast('📜 Loaded from history');
+}
+
+// ==========================================
+// FAVORITES
+// ==========================================
+function toggleFavorite() {
+  const prompt = generatePromptText();
+  const idx = STATE.favorites.findIndex(f=>f.prompt===prompt);
+  if (idx!==-1) { STATE.favorites.splice(idx,1); toast('💔 Removed'); }
+  else { STATE.favorites.unshift({ id:Date.now(), prompt, timestamp:new Date().toLocaleString() }); toast('⭐ Saved!'); }
+  try { localStorage.setItem('maternity_favorites',JSON.stringify(STATE.favorites)); } catch(e){}
+}
+
+function renderFavorites() {
+  const el = document.getElementById('favorites-list');
+  if (!STATE.favorites.length) { el.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:30px;font-size:13px;">No favorites yet</div>'; return; }
+  el.innerHTML = STATE.favorites.map(f => {
+    const preview = f.prompt.length>80?f.prompt.slice(0,80)+'…':f.prompt;
+    return `<div class="fav-item"><div class="fav-preview">${escHtml(preview)}</div><div class="fav-time">${f.timestamp}</div><div class="fav-actions"><button class="act-btn" onclick="clipCopy(STATE.favorites.find(x=>x.id===${f.id}).prompt)">📋</button><button class="act-btn" onclick="deleteFav(${f.id})">🗑️</button></div></div>`;
+  }).join('');
+}
+
+function deleteFav(id) {
+  STATE.favorites = STATE.favorites.filter(f=>f.id!==id);
+  try { localStorage.setItem('maternity_favorites',JSON.stringify(STATE.favorites)); } catch(e){}
+  renderFavorites();
+  toast('🗑️ Deleted');
+}
+
+function exportFavorites() {
+  if (!STATE.favorites.length) { toast('❌ No favorites'); return; }
+  const blob = new Blob([JSON.stringify(STATE.favorites,null,2)],{type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=`maternity-favs-${new Date().toISOString().split('T')[0]}.json`;
+  a.click(); URL.revokeObjectURL(url);
+  toast('📤 Exported!');
+}
+
+function importFavorites(evt) {
+  const file = evt.target.files[0]; if(!file)return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) { toast('❌ Invalid file'); return; }
+      const existing = new Set(STATE.favorites.map(f=>f.prompt));
+      let added = 0;
+      imported.forEach(f => { if(!existing.has(f.prompt)){STATE.favorites.push(f);added++;} });
+      try { localStorage.setItem('maternity_favorites',JSON.stringify(STATE.favorites)); } catch(e){}
+      renderFavorites();
+      toast(`📥 Imported ${added}`);
+    } catch(e) { toast('❌ Error'); }
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+
+// ==========================================
+// COPY PROMPT
+// ==========================================
+function copyPrompt() {
+  const text = generatePromptText();
+  const neg = document.getElementById('negative-prompt').value;
+  clipCopy(neg ? text+'\n\nNegative: '+neg : text);
+}
+
+// ==========================================
+// AI ASSISTANT
+// ==========================================
+function updateAIInput() {
+  const el = document.getElementById('ai-prompt-input');
+  if (el) el.value = generatePromptText();
+}
+
+async function aiAction(action) {
+  const prompt = getActivePromptText();
+  if (!prompt) { toast('❌ Generate or enter a prompt first'); return; }
+  const fmt = STATE.settings.promptFormat || 'grouped';
+  let request = '';
+  switch(action) {
+    case 'shorten': request=`Shorten to under 900 chars. Keep ${fmt} format. Return ONLY the prompt:`; break;
+    case 'detail': request=`Add vivid details. Keep ${fmt} format. Return ONLY the prompt:`; break;
+    case 'style': request=`Create 3 style variations. Keep ${fmt} format. Return ONLY numbered prompts:`; break;
+    case 'variations': request=`Create 3 creative variations. Keep ${fmt} format. Return ONLY numbered prompts:`; break;
+    case 'custom': {
+      request = document.getElementById('custom-ai-request').value.trim();
+      if (!request) { toast('❌ Enter a request'); return; }
+      request += ` Keep ${fmt} format. Return ONLY the prompt.`;
+      break;
+    }
+  }
+  const responseArea = document.getElementById('ai-response');
+  if (responseArea) responseArea.innerHTML = '<div class="ai-card"><div class="ai-card-num">Working</div><div class="ai-card-text expanded">AI is thinking...</div></div>';
+  openPanel('ai');
+  const apiKey = getApiKey();
+  try {
+    let text = '';
+    if (apiKey) {
+      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer '+apiKey},
+        body:JSON.stringify({
+          model:'gpt-4o-mini',
+          messages:[
+            {role:'system',content:'You are an AI image prompt assistant. Never remove pregnancy, skin, hair, camera, clothing, or mood details unless explicitly asked. Match the user prompt structure. For multiple outputs, return numbered prompts only with no commentary.'},
+            {role:'user',content:request+'\n\nOriginal:\n'+prompt}
+          ],
+          temperature:0.7
+        })
+      });
+      const data = await resp.json();
+      if (!resp.ok || data.error) throw new Error((data.error && data.error.message) || 'OpenAI request failed');
+      text = (((data.choices||[])[0]||{}).message||{}).content || '';
+    } else {
+      const system = encodeURIComponent('You are a professional stable diffusion prompt engineer. Return only the prompt text.');
+      const q = encodeURIComponent(request+'\n\nOriginal:\n'+prompt);
+      const resp = await fetch(`https://text.pollinations.ai/${q}?system=${system}&seed=${Math.floor(Math.random()*99999)}`);
+      text = await resp.text();
+    }
+    text = (text || '').trim();
+    if (!text) throw new Error('No AI text returned');
+    renderAICards(text);
+    toast('✅ AI ready!');
+  } catch(e) {
+    console.error(e);
+    if (responseArea) responseArea.innerHTML = '<div class="ai-card"><div class="ai-card-num">Error</div><div class="ai-card-text expanded">Connection failed.</div></div>';
+    toast('❌ '+e.message);
+  }
+}
+
+function parseAIPrompts(text) {
+  const cleaned = text.trim();
+  const blocks = cleaned.match(/(?:^|\n)(?:\*\*)?(\d+)[\.\)]\s*(?:\*\*)?[\s\S]*?(?=(?:\n(?:\*\*)?(?:\d+)[\.\)])|$)/g);
+  if (blocks && blocks.length > 1) {
+    return blocks.map(b => b.replace(/\*\*/g,'').replace(/^\s*\d+[\.\)]\s*/,'').trim()).filter(Boolean);
+  }
+  const paras = cleaned.split(/\n{2,}/).map(p=>p.replace(/\*\*/g,'').replace(/^\s*\d+[\.\)]\s*/,'').trim()).filter(p=>p.length>50);
+  return paras.length > 1 ? paras : [cleaned.replace(/\*\*/g,'').replace(/^\s*\d+[\.\)]\s*/,'').trim()];
+}
+
+function renderAICards(text) {
+  const prompts = parseAIPrompts(text);
+  STATE.aiPrompts = prompts;
+  const el = document.getElementById('ai-response');
+  el.innerHTML = prompts.map((p,i) => {
+    const safe = escHtml(p);
+    const isTruncated = p.length > 200;
+    return `<div class="ai-card">
+      <div class="ai-card-head"><span class="ai-card-num">Prompt ${i+1}</span></div>
+      <div class="ai-card-text${isTruncated?' truncated':''}" id="ait-${i}">${safe}</div>
+      ${isTruncated?`<button class="ai-expand-btn" onclick="toggleAIExpand(${i})">Show more</button>`:''}
+      <div class="ai-card-actions">
+        <button class="act-btn" onclick="clipCopy(STATE.aiPrompts[${i}])">📋</button>
+        <button class="act-btn" onclick="saveAIFav(${i})">⭐</button>
+        <button class="act-btn" onclick="insertAI(${i})">✨ Use</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAIExpand(i) {
+  const el = document.getElementById('ait-'+i);
+  if (!el) return;
+  el.classList.toggle('expanded');
+  el.classList.toggle('truncated');
+  const btn = el.nextElementSibling;
+  if (btn) btn.textContent = el.classList.contains('expanded') ? 'Show less' : 'Show more';
+}
+
+function saveAIFav(i) {
+  const p = STATE.aiPrompts[i]; if(!p)return;
+  STATE.favorites.unshift({id:Date.now()+i, prompt:p, timestamp:new Date().toLocaleString()});
+  try { localStorage.setItem('maternity_favorites',JSON.stringify(STATE.favorites)); } catch(e){}
+  toast('⭐ Saved!');
+}
+
+function insertAI(i) {
+  const p = STATE.aiPrompts[i]; if(!p)return;
+  STATE.manualPrompt = p;
+  STATE.promptMode = 'manual';
+  try { localStorage.setItem('maternity_prompt_mode', STATE.promptMode); localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || ''); } catch(e){}
+  refresh();
+  saveHistory(p);
+  toast('✨ Inserted!');
+}
+
+function copyAllAI() {
+  if(!STATE.aiPrompts.length){toast('❌ No AI prompts');return;}
+  clipCopy(STATE.aiPrompts.join('\n\n'));
+}
+
+// ==========================================
+// REFRESH ALL
+// ==========================================
+function refresh() {
+  updatePromptDisplay();
+  updateCharBar();
+  updateAIInput();
+  syncPromptModeUI();
+  if (document.getElementById('panel-builder') && document.getElementById('panel-builder').classList.contains('show')) {
+    try { buildBuilder(); } catch(e) {}
+    try { syncBuilder(); } catch(e) {}
+  }
+}
+
+// ==========================================
+// IMAGE PREVIEW - MULTI-ENGINE (FIXED)
+// ==========================================
+
+let previewTimeout = null;
+let previewTimerInterval = null;
+
+const PREVIEW_TIMEOUT = 45000; // 45 seconds
+
+let CURRENT_IMAGE_ENGINE = 'auto';
+let CURRENT_PREVIEW_SIZE = 'square';
+
+const PREVIEW_SIZES = {
+  square: { width: 1024, height: 1024, openai: '1024x1024', label: '1:1 Square' },
+  portrait: { width: 1024, height: 1536, openai: '1024x1536', label: '2:3 Portrait' },
+  landscape: { width: 1536, height: 1024, openai: '1536x1024', label: '3:2 Landscape' }
+};
+
+function setImageEngine(engine) {
+  CURRENT_IMAGE_ENGINE = engine;
+  try { localStorage.setItem('maternity_preview_engine', engine); } catch(e){}
+  toast('Engine: ' + engine);
+}
+
+function setPreviewSize(size) {
+  CURRENT_PREVIEW_SIZE = PREVIEW_SIZES[size] ? size : 'square';
+  try { localStorage.setItem('maternity_preview_size', CURRENT_PREVIEW_SIZE); } catch(e){}
+  updatePreviewMeta();
+  toast('Preview size: ' + PREVIEW_SIZES[CURRENT_PREVIEW_SIZE].label);
+}
+
+function getPreviewSize() {
+  return PREVIEW_SIZES[CURRENT_PREVIEW_SIZE] || PREVIEW_SIZES.square;
+}
+
+function updatePreviewMeta() {
+  const labelEl = document.querySelector('#preview-wrap div[style*="font-size:9px"]');
+  if (labelEl) {
+    const size = getPreviewSize();
+    labelEl.textContent = 'AI Image Preview (' + size.width + 'x' + size.height + ')';
+  }
+  const img = document.getElementById('preview-img');
+  if (img) {
+    img.style.maxWidth = CURRENT_PREVIEW_SIZE === 'square' ? '512px' : '100%';
+  }
+}
+
+async function tryOpenAI(img, prompt) {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('OpenAI API key missing');
+
+  const size = getPreviewSize();
+  const response = await fetch('https://api.openai.com/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + apiKey
+    },
+    body: JSON.stringify({
+      model: 'gpt-image-1',
+      prompt,
+      size: size.openai,
+      quality: 'low',
+      output_format: 'png'
+    })
+  });
+
+  const data = await response.json();
+  if (!response.ok || data.error) {
+    throw new Error((data.error && data.error.message) || ('OpenAI error ' + response.status));
+  }
+
+  const image = data && data.data && data.data[0];
+  if (!image) throw new Error('OpenAI returned no image');
+
+  const src = image.b64_json ? ('data:image/png;base64,' + image.b64_json) : image.url;
+  if (!src) throw new Error('OpenAI returned no usable image data');
+
+  await new Promise((resolve, reject) => {
+    img.onload = () => resolve();
+    img.onerror = () => reject(new Error('OpenAI image failed to load'));
+    img.src = src;
+  });
+
+  return 'openai';
+}
+
+function generatePreviewPrompt() {
+  if (STATE.promptMode === 'manual') {
+    const manual = getManualPromptText();
+    return manual.length > 800 ? manual.substring(0, 800) : manual;
+  }
+  const p = STATE.prompt;
+  const hairParts = [p.hairLength, p.hairStyle, p.hairColor].filter(Boolean);
+  const hair = hairParts.length ? hairParts.join(' ') + ' hair' : '';
+
+  let clothing = '';
+  if (p.clothingStyle === 'One-Piece' && p.onePiece) {
+    clothing = [p.onePieceColor, p.onePieceFabric, p.onePiece].filter(Boolean).join(' ');
+  } else if (p.clothingStyle === 'Two-Piece') {
+    const top = [p.topColor, p.topFabric, p.top].filter(Boolean).join(' ');
+    const bottom = [p.bottomColor, p.bottomFabric, p.bottom].filter(Boolean).join(' ');
+    clothing = [top, bottom].filter(Boolean).join(' ');
+  }
+
+  const tags = [
+    p.pregnancy !== 'not pregnant' ? p.pregnancy : '',
+    p.age, p.gender, p.skin, hair, p.expression, clothing,
+    p.pose, p.environment, p.lighting, 'photorealistic'
+  ];
+
+  if (STATE.styleMode && STATE.styleMode !== 'Default') {
+    const styleText = STYLE_MODES[STATE.styleMode];
+    if (styleText) tags.push(styleText);
+  }
+
+  let prompt = tags.filter(Boolean).join(', ');
+  if (prompt.length > 400) prompt = prompt.substring(0, 400);
+  return prompt;
+}
+
+// ==========================================
+// ENGINE: POLLINATIONS (Primary)
+// ==========================================
+
+function buildPollinationsUrl(prompt, seed) {
+  const encoded = encodeURIComponent(prompt);
+  const size = getPreviewSize();
+  return 'https://image.pollinations.ai/prompt/' + encoded + 
+    '?width=' + size.width + '&height=' + size.height + 
+    '&seed=' + seed + '&nologo=true&enhance=false';
+}
+
+function tryPollinations(img, prompt) {
+  return new Promise((resolve, reject) => {
+    const seed = Math.floor(Math.random() * 99999);
+    const url = buildPollinationsUrl(prompt, seed);
+    console.log('Trying Pollinations:', url);
+
+    let loaded = false;
+
+    img.onload = function() {
+      loaded = true;
+      console.log('Pollinations loaded successfully');
+      resolve('pollinations');
+    };
+
+    img.onerror = function() {
+      if (!loaded) {
+        console.log('Pollinations failed');
+        reject(new Error('Pollinations failed'));
+      }
+    };
+
+    // Set src after handlers
+    img.src = url;
+
+    // Timeout for this specific attempt
+    setTimeout(() => {
+      if (!loaded) {
+        console.log('Pollinations timed out');
+        reject(new Error('Pollinations timeout'));
+      }
+    }, 15000);
+  });
+}
+
+// ==========================================
+// ENGINE: PUTER (Fallback)
+// ==========================================
+
+function tryPuter(img, prompt) {
+  return new Promise((resolve, reject) => {
+    console.log('Trying Puter...');
+
+    if (typeof puter === 'undefined' || !puter.ai || !puter.ai.txt2img) {
+      console.log('Puter not available');
+      reject(new Error('Puter not loaded'));
+      return;
+    }
+
+    puter.ai.txt2img(prompt)
+      .then(result => {
+        if (result && result.src) {
+          img.onload = () => resolve('puter');
+          img.onerror = () => reject(new Error('Puter image failed'));
+          img.src = result.src;
+        } else {
+          reject(new Error('Puter no result'));
+        }
+      })
+      .catch(err => {
+        console.log('Puter error:', err);
+        reject(err);
+      });
+  });
+}
+
+// ==========================================
+// MASTER PREVIEW FUNCTION
+// ==========================================
+
+async function generatePreview() {
+  const prompt = generatePreviewPrompt();
+  if (!prompt) {
+    toast('No prompt to preview');
+    return;
+  }
+
+  const wrap = document.getElementById('preview-wrap');
+  const img = document.getElementById('preview-img');
+  const loading = document.getElementById('preview-loading');
+
+  wrap.style.display = 'block';
+  img.style.display = 'none';
+  loading.style.display = 'block';
+  loading.textContent = 'Generating preview...';
+
+  clearTimeout(previewTimeout);
+  clearInterval(previewTimerInterval);
+  img.onload = null;
+  img.onerror = null;
+  img.removeAttribute('src');
+
+  let seconds = 0;
+  previewTimerInterval = setInterval(() => {
+    seconds++;
+    loading.textContent = 'Generating... ' + seconds + 's';
+  }, 1000);
+
+  previewTimeout = setTimeout(() => {
+    clearInterval(previewTimerInterval);
+    const directUrl = buildPollinationsUrl(prompt, 12345);
+    loading.innerHTML = 'Timed out. <a href="' + directUrl + '" target="_blank" style="color:var(--accent-gold);text-decoration:underline;">Open backup preview</a>';
+    toast('Preview timed out');
+  }, PREVIEW_TIMEOUT);
+
+  const engines = CURRENT_IMAGE_ENGINE === 'auto'
+    ? (getApiKey() ? ['openai', 'pollinations', 'puter'] : ['pollinations', 'puter'])
+    : [CURRENT_IMAGE_ENGINE];
+
+  const engineLabels = {
+    openai: 'OpenAI',
+    pollinations: 'Pollinations',
+    puter: 'Puter'
+  };
+
+  let lastError = null;
+
+  for (const engine of engines) {
+    try {
+      loading.textContent = 'Trying ' + (engineLabels[engine] || engine) + '...';
+
+      if (engine === 'openai') {
+        await tryOpenAI(img, prompt);
+      } else if (engine === 'pollinations') {
+        await tryPollinations(img, prompt);
+      } else if (engine === 'puter') {
+        await tryPuter(img, prompt);
+      } else {
+        throw new Error('Unknown engine: ' + engine);
+      }
+
+      clearTimeout(previewTimeout);
+      clearInterval(previewTimerInterval);
+      loading.style.display = 'none';
+      img.style.display = 'block';
+      updatePreviewMeta();
+      toast('Preview ready via ' + (engineLabels[engine] || engine) + '!');
+      return;
+    } catch (err) {
+      lastError = err;
+      console.log(engine + ' failed:', err && err.message ? err.message : err);
+    }
+  }
+
+  clearTimeout(previewTimeout);
+  clearInterval(previewTimerInterval);
+  const directUrl = buildPollinationsUrl(prompt, 12345);
+  loading.innerHTML = 'All engines failed. <a href="' + directUrl + '" target="_blank" style="color:var(--accent-gold);text-decoration:underline;">Open Pollinations backup</a>' + (lastError ? '<div style="margin-top:8px;font-size:11px;opacity:0.8;">' + escHtml(lastError.message || String(lastError)) + '</div>' : '');
+  toast('Preview failed');
+}// ==========================================
+// APP THEME SYSTEM
+// ==========================================
+const APP_THEMES = {
+  mocha:    { name:'☕ Mocha',    bg:'#12100E', card:'#1C1917', surface:'#262220', elevated:'#302C28', border:'#3D3733', borderAccent:'#8B7355', textPri:'#F5EDE4', textSec:'#C4B49A', textMut:'#8B7E6E', accent:'#D4A853', accent2:'#C9845C' },
+  midnight: { name:'🌙 Midnight', bg:'#0B0E18', card:'#121729', surface:'#1A2035', elevated:'#222A42', border:'#2E3754', borderAccent:'#4A6FA5', textPri:'#E0E8F5', textSec:'#94A8C9', textMut:'#5E7291', accent:'#5B9CF5', accent2:'#3D7BD9' },
+  forest:   { name:'🌲 Forest',   bg:'#0A120D', card:'#121E16', surface:'#1A2A1F', elevated:'#223626', border:'#2E4A36', borderAccent:'#4A8B5E', textPri:'#E0F2E5', textSec:'#94C9A4', textMut:'#5E916E', accent:'#5BC97A', accent2:'#3DA85A' },
+  rose:     { name:'🌹 Rose',     bg:'#150C10', card:'#21141A', surface:'#2E1C24', elevated:'#3A242E', border:'#503440', borderAccent:'#8B5570', textPri:'#F5E0E8', textSec:'#C994A8', textMut:'#915E72', accent:'#E07090', accent2:'#C94D73' },
+  ocean:    { name:'🌊 Ocean',    bg:'#0A1015', card:'#10181F', surface:'#18222C', elevated:'#1F2C38', border:'#2A3E50', borderAccent:'#4A7A9B', textPri:'#E0EEF5', textSec:'#8BB8D4', textMut:'#5A8BA8', accent:'#4ABDE0', accent2:'#2A9BC4' },
+  light:    { name:'☀️ Light',    bg:'#F0EDE8', card:'#FFFFFF', surface:'#F5F3F0', elevated:'#EDEAE5', border:'#D8D3CC', borderAccent:'#A89880', textPri:'#1C1917', textSec:'#5A5248', textMut:'#8B8279', accent:'#B8863A', accent2:'#9B6E2A' },
+  custom:   { name:'🎨 Custom',   custom:true }
+};
+
+function buildAppThemeRow() {
+  const row = document.getElementById('app-theme-row');
+  if (!row) return;
+  const current = getAppThemeName();
+  row.innerHTML = Object.keys(APP_THEMES).map(id => {
+    const t = APP_THEMES[id];
+    return `<button class="style-chip${current===id?' active':''}" onclick="setAppTheme('${id}')">${t.name}</button>`;
+  }).join('');
+}
+
+function getAppThemeName() {
+  try { return localStorage.getItem('maternity_app_theme') || 'mocha'; } catch(e) { return 'mocha'; }
+}
+
+function setAppTheme(id) {
+  try { localStorage.setItem('maternity_app_theme', id); } catch(e){}
+  const customWrap = document.getElementById('custom-color-wrap');
+  if (id === 'custom') {
+    if (customWrap) customWrap.style.display = 'block';
+    // Apply saved custom or keep current
+    const savedCustom = getSavedCustomTheme();
+    if (savedCustom.accent) applyThemeColors(savedCustom);
+    buildAppThemeRow();
+    toast('🎨 Pick your colors below!');
+    return;
+  }
+  if (customWrap) customWrap.style.display = 'none';
+  const theme = APP_THEMES[id];
+  if (!theme) return;
+  applyThemeColors(theme);
+  buildAppThemeRow();
+  toast(`${theme.name} theme applied!`);
+}
+
+function applyThemeColors(t) {
+  const r = document.documentElement;
+  const b = document.body;
+  // CSS variables
+  r.style.setProperty('--bg-deep', t.bg);
+  r.style.setProperty('--bg-card', t.card);
+  r.style.setProperty('--bg-surface', t.surface);
+  r.style.setProperty('--bg-elevated', t.elevated);
+  r.style.setProperty('--border-subtle', t.border);
+  r.style.setProperty('--border-accent', t.borderAccent);
+  r.style.setProperty('--text-primary', t.textPri);
+  r.style.setProperty('--text-secondary', t.textSec);
+  r.style.setProperty('--text-muted', t.textMut);
+  r.style.setProperty('--accent-gold', t.accent);
+  r.style.setProperty('--accent-warm', t.accent2);
+  // Hardcoded fallback overrides for iPhone
+  b.style.background = t.bg;
+  b.style.color = t.textPri;
+  // Update all cards, panels, buttons with new colors
+  document.querySelectorAll('.card, .slide-panel').forEach(el => { el.style.background = t.card; el.style.borderColor = t.border; });
+  document.querySelectorAll('.prompt-display, .act-btn, .style-chip, .platform-chip, .theme-card, .field-input, .search-input, .setting-select, .batch-item, .ai-card, .fav-item, .neg-input, .history-select, .clothing-opt, .chip').forEach(el => {
+    el.style.background = t.surface; el.style.borderColor = t.border; el.style.color = t.textSec;
+  });
+  document.querySelectorAll('.prompt-display').forEach(el => el.style.color = t.textPri);
+  document.querySelectorAll('.act-btn.primary').forEach(el => { el.style.background = `linear-gradient(135deg, ${t.accent}, ${t.accent2})`; el.style.color = t.bg; el.style.borderColor = 'transparent'; });
+  document.querySelectorAll('.style-chip.active, .platform-chip.active').forEach(el => { el.style.borderColor = t.accent; el.style.color = t.accent; el.style.background = t.accent+'18'; });
+  document.querySelectorAll('.card-title, .panel-head-title, .app-header h1').forEach(el => el.style.color = t.accent);
+  document.querySelectorAll('.bottom-nav').forEach(el => { el.style.background = t.card; el.style.borderColor = t.border; });
+  document.querySelectorAll('.nav-btn').forEach(el => el.style.color = t.textMut);
+  document.querySelectorAll('.nav-btn.active').forEach(el => el.style.color = t.accent);
+  document.querySelectorAll('.setting-label, .field-label-text, .field-section-title, .theme-name').forEach(el => el.style.color = t.textSec);
+  document.querySelectorAll('.setting-hint, .char-info span, .version').forEach(el => el.style.color = t.textMut);
+  document.querySelectorAll('.toast').forEach(el => { el.style.background = t.elevated; el.style.color = t.textPri; el.style.borderColor = t.borderAccent; });
+  document.querySelectorAll('.undo-bar').forEach(el => { el.style.background = t.elevated; el.style.borderColor = t.borderAccent; el.style.color = t.textSec; });
+  document.querySelectorAll('.undo-btn').forEach(el => { el.style.background = t.accent; el.style.color = t.bg; });
+}
+
+function getSavedCustomTheme() {
+  try {
+    const s = localStorage.getItem('maternity_custom_theme');
+    return s ? JSON.parse(s) : {};
+  } catch(e) { return {}; }
+}
+
+function saveCustomTheme(obj) {
+  try {
+    const existing = getSavedCustomTheme();
+    const merged = Object.assign({}, existing, obj);
+    localStorage.setItem('maternity_custom_theme', JSON.stringify(merged));
+  } catch(e){}
+}
+
+function hexToHSL(hex) {
+  let r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b), l=(max+min)/2;
+  let h=0, s=0;
+  if(max!==min){ const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){ case r:h=((g-b)/d+(g<b?6:0))/6;break; case g:h=((b-r)/d+2)/6;break; case b:h=((r-g)/d+4)/6;break; } }
+  return {h:Math.round(h*360),s:Math.round(s*100),l:Math.round(l*100)};
+}
+
+function hslToHex(h,s,l) {
+  s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;const clr=l-a*Math.max(Math.min(k-3,9-k,1),-1);return Math.round(255*clr).toString(16).padStart(2,'0');};
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function generateThemeFromAccent(accentHex, bgHex) {
+  const a = hexToHSL(accentHex);
+  const b = hexToHSL(bgHex);
+  const isDark = b.l < 50;
+  return {
+    bg: bgHex,
+    card: hslToHex(b.h, b.s, isDark ? b.l+4 : b.l-4),
+    surface: hslToHex(b.h, b.s, isDark ? b.l+8 : b.l-8),
+    elevated: hslToHex(b.h, b.s, isDark ? b.l+12 : b.l-12),
+    border: hslToHex(b.h, Math.min(b.s+5,100), isDark ? b.l+18 : b.l-18),
+    borderAccent: hslToHex(a.h, Math.min(a.s,60), isDark ? 40 : 55),
+    textPri: isDark ? hslToHex(a.h, Math.min(a.s,15), 92) : hslToHex(a.h, Math.min(a.s,15), 12),
+    textSec: isDark ? hslToHex(a.h, Math.min(a.s,25), 72) : hslToHex(a.h, Math.min(a.s,25), 38),
+    textMut: isDark ? hslToHex(a.h, Math.min(a.s,20), 50) : hslToHex(a.h, Math.min(a.s,20), 55),
+    accent: accentHex,
+    accent2: hslToHex(a.h+15, a.s, Math.max(a.l-10,20))
+  };
+}
+
+function applyCustomAccent() {
+  const picker = document.getElementById('custom-accent-picker');
+  const bgPicker = document.getElementById('custom-bg-picker');
+  const hex = picker.value;
+  const bgHex = bgPicker.value;
+  document.getElementById('custom-accent-hex').textContent = hex;
+  const theme = generateThemeFromAccent(hex, bgHex);
+  saveCustomTheme(theme);
+  applyThemeColors(theme);
+  toast('🎨 Custom accent applied!');
+}
+
+function applyCustomBg() {
+  const picker = document.getElementById('custom-bg-picker');
+  const accentPicker = document.getElementById('custom-accent-picker');
+  const bgHex = picker.value;
+  const accentHex = accentPicker.value;
+  document.getElementById('custom-bg-hex').textContent = bgHex;
+  const theme = generateThemeFromAccent(accentHex, bgHex);
+  saveCustomTheme(theme);
+  applyThemeColors(theme);
+  toast('🎨 Custom background applied!');
+}
+
+function loadAppTheme() {
+  const name = getAppThemeName();
+  if (name === 'custom') {
+    const saved = getSavedCustomTheme();
+    if (saved.accent) applyThemeColors(saved);
+  } else {
+    const theme = APP_THEMES[name];
+    if (theme && !theme.custom) applyThemeColors(theme);
+  }
+}
+
+
+// ==========================================
+// IMAGE TOOLS CONSOLIDATED OVERRIDES
+// ==========================================
+STATE.creativePromptType = STATE.creativePromptType || 'merge_saved';
+let imagePromptTimer = null;
+let imagePromptStartedAt = 0;
+
+function setImagePromptStatus(message, visible = true) {
+  const el = document.getElementById('image-prompt-status');
+  if (!el) return;
+  el.style.display = visible ? 'block' : 'none';
+  el.textContent = visible ? message : '';
+}
+function startImagePromptTimer(label = 'Analyzing image') {
+  stopImagePromptTimer();
+  imagePromptStartedAt = Date.now();
+  setImagePromptStatus(label + '... 0.0s');
+  imagePromptTimer = setInterval(() => {
+    const secs = ((Date.now() - imagePromptStartedAt) / 1000).toFixed(1);
+    setImagePromptStatus(label + '... ' + secs + 's');
+  }, 100);
+}
+function stopImagePromptTimer(doneMessage = '') {
+  if (imagePromptTimer) clearInterval(imagePromptTimer);
+  imagePromptTimer = null;
+  if (doneMessage) {
+    setImagePromptStatus(doneMessage, true);
+    setTimeout(() => setImagePromptStatus('', false), 1800);
+  } else {
+    setImagePromptStatus('', false);
+  }
+}
+function hydrateImageToolsUI() {
+  let saved = 'merge_saved';
+  try { saved = localStorage.getItem('maternity_creative_prompt_type') || 'merge_saved'; } catch(e){}
+  STATE.creativePromptType = saved;
+  const sel = document.getElementById('creative-prompt-type');
+  if (sel) sel.value = saved;
+}
+function setCreativePromptType(v) {
+  STATE.creativePromptType = v || 'merge_saved';
+  try { localStorage.setItem('maternity_creative_prompt_type', STATE.creativePromptType); } catch(e){}
+}
+function setImageToolOutput(value, pushToManual = false) {
+  const out = document.getElementById('image-tool-output');
+  const limit = getCurrentPlatformLimit();
+  const text = sanitizeImagePromptResult(value || '', limit) || '';
+  if (out) out.value = text;
+  updateImageToolCharBar();
+  if (pushToManual) {
+    STATE.manualPrompt = text;
+    STATE.promptMode = 'manual';
+    try {
+      localStorage.setItem('maternity_prompt_mode', STATE.promptMode);
+      localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || '');
+    } catch(e){}
+    refresh();
+    syncPromptModeUI();
+    focusPromptDisplay();
+  }
+}
+function useImageToolOutput() {
+  const out = document.getElementById('image-tool-output');
+  const text = out ? (out.value || '').trim() : '';
+  if (!text) { toast('No image prompt to use yet'); return; }
+  pushUndo();
+  setImageToolOutput(text, true);
+  showMain();
+  toast('Moved image result to Manual Prompt');
+}
+function copyImageToolOutput() {
+  const out = document.getElementById('image-tool-output');
+  const text = out ? (out.value || '').trim() : '';
+  if (!text) { toast('No image result to copy'); return; }
+  clipCopy(text);
+}
+function clearImageToolOutput() {
+  const out = document.getElementById('image-tool-output');
+  if (out) out.value = '';
+  updateImageToolCharBar();
+  stopImagePromptTimer();
+  toast('Image tool output cleared');
+}
+
+function handleImageToolOutputInput() {
+  const out = document.getElementById('image-tool-output');
+  const limit = getCurrentPlatformLimit();
+  if (out && (out.value || '').length > limit) out.value = (out.value || '').slice(0, limit);
+  updateImageToolCharBar();
+}
+
+function updateImageToolCharBar() {
+  const out = document.getElementById('image-tool-output');
+  const countEl = document.getElementById('image-tool-char-count');
+  const limitEl = document.getElementById('image-tool-char-limit');
+  const hintEl = document.getElementById('image-tool-char-hint');
+  const plat = PLATFORMS.find(p => p.id === STATE.platform) || PLATFORMS[0];
+  const len = out ? (out.value || '').length : 0;
+  if (out) out.maxLength = plat.limit;
+  if (countEl) countEl.textContent = len + ' chars';
+  if (limitEl) limitEl.textContent = '/ ' + plat.limit;
+  if (hintEl) {
+    const remaining = Math.max(0, plat.limit - len);
+    hintEl.textContent = `${plat.name} max. ${remaining} characters remaining.`;
+    hintEl.style.color = len > plat.limit * 0.9 ? 'var(--danger)' : len > plat.limit * 0.7 ? 'var(--accent-gold)' : 'var(--text-secondary)';
+  }
+}
+function sanitizeImagePromptResult(text, charLimit) {
+  let out = String(text || '').trim().replace(/^['"`]+|['"`]+$/g, '');
+  out = out.replace(/\s+/g, ' ').trim();
+  const badPatterns = [
+    /\bIMG\s*[_-]?\d+/i,
+    /uploaded image/i,
+    /uploaded item or scene/i,
+    /subject emphasis/i,
+    /inspired by/i,
+    /^photorealistic (still-life|portrait) photo of (the )?(uploaded|img)/i
+  ];
+  const isTooGeneric = !out || out.length < 24 || badPatterns.some(r => r.test(out));
+  if (isTooGeneric) return '';
+  if (out.length > charLimit) out = out.slice(0, charLimit).trim();
+  return out;
+}
+function localImagePromptFallback(file, mode = 'literal') {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const orientation = img.width === img.height ? 'square' : (img.width > img.height ? 'landscape' : 'portrait');
+      URL.revokeObjectURL(url);
+      const profile = buildDefaultSubjectForImagePrompt() || 'an adult subject';
+      const creativeType = STATE.creativePromptType || 'merge_saved';
+      const map = {
+        product: `Photorealistic ${orientation} product display of a packaged item in a refrigerator or kitchen setting, realistic lighting, clear label details, detailed textures, no people.`,
+        lifestyle: `Lifestyle scene of ${profile} interacting with a refrigerated packaged item, natural home lighting, candid composition, realistic details.`,
+        portrait: `Portrait scene of ${profile} holding a refrigerated packaged item, soft indoor lighting, lifestyle photography style.`,
+        merge_saved: `Photorealistic lifestyle scene featuring ${profile}, naturally interacting with a refrigerated packaged item, realistic home lighting and detailed textures.`,
+        background: `Photorealistic refrigerator or kitchen environment, cool indoor lighting, reflective shelf surfaces, realistic household setting.`,
+        inspire: `Cinematic prompt inspired by a refrigerator interior, cool lighting, reflective textures, and a modern home atmosphere.`
+      };
+      if (mode === 'creative') resolve(map[creativeType] || map.merge_saved);
+      else resolve(`A close-up ${orientation} photo of a packaged food or drink item inside a refrigerator, realistic indoor lighting, visible label details, natural composition, no people visible.`);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      resolve(mode === 'creative'
+        ? 'Photorealistic lifestyle prompt based on the uploaded scene, realistic lighting, natural composition.'
+        : 'Literal description of a packaged item or visible scene with realistic lighting and clear details.');
+    };
+    img.src = url;
+  });
+}
+async function extractImageLiteralJSON(file) {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('No API key');
+  const dataUrl = await fileToDataURL(file);
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [{
+        role: 'user',
+        content: [
+          { type: 'text', text: `Analyze this image literally and return JSON only with:
+{
+  "hasPerson": boolean,
+  "peopleCount": number,
+  "primarySubject": string,
+  "visibleText": string[],
+  "environment": string,
+  "lighting": string,
+  "composition": string,
+  "notableDetails": string[]
+}
+Rules:
+- Describe only what is clearly visible.
+- Do not invent people if none are visible.
+- Ignore the filename entirely.
+- primarySubject must specifically name the main visible object or person.
+- Keep fields concise.` },
+          { type: 'image_url', image_url: { url: dataUrl, detail: 'high' } }
+        ]
+      }],
+      response_format: { type: 'json_object' },
+      temperature: 0.1
+    })
+  });
+  const data = await resp.json();
+  if (!resp.ok || data.error) throw new Error((data.error && data.error.message) || 'Image analysis failed');
+  const content = (((data.choices || [])[0] || {}).message || {}).content || '{}';
+  return JSON.parse(content);
+}
+function literalJsonToText(info) {
+  const subject = info && info.primarySubject ? info.primarySubject : 'the main visible subject';
+  const environment = info && info.environment ? info.environment : 'a visible scene';
+  const extras = [];
+  if (info && Array.isArray(info.visibleText) && info.visibleText.length) extras.push('visible text includes ' + info.visibleText.slice(0,3).map(v => '"' + v + '"').join(', '));
+  if (info && Array.isArray(info.notableDetails) && info.notableDetails.length) extras.push(info.notableDetails.slice(0,3).join(', '));
+  if (info && info.lighting) extras.push(info.lighting + ' lighting');
+  if (info && info.composition) extras.push(info.composition + ' composition');
+  let out = `A close-up of ${subject} in ${environment}.`;
+  if (extras.length) out += ' ' + extras.join(', ') + '.';
+  return out.replace(/\s+/g, ' ').trim();
+}
+function buildImageCreativeInstruction(literalText, info) {
+  const creativeType = STATE.creativePromptType || 'merge_saved';
+  const profile = buildDefaultSubjectForImagePrompt() || 'an adult subject';
+  const charLimit = Math.min(Math.max(260, getCurrentPlatformLimit() - 40), 950);
+  const map = {
+    product: 'Create an object-focused product display prompt. Do not add people. Keep the uploaded object or packaging as the main subject.',
+    lifestyle: 'Create a lifestyle photography prompt using this subject profile whenever a person is needed: ' + profile + '. The subject should naturally interact with the main object or scene from the literal description.',
+    portrait: 'Create a portrait-oriented prompt using this subject profile as the main human focus: ' + profile + '. The uploaded subject should become a prop or supporting element.',
+    merge_saved: 'Create a portrait/lifestyle prompt that blends the uploaded scene with this saved character profile: ' + profile + '. Use that saved character instead of a vague generic person whenever it fits.',
+    background: 'Use the uploaded image mainly as background or environmental inspiration. Keep any human details minimal unless clearly visible.',
+    inspire: 'Create an artistic but coherent photography prompt inspired by the uploaded image, colors, lighting, and setting.'
+  };
+  const peopleRule = info && info.hasPerson
+    ? 'If a clearly visible person exists, respect what is visible before adding anything new.'
+    : 'If no person is visible, do not claim one is already in the uploaded photo. You may stage one only if the selected creative type calls for it.';
+  return `You are writing one polished image-generation prompt for a human-focused portrait and lifestyle studio.
+Selected creative type: ${creativeType}.
+Literal image description: ${literalText}
+${map[creativeType] || map.merge_saved}
+${peopleRule}
+Do not mention filenames, uploaded image, subject emphasis, or placeholder language.
+Keep it under ${charLimit} characters.
+Return only the final prompt text.`;
+}
+async function createCreativePromptFromLiteral(literalText, info) {
+  const apiKey = getApiKey();
+  const charLimit = Math.min(Math.max(260, getCurrentPlatformLimit() - 40), 950);
+  if (!apiKey) return await localImagePromptFallback({name:'upload'}, 'creative');
+  const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [{ role: 'user', content: buildImageCreativeInstruction(literalText, info) }],
+      temperature: 0.6
+    })
+  });
+  const data = await resp.json();
+  if (!resp.ok || data.error) throw new Error((data.error && data.error.message) || 'Creative rewrite failed');
+  const out = (((data.choices || [])[0] || {}).message || {}).content || '';
+  return sanitizeImagePromptResult(out, charLimit) || await localImagePromptFallback({name:'upload'}, 'creative');
+}
+async function describeImageToPrompt(file, mode = 'literal') {
+  const charLimit = Math.min(Math.max(260, getCurrentPlatformLimit() - 40), 950);
+  let info = null;
+  let literalText = '';
+  try {
+    info = await extractImageLiteralJSON(file);
+    literalText = sanitizeImagePromptResult(literalJsonToText(info), charLimit);
+  } catch (e) {
+    info = { hasPerson: false, peopleCount: 0, primarySubject: 'the visible subject', environment: 'a visible scene', lighting: 'realistic', composition: 'natural', notableDetails: [] };
+    literalText = sanitizeImagePromptResult(await localImagePromptFallback(file, 'literal'), charLimit);
+  }
+  if (!literalText) literalText = await localImagePromptFallback(file, 'literal');
+  if (mode === 'creative') {
+    try { return await createCreativePromptFromLiteral(literalText, info); }
+    catch (e) { return await localImagePromptFallback(file, 'creative'); }
+  }
+  return literalText;
+}
+async function handleImagePromptFile(evt) {
+  const file = evt.target.files && evt.target.files[0];
+  if (!file) return;
+  const mode = evt.target.dataset.mode || 'literal';
+  pushUndo();
+  try {
+    openPanel('image');
+    startImagePromptTimer(mode === 'creative' ? 'Building creative prompt' : 'Describing image literally');
+    const result = await describeImageToPrompt(file, mode);
+    setImageToolOutput(result, false);
+    stopImagePromptTimer(mode === 'creative' ? 'Creative prompt ready' : 'Literal description ready');
+    toast(mode === 'creative' ? 'Creative image prompt ready' : 'Literal image description ready');
+  } catch (e) {
+    console.error(e);
+    stopImagePromptTimer('Image tools failed');
+    toast('Image tools failed');
+  } finally {
+    evt.target.value = '';
+  }
+}
+function triggerImagePrompt(mode = 'literal') {
+  if (!selectedImageToolFile) {
+    toast('Choose an image first');
+    triggerImagePick();
+    return;
+  }
+  executeSelectedImagePrompt(mode === 'creative' ? 'creative' : 'literal');
+}
+const _openPanelOriginal = openPanel;
+openPanel = function(name) {
+  _openPanelOriginal(name);
+  const navMap = { builder:'nav-builder', image:'nav-image', ai:'nav-ai', favorites:'nav-fav', settings:'nav-settings', batch:'nav-home' };
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const nb = document.getElementById(navMap[name] || 'nav-home');
+  if (nb) nb.classList.add('active');
+  if (name === 'image') hydrateImageToolsUI();
+};
+const _showMainOriginal = showMain;
+showMain = function() {
+  _showMainOriginal();
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const home = document.getElementById('nav-home');
+  if (home) home.classList.add('active');
+};
+
+
+// ==========================================
+// IMAGE TOOL WORKSPACE FIXES
+// ==========================================
+let CURRENT_SELECTED_IMAGE_FILE = null;
+let CURRENT_SELECTED_IMAGE_URL = '';
+
+function updateSelectedImageUI() {
+  const wrap = document.getElementById('image-picked-wrap');
+  const img = document.getElementById('image-picked-preview');
+  const name = document.getElementById('image-picked-name');
+  if (!wrap || !img || !name) return;
+  if (CURRENT_SELECTED_IMAGE_FILE) {
+    wrap.style.display = 'block';
+    name.textContent = CURRENT_SELECTED_IMAGE_FILE.name || 'Selected image';
+    if (CURRENT_SELECTED_IMAGE_URL) {
+      img.src = CURRENT_SELECTED_IMAGE_URL;
+      img.style.display = 'block';
+    } else {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+    }
+  } else {
+    wrap.style.display = 'none';
+    name.textContent = 'No image selected';
+    img.removeAttribute('src');
+    img.style.display = 'none';
+  }
+}
+
+function triggerImagePick() {
+  const inp = document.getElementById('image-prompt-input');
+  if (!inp) { toast('Image picker not found'); return; }
+  inp.click();
+}
+
+function clearSelectedImage(silent = false) {
+  if (CURRENT_SELECTED_IMAGE_URL) {
+    try { URL.revokeObjectURL(CURRENT_SELECTED_IMAGE_URL); } catch(e) {}
+  }
+  CURRENT_SELECTED_IMAGE_FILE = null;
+  CURRENT_SELECTED_IMAGE_URL = '';
+  const inp = document.getElementById('image-prompt-input');
+  if (inp) inp.value = '';
+  updateSelectedImageUI();
+  if (!silent) toast('Selected image cleared');
+}
+
+function handleSelectedImageFile(event) {
+  const file = event && event.target && event.target.files ? event.target.files[0] : null;
+  if (!file) return;
+  if (CURRENT_SELECTED_IMAGE_URL) {
+    try { URL.revokeObjectURL(CURRENT_SELECTED_IMAGE_URL); } catch(e) {}
+  }
+  CURRENT_SELECTED_IMAGE_FILE = file;
+  CURRENT_SELECTED_IMAGE_URL = URL.createObjectURL(file);
+  updateSelectedImageUI();
+  setImagePromptStatus('Image selected. Choose Literal or Creative.', true);
+  setTimeout(() => setImagePromptStatus('', false), 1500);
+  toast('Image selected');
+}
+
+async function runImagePrompt(mode = 'literal') {
+  if (!CURRENT_SELECTED_IMAGE_FILE) {
+    toast('Choose an image first');
+    triggerImagePick();
+    return;
+  }
+  try {
+    const label = mode === 'creative' ? 'Building creative prompt' : 'Describing image literally';
+    startImagePromptTimer(label);
+    const result = await describeImageToPrompt(CURRENT_SELECTED_IMAGE_FILE, mode === 'creative' ? 'creative' : 'literal');
+    const safe = sanitizeImagePromptResult(result, (PLATFORMS.find(p => p.id === STATE.platform)?.limit || 1200)) || result || '';
+    setImageToolOutput(safe, false);
+    stopImagePromptTimer(mode === 'creative' ? 'Creative prompt ready' : 'Literal description ready');
+    toast(mode === 'creative' ? 'Creative prompt ready' : 'Literal description ready');
+  } catch (err) {
+    console.error('Image tool error:', err);
+    try {
+      const fallback = await localImagePromptFallback(CURRENT_SELECTED_IMAGE_FILE, mode === 'creative' ? 'creative' : 'literal');
+      setImageToolOutput(fallback || '', false);
+      stopImagePromptTimer('Fallback ready');
+      toast('Used fallback image prompt');
+    } catch (fallbackErr) {
+      console.error('Image tool fallback error:', fallbackErr);
+      stopImagePromptTimer('');
+      setImagePromptStatus('Image tool failed', true);
+      toast('Image tool failed');
+    }
+  }
+}
+
+
+
+// ==========================================
+// IMAGE TOOL COMPATIBILITY PATCHES
+// ==========================================
+function getCurrentPlatformLimit() {
+  const entry = (PLATFORMS || []).find(p => p.id === STATE.platform);
+  return entry && entry.limit ? entry.limit : 1000;
+}
+
+function buildDefaultSubjectForImagePrompt() {
+  const p = (STATE && STATE.prompt) ? STATE.prompt : {};
+  const s = (STATE && STATE.settings) ? STATE.settings : {};
+  const gender = String(p.gender || s.defaultGender || '').toLowerCase().trim();
+  const age = String(p.age || s.defaultAge || '').toLowerCase().trim();
+  const pregnancy = String((p.gender || s.defaultGender || '').toLowerCase() === 'female'
+    ? (p.pregnancy || s.defaultPregnancy || '')
+    : '').toLowerCase().trim();
+  const hairColor = String(p.hairColor || '').toLowerCase().trim();
+  const hairLength = String(p.hairLength || '').toLowerCase().trim();
+  const hairStyle = String(p.hairStyle || '').toLowerCase().trim();
+  const skin = String(p.skin || '').toLowerCase().trim();
+  const expression = String(p.expression || '').toLowerCase().trim();
+  const outfit = String(p.onePiece || p.top || p.clothingStyle || '').toLowerCase().trim();
+  const env = String(p.environment || '').toLowerCase().trim();
+
+  const personParts = [];
+  if (pregnancy && pregnancy !== 'not pregnant') personParts.push(pregnancy);
+  if (age) personParts.push(age);
+  if (skin) personParts.push(skin);
+  if (gender) personParts.push(gender);
+  if (hairColor) personParts.push(hairColor + ' hair');
+  if (hairLength && !personParts.some(x => x.includes(hairLength))) personParts.push(hairLength + ' hair');
+  if (hairStyle && !personParts.some(x => x.includes(hairStyle))) personParts.push(hairStyle + ' hair');
+  if (expression) personParts.push('with a ' + expression);
+  if (outfit) personParts.push('wearing ' + outfit);
+  if (env) personParts.push('in a ' + env);
+
+  const subject = personParts.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim();
+  if (subject) return subject;
+
+  const fallbackGender = gender || 'person';
+  const fallbackAge = age || 'adult';
+  return ('a ' + fallbackAge + ' ' + fallbackGender).replace(/\s+/g, ' ').trim();
+}
+
+function renderSelectedImageUI() {
+  updateSelectedImageUI();
+}
+
+function changeSelectedImage() {
+  triggerImagePick();
+}
+
+function executeSelectedImagePrompt(mode = 'literal') {
+  return runImagePrompt(mode);
+}
+
+function triggerImagePrompt(mode = 'literal') {
+  return runImagePrompt(mode === 'creative' ? 'creative' : 'literal');
+}
+
+function localImagePromptFallback(file, mode = 'literal') {
+  return new Promise((resolve) => {
+    const finalize = (orientation = 'portrait') => {
+      const profile = buildDefaultSubjectForImagePrompt() || 'an adult subject';
+      const creativeType = STATE.creativePromptType || 'merge_saved';
+      const literal = `Literal description of a ${orientation} image with realistic lighting, natural composition, clear visible details, and no invented elements.`;
+      const creativeMap = {
+        merge_saved: `Photorealistic ${orientation} lifestyle scene featuring ${profile}, inspired by the uploaded image, realistic lighting, natural composition, detailed textures, and grounded visual details.`,
+        lifestyle: `Photorealistic ${orientation} lifestyle scene inspired by the uploaded image, featuring ${profile} naturally interacting with the visible subject, realistic lighting, candid composition, and detailed environment styling.`,
+        portrait: `Photorealistic ${orientation} portrait inspired by the uploaded image, featuring ${profile} as the main focus, detailed clothing and styling, realistic lighting, clean composition, and strong subject presence.`,
+        product: `Photorealistic ${orientation} product display inspired by the uploaded image, object-focused composition, realistic lighting, crisp textures, clean staging, and commercial photography detail.`,
+        background: `Photorealistic ${orientation} environment prompt inspired by the uploaded image, no invented main subject, strong sense of place, realistic lighting, layered background details, and natural atmosphere.`,
+        inspire: `Cinematic ${orientation} prompt inspired by the uploaded image, artistic reinterpretation, realistic lighting, strong composition, detailed textures, and polished visual storytelling.`
+      };
+      resolve(mode === 'creative' ? (creativeMap[creativeType] || creativeMap.merge_saved) : literal);
+    };
+
+    if (!file || typeof URL === 'undefined' || typeof Image === 'undefined') {
+      finalize();
+      return;
+    }
+
+    let url = '';
+    try {
+      url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        const orientation = img.width === img.height ? 'square' : (img.width > img.height ? 'landscape' : 'portrait');
+        try { URL.revokeObjectURL(url); } catch (e) {}
+        finalize(orientation);
+      };
+      img.onerror = () => {
+        try { URL.revokeObjectURL(url); } catch (e) {}
+        finalize();
+      };
+      img.src = url;
+    } catch (e) {
+      if (url) {
+        try { URL.revokeObjectURL(url); } catch (err) {}
+      }
+      finalize();
+    }
+  });
+}
+
+// ==========================================
+// INIT
+// ==========================================
+function init() {
+  try { CURRENT_IMAGE_ENGINE = localStorage.getItem('maternity_preview_engine') || 'auto'; } catch(e){}
+  try { CURRENT_PREVIEW_SIZE = localStorage.getItem('maternity_preview_size') || 'square'; } catch(e){}
+  try {
+    // Load saved state
+    try { const s=localStorage.getItem('maternity_settings'); if(s)STATE.settings=JSON.parse(s); } catch(e){}
+    try { const f=localStorage.getItem('maternity_favorites'); if(f)STATE.favorites=JSON.parse(f); } catch(e){}
+    try { const h=localStorage.getItem('maternity_history'); if(h)STATE.history=JSON.parse(h); } catch(e){}
+    try { const l=localStorage.getItem('maternity_locks'); if(l)STATE.locks=JSON.parse(l); } catch(e){}
+    try { const sm=localStorage.getItem('maternity_style'); if(sm)STATE.styleMode=sm; } catch(e){}
+    try { const p=localStorage.getItem('maternity_platform'); if(p)STATE.platform=p; } catch(e){}
+    try { const pm=localStorage.getItem('maternity_prompt_mode'); if(pm)STATE.promptMode=pm; } catch(e){}
+    try { const mp=localStorage.getItem('maternity_manual_prompt'); if(mp!==null)STATE.manualPrompt=mp; } catch(e){}
+
+    // Build UI
+    buildPlatformBar();
+    buildStyleRow();
+    buildThemeGrid();
+    buildAppThemeRow();
+    loadAppTheme();
+    applyDefaults();
+    const promptDisplay = document.getElementById('prompt-display');
+    if (promptDisplay) promptDisplay.addEventListener('input', handlePromptDisplayInput);
+    updatePromptDisplay();
+    updateHistoryDropdown();
+    updateThemeBar();
+    hydrateImageToolsUI();
+    renderSelectedImageUI();
+    updateImageToolCharBar();
+    if (STATE.promptMode === 'manual' && !(STATE.manualPrompt||'').trim()) STATE.promptMode = 'builder';
+
+    // Welcome
+    if (!STATE.settings.defaultGender) {
+      setTimeout(() => { openPanel('settings'); toast('👋 Welcome! Set your defaults'); }, 500);
+    }
+  } catch(e) {
+    console.error('Init error:', e);
+  }
+}
+
+if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',init);
+else init();
+</script>
+
 </body>
 </html>
