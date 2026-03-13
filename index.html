@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Portrait & Lifestyle Prompt Studio v1.15</title>
+<title>Portrait & Lifestyle Prompt Studio v1.16</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -838,7 +838,7 @@ margin-bottom: 4px;
 
 <div class="app-header">
   <h1>✨ Portrait &amp; Lifestyle Prompt Studio</h1>
-  <div class="version">v1.01 — Stable Image &amp; AI Tools</div>
+  <div class="version">v1.16 — Expanded Assets &amp; Bug Fixes</div>
 </div>
 
 <div class="container" id="main-content">
@@ -1258,14 +1258,14 @@ const FIELDS = {
 
   makeup: ['80s neon makeup', 'Airbrushed glam', 'Bold makeup', 'Bronzed makeup', 'Cat eye', 'Colorful eyeliner', 'Contour makeup', 'Cosplay makeup', 'Cyberpunk face decals', 'Dewy skin', 'Dramatic makeup', 'Editorial high-fashion', 'Everyday makeup', 'Face gems', 'Face paint', 'Glitter highlights', 'Glossy lips', 'Glowing skin', 'Gothic makeup', 'Graphic eyeliner', 'Light makeup', 'Minimal makeup', 'Monochrome makeup', 'Natural makeup', 'No makeup', 'Pastel makeup', 'Peach blush', 'Red lips', 'Retro makeup', 'Shimmer makeup', 'Smokey eye', 'Soft glam', 'Sun-kissed makeup', 'Tribal markings', 'Vintage makeup', 'Winged eyeliner'],
 
-  clothingTheme: ['At Home', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel'],
+  clothingTheme: ['At Home', 'Autumn', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Holiday', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel', 'Urban', 'Wedding'],
 
   clothingStyle: ['Fantasy / Armor', 'Layered', 'One-Piece', 'Swimwear', 'Two-Piece'],
 
-  clothingPresetType: ['At Home', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel'],
-  clothingPreset: ['Beach Cover-Up Set', 'Beach Lounge Set', 'Bikini Set', 'Boho Festival Set', 'Casual Coffee Run Set', 'Classic Office Set', 'Cozy At-Home Set', 'Date Night Dress Set', 'Enchanted Grove Set', 'Explorer Jungle Set', 'Fantasy Armor Set', 'Fitness Training Set', 'Flowing Party Dress Set', 'Jungle Adventure Set', 'Maternity Studio Set', 'Moonlit Sorceress Set', 'Prehistoric Huntress Set', 'Resort Swim Set', 'Safari Linen Set', 'Smart Casual Office Set', 'Studio Glam Set', 'Sunset Boardwalk Set', 'Tropical Waterfall Set', 'Travel Day Set'],
+  clothingPresetType: ['At Home', 'Autumn', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Holiday', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel', 'Urban', 'Wedding'],
+  clothingPreset: ['Autumn Harvest Set', 'Beach Cover-Up Set', 'Beach Lounge Set', 'Bikini Set', 'Boho Festival Set', 'Bridal Shower Set', 'Casual Coffee Run Set', 'Classic Office Set', 'Cozy At-Home Set', 'Date Night Dress Set', 'Enchanted Grove Set', 'Explorer Jungle Set', 'Fall Hiking Set', 'Fantasy Armor Set', 'Fitness Training Set', 'Flowing Party Dress Set', 'Garden Party Set', 'Holiday Glam Set', 'Jungle Adventure Set', 'Maternity Studio Set', 'Moonlit Sorceress Set', 'Picnic Day Set', 'Pool Party Set', 'Prehistoric Huntress Set', 'Resort Swim Set', 'Safari Linen Set', 'Ski Lodge Set', 'Smart Casual Office Set', 'Street Style Set', 'Studio Glam Set', 'Sunset Boardwalk Set', 'Tropical Waterfall Set', 'Travel Day Set', 'Urban Night Set', 'Wedding Day Set', 'Winter Coat Set'],
 
-  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Babydoll dress', 'Ball gown', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Corset dress', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Elegant dress', 'Empire waist dress', 'Evening gown', 'Figure skating dress', 'Floral sundress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'One-piece swimsuit', 'Overall shorts', 'Overalls', 'Pinafore dress', 'Robe', 'Romper', 'Sari', 'Sequin dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Space suit', 'Sun dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Tactical suit', 'Toga', 'Tulle dress', 'Uniform', 'Velvet gown', 'Wedding dress', 'Witch robes', 'Wrap dress'],
+  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Asymmetric dress', 'Babydoll dress', 'Ball gown', 'Bathrobe', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Bustier dress', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Co-ord set', 'Corset dress', 'Corset gown', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Duster coat dress', 'Elegant dress', 'Embroidered dress', 'Empire waist dress', 'Evening gown', 'Feathered gown', 'Figure skating dress', 'Fit-and-flare dress', 'Flamenco dress', 'Floral maxi dress', 'Floral sundress', 'Folk costume', 'Fringe dress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Latex bodysuit', 'Leather jumpsuit', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'Off-shoulder dress', 'One-piece swimsuit', 'Open-back dress', 'Overall shorts', 'Overalls', 'Pencil dress', 'Pinafore dress', 'Robe', 'Romper', 'Ruched dress', 'Ruffle dress', 'Sari', 'Sequin dress', 'Sheath dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Smock dress', 'Space suit', 'Strapless dress', 'Sun dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Swimdress', 'Tactical suit', 'Tiered dress', 'Toga', 'Tulle dress', 'Tuxedo jumpsuit', 'Uniform', 'Velvet dress', 'Velvet gown', 'Victorian gown', 'Vintage tea dress', 'Wedding dress', 'Witch robes', 'Wrap dress'],
 
   onePieceColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Bronze', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Chocolate', 'Copper', 'Coral', 'Cream', 'Dusty rose', 'Emerald green', 'Floral print', 'Forest green', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Iridescent', 'Ivory', 'Lavender', 'Leopard print', 'Lilac', 'Magenta', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy blue', 'Neon orange', 'Olive', 'Orange', 'Pastel pink', 'Peach', 'Pearl white', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Royal blue', 'Sage green', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
 
@@ -1301,17 +1301,17 @@ const FIELDS = {
 
   footwearFabric: ['canvas', 'denim', 'fabric', 'faux leather', 'felt', 'knit', 'lace', 'leather', 'mesh', 'nubuck', 'patent leather', 'rubber', 'satin', 'suede', 'synthetic', 'velvet', 'wool'],
 
-  accessories: ['Anklet', 'Aura glow', 'Backpack', 'Bangle bracelet', 'Belt', 'Body chain', 'Bracelet', 'Brooch', 'Cape', 'Choker', 'Clutch bag', 'Cowboy hat', 'Crown', 'Cuff bracelet', 'Drop earrings', 'Earrings', 'Flower crown', 'Gas mask', 'Glasses', 'Gloves', 'Hair bow', 'Hair clip', 'Handbag', 'Hat', 'Headband', 'Headphones', 'Hoop earrings', 'Jewelry', 'Leather gloves', 'Neck scarf', 'Necklace', 'Pearl necklace', 'Rings', 'Scarf', 'Statement earrings', 'Sunglasses', 'Sword', 'Tiara', 'Umbrella', 'Veil', 'Waist chain', 'Wand', 'Watch'],
+  accessories: ['Anklet', 'Aura glow', 'Backpack', 'Bangle bracelet', 'Baseball cap', 'Beaded necklace', 'Belt', 'Beret', 'Body chain', 'Bow tie', 'Bracelet', 'Brooch', 'Cape', 'Chain belt', 'Charm bracelet', 'Choker', 'Clutch bag', 'Cowboy hat', 'Crown', 'Crystal pendant', 'Cuff bracelet', 'Drop earrings', 'Ear cuff', 'Earrings', 'Elbow gloves', 'Embroidered bag', 'Fanny pack', 'Feather boa', 'Fedora hat', 'Flower crown', 'Gas mask', 'Glasses', 'Gloves', 'Gold chain', 'Hair bow', 'Hair clip', 'Hair pins', 'Handbag', 'Hat', 'Headband', 'Headphones', 'Hoop earrings', 'Jewelry', 'Knit beanie', 'Lace collar', 'Leather gloves', 'Leg holster', 'Locket necklace', 'Midi rings', 'Mini backpack', 'Monocle', 'Moon pendant', 'Neck scarf', 'Necklace', 'Pearl necklace', 'Rings', 'Sash', 'Scarf', 'Shoulder bag', 'Silk gloves', 'Silk scarf', 'Snake bracelet', 'Stacked bracelets', 'Stacked rings', 'Statement earrings', 'Straw hat', 'Sunglasses', 'Sword', 'Tennis bracelet', 'Tiara', 'Toe ring', 'Tote bag', 'Umbrella', 'Veil', 'Visor', 'Waist chain', 'Wand', 'Watch', 'Wide brim hat'],
 
-  props: ['Acoustic guitar', 'Artifact', 'Baby blanket', 'Balloon', 'Balloons', 'Blanket', 'Book', 'Bouquet', 'Briefcase', 'Camera', 'Camp lantern', 'Candles', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Designer shopping bags', 'Dumbbells', 'Fairy lights', 'Film camera', 'Flowers', 'Gift box', 'Guitar', 'Lantern', 'Laptop', 'Luggage', 'Microphone', 'Mirror', 'Paint palette', 'Phone', 'Picnic basket', 'Pillow', 'Polaroid camera', 'Purse', 'Rose', 'Shield', 'Shopping bags', 'Single flower', 'Skateboard', 'Staff', 'Stuffed animal', 'Suitcase', 'Sun hat', 'Tea cup', 'Teddy bear', 'Towel', 'Umbrella', 'Violin', 'Water bottle', 'Wine glass', 'Yoga mat'],
+  props: ['Acoustic guitar', 'Artifact', 'Baby blanket', 'Balloon', 'Balloons', 'Basket of fruit', 'Blanket', 'Book', 'Bouquet', 'Briefcase', 'Bubbles', 'Camera', 'Camp lantern', 'Candles', 'Canvas painting', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Deck of cards', 'Designer shopping bags', 'Dreamcatcher', 'Dumbbells', 'Envelope', 'Fairy lights', 'Film camera', 'Fishing rod', 'Flowers', 'Fruit bowl', 'Gift box', 'Guitar', 'Hockey stick', 'Horseback', 'Ice cream cone', 'Journal notebook', 'Jump rope', 'Kite', 'Lantern', 'Laptop', 'Luggage', 'Map', 'Microphone', 'Mirror', 'Musical instrument', 'Paint palette', 'Parasol', 'Phone', 'Picnic basket', 'Pillow', 'Polaroid camera', 'Pottery wheel', 'Purse', 'Rose', 'Scroll', 'Shield', 'Shopping bags', 'Single flower', 'Skateboard', 'Sketchbook', 'Smoothie cup', 'Snack box', 'Snowboard', 'Soccer ball', 'Sparkler', 'Staff', 'Stuffed animal', 'Suitcase', 'Sun hat', 'Surfboard', 'Tea cup', 'Teddy bear', 'Tennis racket', 'Towel', 'Trophy', 'Umbrella', 'Violin', 'Water bottle', 'Watering can', 'Wine glass', 'Yoga mat'],
 
-  environment: ['Abandoned amusement park', 'Abandoned asylum', 'Airport', 'Ancient Egypt', 'Ancient library', 'Ancient temple ruins', 'Aquarium tunnel', 'Art gallery', 'Art studio', 'Autumn forest', 'Backyard garden', 'Balcony overlook', 'Ballroom', 'Bamboo forest', 'Barn', 'Beach', 'Beach resort', 'Boardwalk', 'Bookstore', 'Botanical garden', 'Boutique', 'Cafe', 'Calm lake', 'Candy land', 'Canyon', 'Cathedral', 'Cave', 'Cherry blossom garden', 'City alley', 'City rooftop', 'City street', 'Cliffside overlook', 'Cloud kingdom', 'Coastal village', 'Concert hall', 'Conference room', 'Countryside', 'Cozy bedroom', 'Cozy kitchen', 'Cruise ship', 'Cyberpunk alley', 'Dance studio', 'Desert dunes', 'Dreamy greenhouse', 'Enchanted forest', 'Farm', 'Farmhouse', 'Field', 'Floating island', 'Flower field', 'Forest cabin', 'Forest clearing', 'Forest waterfall', 'Futuristic city', 'Garden', 'Glacier', 'Gothic castle', 'Grand staircase', 'Greenhouse', 'Gym', 'Harbor', 'Historic townhouse', 'Home studio', 'Hospital', 'Hotel lobby', 'Indoor pool', 'Jungle', 'Laboratory', 'Lake dock', 'Lakeside cabin', 'Lavender field', 'Library', 'Lighthouse', 'Luxury penthouse', 'Luxury yacht', 'Mars colony', 'Meadow', 'Medieval castle', 'Modern apartment', 'Modern living room', 'Monastery', 'Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Movie set', 'Museum', 'Nature trail', 'Night market', 'Nightclub', 'Oasis', 'Ocean', 'Office', 'Olive grove', 'Orchard', 'Palace', 'Parisian street', 'Park', 'Pier', 'Pine forest', 'Post-apocalyptic ruins', 'Prairie', 'Rainforest', 'Ranch', 'Recording studio', 'Restaurant', 'Rock concert', 'Rocky cliffs', 'Rolling hills', 'Rooftop bar', 'Rose garden', 'Sailboat', 'Salon', 'Savanna', 'Snowy cabin', 'Snowy landscape', 'Spa', 'Space station', 'Spring meadow', 'Stable', 'Summer garden', 'Sunflower field', 'Temple', 'Theater stage', 'Throne room', 'Train station', 'Treehouse', 'Tropical beach', 'Tropical island', 'Tundra', 'Underground cavern', 'Underwater', 'Urban loft', 'Urban street', 'Valley', 'Victorian parlor', 'Vineyard', 'Water park', 'Waterfall', 'Wheat field', 'Wildflower meadow', 'Winery', 'Winter wonderland', 'Yoga studio'],
+  environment: ['Abandoned amusement park', 'Abandoned asylum', 'Airport', 'Ancient Egypt', 'Ancient library', 'Ancient temple ruins', 'Apple orchard', 'Aquarium tunnel', 'Art gallery', 'Art studio', 'Astronomy observatory', 'Autumn forest', 'Backyard garden', 'Balcony overlook', 'Ballroom', 'Bamboo forest', 'Barn', 'Beach', 'Beach bonfire', 'Beach resort', 'Boardwalk', 'Bookstore', 'Botanical garden', 'Boutique', 'Butterfly garden', 'Cafe', 'Calm lake', 'Candy land', 'Canyon', 'Castle courtyard', 'Cathedral', 'Cave', 'Cherry blossom garden', 'Cherry blossom park', 'City alley', 'City rooftop', 'City street', 'Cliffside overlook', 'Cloud kingdom', 'Coastal village', 'Cobblestone alley', 'Concert hall', 'Conference room', 'Coral reef', 'Countryside', 'Cozy bedroom', 'Cozy fireplace', 'Cozy kitchen', 'Covered bridge', 'Cruise ship', 'Crystal cave', 'Cyberpunk alley', 'Dance studio', 'Desert dunes', 'Desert oasis', 'Drive-in theater', 'Dreamy greenhouse', 'Enchanted forest', 'Fairy garden', 'Farm', 'Farmhouse', 'Field', 'Floating island', 'Flower field', 'Flower market', 'Fog-covered moors', 'Forest cabin', 'Forest clearing', 'Forest waterfall', 'Futuristic city', 'Garden', 'Garden maze', 'Glacier', 'Gothic castle', 'Graffiti wall', 'Grand staircase', 'Greenhouse', 'Gym', 'Harbor', 'Historic townhouse', 'Home studio', 'Hospital', 'Hot air balloon', 'Hotel lobby', 'Ice cave', 'Indoor pool', 'Infinity pool', 'Irish countryside', 'Japanese tea house', 'Jungle', 'Koi pond', 'Laboratory', 'Lake dock', 'Lake reflections', 'Lakeside cabin', 'Lavender field', 'Library', 'Lighthouse', 'Lotus pond', 'Luxury penthouse', 'Luxury yacht', 'Market bazaar', 'Mars colony', 'Meadow', 'Medieval castle', 'Misty forest', 'Modern apartment', 'Modern living room', 'Monastery', 'Moonlit beach', 'Moroccan riad', 'Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Movie set', 'Museum', 'Music festival', 'Nature trail', 'Neon arcade', 'Night market', 'Nightclub', 'Oasis', 'Ocean', 'Office', 'Olive grove', 'Open field', 'Orchard', 'Orchard in bloom', 'Outdoor cinema', 'Palace', 'Parisian street', 'Park', 'Pier', 'Pink salt lake', 'Pine forest', 'Poolside lounge', 'Post-apocalyptic ruins', 'Pottery studio', 'Prairie', 'Pumpkin patch', 'Rain-slicked street', 'Rainforest', 'Ranch', 'Recording studio', 'Restaurant', 'Rice terraces', 'Rock concert', 'Rocky cliffs', 'Rolling hills', 'Rooftop bar', 'Rooftop garden', 'Rose garden', 'Sailboat', 'Salon', 'Sand dunes at dawn', 'Savanna', 'Secret garden', 'Ski resort', 'Snowy cabin', 'Snowy landscape', 'Spa', 'Space station', 'Spring meadow', 'Stable', 'Summer garden', 'Sunflower field', 'Swimming pool', 'Tea plantation', 'Temple', 'Terraced garden', 'Theater stage', 'Throne room', 'Tidal pool', 'Train station', 'Treehouse', 'Tropical beach', 'Tropical island', 'Tundra', 'Underground cavern', 'Underground speakeasy', 'Underwater', 'Urban garden', 'Urban loft', 'Urban street', 'Valley', 'Victorian parlor', 'Vineyard', 'Volcano summit', 'Water park', 'Waterfall', 'Watermill', 'Wheat field', 'Wildflower meadow', 'Winery', 'Winter wonderland', 'Yoga studio', 'Zen garden'],
 
-  lighting: ['Aurora glow', 'Backlit sunset', 'Bioluminescent glow', 'Blue hour light', 'Blue water reflections', 'Bright blue sky', 'Bright fluorescent', 'Bright gym lighting', 'Bright midday sunlight', 'Bright natural sunlight', 'Candlelight', 'Chandelier glow', 'Cinematic lighting', 'Clinical lighting', 'Colorful neon lights', 'Cosmic glow', 'Dappled sunlight', 'Dawn light', 'Divine golden light', 'Dramatic stage light', 'Dramatic storm lighting', 'Dramatic sunset', 'Edison bulbs', 'Fairy lights', 'Fire glow', 'Floating candles', 'Foggy atmosphere', 'Golden hour sunset', 'Hazy light', 'Holographic signs', 'Lantern light', 'Magical energy', 'Misty light', 'Moonlight', 'Natural daylight', 'Neon signs', 'Northern lights', 'Overcast light', 'Pink sunset glow', 'Purple magical energy', 'Ray tracing', 'Ring light', 'Soft diffused light', 'Soft morning light', 'Soft natural light', 'Soft studio lighting', 'Spotlights', 'Stage lighting', 'Starlight', 'String lights', 'Studio lighting', 'Sunbeam through window', 'Sunset city lights', 'Torch light', 'Twilight glow', 'Underwater sunbeams', 'Volumetric lighting', 'Warm amber lighting', 'Warm cafe lighting', 'Warm indoor lighting', 'Warm lamp light', 'Warm sunlight', 'Warm window light'],
+  lighting: ['Aurora glow', 'Backlit sunset', 'Bioluminescent glow', 'Blue hour light', 'Blue water reflections', 'Bonfire light', 'Bright blue sky', 'Bright fluorescent', 'Bright gym lighting', 'Bright midday sunlight', 'Bright natural sunlight', 'Candlelight', 'Chandelier glow', 'Christmas lights', 'Cinematic lighting', 'Clinical lighting', 'Colorful neon lights', 'Cosmic glow', 'Cyberpunk neon', 'Dappled sunlight', 'Dawn light', 'Desert midday sun', 'Divine golden light', 'Dramatic side lighting', 'Dramatic stage light', 'Dramatic storm lighting', 'Dramatic sunset', 'Edison bulbs', 'Fairy lights', 'Fire glow', 'Flickering torchlight', 'Floating candles', 'Fog machine haze', 'Foggy atmosphere', 'Galaxy glow', 'Glittering sparkle', 'Golden hour sunset', 'Hazy light', 'Holographic signs', 'Lantern light', 'Laser beams', 'Lightning storm', 'Magical energy', 'Misty light', 'Moonlight', 'Natural daylight', 'Neon signs', 'Northern lights', 'Overcast light', 'Pink sunset glow', 'Purple magical energy', 'Ray tracing', 'Reflection light', 'Ring light', 'Rim lighting', 'Snow-reflected light', 'Soft diffused light', 'Soft morning light', 'Soft natural light', 'Soft studio lighting', 'Spotlights', 'Stage lighting', 'Starlight', 'String lights', 'Studio lighting', 'Sunbeam through window', 'Sunset city lights', 'Torch light', 'Twilight glow', 'Underwater sunbeams', 'Volumetric lighting', 'Warm amber lighting', 'Warm cafe lighting', 'Warm indoor lighting', 'Warm lamp light', 'Warm sunlight', 'Warm window light'],
 
-  pose: ['Arms crossed', 'Arms spread wide', 'Carrying shopping bags', 'Cradling belly', 'Dancing', 'Hands in pockets', 'Holding coffee', 'Holding flowers', 'Holding hands to face', 'Holding hat brim', 'Jumping mid-air', 'Kneeling gracefully', 'Laughing with head tilted back', 'Leaning against wall', 'Looking away thoughtfully', 'Looking down softly', 'Looking over shoulder', 'Reclining elegantly', 'Relaxed pose', 'Running lightly', 'Seated elegantly', 'Sitting comfortably', 'Sitting on floor', 'Standing confidently', 'Standing elegantly', 'Standing powerfully', 'Stretching', 'Strolling', 'Walking confidently', 'Walking naturally', 'Warrior pose', 'Windswept pose', 'Yoga pose'],
+  pose: ['Arms crossed', 'Arms spread wide', 'Back to camera', 'Blowing a kiss', 'Braiding hair', 'Carrying shopping bags', 'Checking phone', 'Cradling belly', 'Crouching down', 'Dancing', 'Doing cartwheels', 'Doing splits', 'Drinking coffee', 'Eating fruit', 'Feeding birds', 'Floating in water', 'Gardening', 'Hands in pockets', 'Hanging from bar', 'Holding coffee', 'Holding flowers', 'Holding hands to face', 'Holding hat brim', 'Hugging knees', 'Jumping mid-air', 'Jumping rope', 'Kneeling gracefully', 'Laughing with head tilted back', 'Leaning against wall', 'Looking away thoughtfully', 'Looking down softly', 'Looking over shoulder', 'Lying in flowers', 'Lying on back', 'Meditating', 'Overhead stretch', 'Painting canvas', 'Picking flowers', 'Playing guitar', 'Playing with pet', 'Pushing hair back', 'Reading book', 'Reclining elegantly', 'Relaxed pose', 'Riding bicycle', 'Running lightly', 'Running with arms back', 'Seated elegantly', 'Sitting comfortably', 'Sitting on floor', 'Skateboarding', 'Spinning around', 'Standing confidently', 'Standing elegantly', 'Standing powerfully', 'Stretching', 'Strolling', 'Surfing wave', 'Throwing confetti', 'Twirling dress', 'Walking away', 'Walking confidently', 'Walking naturally', 'Walking on tiptoes', 'Warrior pose', 'Waving', 'Windswept pose', 'Working on laptop', 'Writing in journal', 'Yoga pose'],
 
-  mood: ['bold daring mood', 'calm tranquil mood', 'carefree lighthearted mood', 'confident heroic mood', 'cozy intimate mood', 'dreamy ethereal mood', 'elegant sophisticated mood', 'energetic vibrant mood', 'fierce powerful mood', 'happy relaxed mood', 'healthy active mood', 'joyful happy mood', 'magical whimsical mood', 'mysterious enchanting mood', 'passionate intense mood', 'peaceful content mood', 'peaceful serene mood', 'playful adventurous mood', 'relaxed comfortable mood', 'romantic cozy mood', 'soft feminine mood', 'victorious triumphant mood']
+  mood: ['adventurous exploratory mood', 'artistic creative mood', 'bold daring mood', 'calm tranquil mood', 'carefree lighthearted mood', 'cheerful bubbly mood', 'confident heroic mood', 'cozy intimate mood', 'dark brooding mood', 'dreamy ethereal mood', 'earthy grounded mood', 'elegant sophisticated mood', 'empowered confident mood', 'energetic vibrant mood', 'ethereal otherworldly mood', 'festive celebratory mood', 'fierce powerful mood', 'flirty playful mood', 'glamorous dazzling mood', 'happy relaxed mood', 'healthy active mood', 'introspective quiet mood', 'joyful happy mood', 'lively energetic mood', 'luxurious refined mood', 'magical whimsical mood', 'melancholic wistful mood', 'mysterious enchanting mood', 'nostalgic reflective mood', 'passionate intense mood', 'peaceful content mood', 'peaceful serene mood', 'playful adventurous mood', 'powerful bold mood', 'raw authentic mood', 'relaxed comfortable mood', 'romantic cozy mood', 'sensual alluring mood', 'soft feminine mood', 'soft whimsical mood', 'sporty dynamic mood', 'tender emotional mood', 'timeless classic mood', 'victorious triumphant mood', 'wild untamed mood']
 
 };
 
@@ -1340,7 +1340,19 @@ const CLOTHING_PRESETS = {
   'Studio Glam Set': { tags:['Studio'], clothingTheme:'Studio', clothingStyle:'One-Piece', onePiece:'slip dress', hosiery:'sheer tights', footwear:'stilettos' },
   'Sunset Boardwalk Set': { tags:['Beach', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'', footwear:'wedges' },
   'Travel Day Set': { tags:['Travel'], clothingTheme:'Travel', clothingStyle:'Layered', top:'t-shirt', bottom:'joggers', outerwear:'jacket', hosiery:'ankle socks', footwear:'slip on shoes' },
-  'Tropical Waterfall Set': { tags:['Beach', 'Jungle', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'sarong', hosiery:'', footwear:'sandals' }
+  'Tropical Waterfall Set': { tags:['Beach', 'Jungle', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'sarong', hosiery:'', footwear:'sandals' },
+  'Autumn Harvest Set': { tags:['Autumn', 'Nature', 'Seasons'], clothingTheme:'Autumn', clothingStyle:'Layered', top:'flannel shirt', bottom:'high-waisted shorts', outerwear:'cardigan', hosiery:'knee high socks', footwear:'ankle boots' },
+  'Bridal Shower Set': { tags:['Wedding', 'Events'], clothingTheme:'Wedding', clothingStyle:'One-Piece', onePiece:'slip dress', hosiery:'sheer tights', footwear:'ballet flats' },
+  'Fall Hiking Set': { tags:['Autumn', 'Nature', 'Travel'], clothingTheme:'Autumn', clothingStyle:'Layered', top:'henley shirt', bottom:'cargo pants', outerwear:'windbreaker', hosiery:'wool socks', footwear:'hiking boots' },
+  'Garden Party Set': { tags:['Events', 'Nature'], clothingTheme:'Events', clothingStyle:'One-Piece', onePiece:'midi dress', hosiery:'sheer tights', footwear:'wedges' },
+  'Holiday Glam Set': { tags:['Holiday', 'Events', 'Nightlife'], clothingTheme:'Holiday', clothingStyle:'One-Piece', onePiece:'sequin dress', hosiery:'sheer tights', footwear:'high heels' },
+  'Picnic Day Set': { tags:['At Home', 'Nature'], clothingTheme:'At Home', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'', footwear:'espadrilles' },
+  'Pool Party Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Two-Piece', top:'bikini top', bottom:'bikini bottoms', hosiery:'', footwear:'flip flops' },
+  'Ski Lodge Set': { tags:['Travel', 'Winter'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'leggings', outerwear:'coat', hosiery:'wool socks', footwear:'snow boots' },
+  'Street Style Set': { tags:['Urban', 'Shopping'], clothingTheme:'Urban', clothingStyle:'Layered', top:'crop top', bottom:'jeans', outerwear:'leather jacket', hosiery:'ankle socks', footwear:'athletic sneakers' },
+  'Urban Night Set': { tags:['Urban', 'Nightlife'], clothingTheme:'Urban', clothingStyle:'Two-Piece', top:'halter top', bottom:'leather pants', hosiery:'', footwear:'stilettos' },
+  'Wedding Day Set': { tags:['Wedding', 'Events'], clothingTheme:'Wedding', clothingStyle:'One-Piece', onePiece:'wedding dress', hosiery:'sheer tights', footwear:'stilettos' },
+  'Winter Coat Set': { tags:['Travel', 'Seasons'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'dress pants', outerwear:'trench coat', hosiery:'pantyhose', footwear:'ankle boots' }
 };
 
 // ==========================================
@@ -1366,7 +1378,12 @@ const THEMES = {
   'events':{ emoji:'🎪', name:'Events', environments:['ballroom','concert hall','theater stage'], lighting:['chandelier glow','dramatic lighting','spotlights'], onePieces:['ball gown','evening gown','cocktail dress','elegant dress'], tops:['blazer','blouse'], bottoms:['dress pants','skirt'], poses:['celebrating','dancing','standing elegantly'], moods:['joyful happy mood','victorious triumphant mood','energetic vibrant mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
   'seasons':{ emoji:'🍂', name:'Seasons', environments:['spring meadow','summer garden','sunflower field','autumn forest','snowy landscape','winter wonderland','flower field','meadow'], lighting:['golden hour sunset','soft morning light','bright natural sunlight','overcast light'], onePieces:['sundress','maxi dress','wrap dress'], tops:['sweater','cardigan','coat'], bottoms:['jeans','leggings','skirt'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','carefree lighthearted mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Casual Coffee Run Set','Cozy At-Home Set'] },
   'flowers':{ emoji:'🌸', name:'Floral', environments:['garden','botanical garden','flower field','lavender field','sunflower field','wildflower meadow'], lighting:['golden hour sunset','soft morning light','dappled sunlight through trees'], onePieces:['sundress','maxi dress','wrap dress','slip dress'], tops:['blouse','camisole'], bottoms:['skirt','shorts'], poses:['standing confidently','walking naturally','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','romantic cozy mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Sunset Boardwalk Set'] },
-  'studio':{ emoji:'📸', name:'Studio', environments:['art studio','home studio'], lighting:['soft studio lighting','soft diffused light','dramatic lighting','ring light'], onePieces:['elegant dress','gown','maternity dress','slip dress'], tops:['camisole','bralette'], bottoms:['skirt','leggings'], poses:['standing confidently','cradling belly'], moods:['elegant sophisticated mood','confident heroic mood','dreamy ethereal mood'], clothingPresets:['Flowing Party Dress Set','Maternity Studio Set','Studio Glam Set'] }
+  'studio':{ emoji:'📸', name:'Studio', environments:['art studio','home studio'], lighting:['soft studio lighting','soft diffused light','dramatic lighting','ring light'], onePieces:['elegant dress','gown','maternity dress','slip dress'], tops:['camisole','bralette'], bottoms:['skirt','leggings'], poses:['standing confidently','cradling belly'], moods:['elegant sophisticated mood','confident heroic mood','dreamy ethereal mood'], clothingPresets:['Flowing Party Dress Set','Maternity Studio Set','Studio Glam Set'] },
+  'wedding':{ emoji:'💍', name:'Wedding', environments:['ballroom','garden','cathedral','rose garden','botanical garden','vineyard','beach resort'], lighting:['chandelier glow','soft diffused light','golden hour sunset','divine golden light','fairy lights'], onePieces:['wedding dress','ball gown','slip dress','elegant dress','lace dress'], tops:['blouse','camisole'], bottoms:['skirt'], poses:['standing elegantly','holding flowers','twirling dress','seated elegantly'], moods:['romantic cozy mood','elegant sophisticated mood','joyful happy mood','dreamy ethereal mood','timeless classic mood'], occupations:['bride','model'], clothingPresets:['Wedding Day Set','Bridal Shower Set','Flowing Party Dress Set'] },
+  'urban':{ emoji:'🏙️', name:'Urban', environments:['city street','graffiti wall','urban loft','rooftop bar','cobblestone alley','night market','neon arcade'], lighting:['neon signs','colorful neon lights','warm amber lighting','sunset city lights','dramatic stage light'], onePieces:['bodycon dress','little black dress','catsuit','leather jumpsuit'], tops:['crop top','halter top','camisole'], bottoms:['jeans','leather pants','high-waisted shorts','skater skirt'], poses:['leaning against wall','standing confidently','walking confidently','looking over shoulder'], moods:['bold daring mood','fierce powerful mood','mysterious enchanting mood','energetic vibrant mood'], occupations:['content creator','influencer','DJ','photographer'], clothingPresets:['Street Style Set','Urban Night Set','Date Night Dress Set'] },
+  'autumn':{ emoji:'🍂', name:'Autumn', environments:['autumn forest','pumpkin patch','apple orchard','countryside','park','wheat field','covered bridge'], lighting:['golden hour sunset','warm amber lighting','overcast light','soft morning light'], onePieces:['maxi dress','sweater dress','midi dress','wrap dress'], tops:['flannel shirt','sweater','cardigan','turtleneck'], bottoms:['jeans','leggings','wide-leg pants','midi skirt'], poses:['walking naturally','standing confidently','picking flowers','throwing confetti'], moods:['carefree lighthearted mood','nostalgic reflective mood','peaceful serene mood','earthy grounded mood','cozy intimate mood'], clothingPresets:['Autumn Harvest Set','Fall Hiking Set','Cozy At-Home Set'] },
+  'water-sports':{ emoji:'🏄', name:'Water Sports', environments:['beach','ocean','tropical beach','swimming pool','lake dock','waterfall','tropical island'], lighting:['bright natural sunlight','backlit sunset','blue water reflections','golden hour sunset'], onePieces:['one-piece swimsuit','swimdress','beach cover-up'], tops:['bikini top','rash guard','tankini top','sports bra'], bottoms:['bikini bottoms','board shorts','surf shorts','sarong'], poses:['surfing wave','floating in water','jumping mid-air','standing confidently'], moods:['energetic vibrant mood','carefree lighthearted mood','adventurous exploratory mood','healthy active mood'], clothingPresets:['Bikini Set','Pool Party Set','Resort Swim Set','Tropical Waterfall Set'] },
+  'holiday':{ emoji:'🎄', name:'Holiday', environments:['winter wonderland','cozy fireplace','snowy landscape','snowy cabin','ballroom'], lighting:['christmas lights','warm indoor lighting','candlelight','string lights','fairy lights'], onePieces:['sequin dress','velvet dress','ball gown','evening gown','velvet gown'], tops:['turtleneck','sweater'], bottoms:['leggings','skirt','dress pants'], poses:['standing elegantly','dancing','throwing confetti','holding flowers'], moods:['festive celebratory mood','joyful happy mood','magical whimsical mood','cozy intimate mood','glamorous dazzling mood'], clothingPresets:['Holiday Glam Set','Date Night Dress Set','Ski Lodge Set','Winter Coat Set'] }
 };
 
 const STYLE_MODES = { 'Default':'', 'Cinematic':'cinematic, dramatic', 'Fantasy':'whimsical, fantastical', 'Romantic':'romantic, dreamy', 'Epic':'epic, grand', 'Documentary':'documentary, realistic' };
@@ -1376,7 +1393,10 @@ const SEARCH_SYNONYMS = {
   'forest':['woods','jungle','nature','trees'], 'mountain':['alpine','peak','hiking'],
   'city':['urban','downtown','street'], 'snow':['snowy','winter','christmas'],
   'fantasy':['elf','fairy','dragon','enchanted','magic'], 'gym':['fitness','workout','yoga'],
-  'art':['creative','studio','gallery','paint'], 'food':['dining','restaurant','cafe','coffee']
+  'art':['creative','studio','gallery','paint'], 'food':['dining','restaurant','cafe','coffee'],
+  'wedding':['bridal','bride','marriage','ceremony'], 'autumn':['fall','harvest','leaves','pumpkin'],
+  'party':['holiday','celebration','festive','events'], 'swim':['pool','water','surfing','ocean'],
+  'street':['urban','graffiti','city','downtown']
 };
 
 // ==========================================
@@ -1571,6 +1591,7 @@ function randomizeClothing(themeId) {
   const theme = themeId ? THEMES[themeId] : null;
   const themeToStyle = {
     'At Home':'Layered',
+    'Autumn':'Layered',
     'Beach':'Swimwear',
     'Creative':'Layered',
     'Dining':'One-Piece',
@@ -1578,6 +1599,7 @@ function randomizeClothing(themeId) {
     'Fantasy':'Fantasy / Armor',
     'Fitness':'Two-Piece',
     'Historical':'One-Piece',
+    'Holiday':'One-Piece',
     'Jungle':'Layered',
     'Maternity':'One-Piece',
     'Nightlife':'One-Piece',
@@ -1585,7 +1607,9 @@ function randomizeClothing(themeId) {
     'Prehistoric':'Layered',
     'Studio':'One-Piece',
     'Swimwear':'Swimwear',
-    'Travel':'Layered'
+    'Travel':'Layered',
+    'Urban':'Layered',
+    'Wedding':'One-Piece'
   };
 
   let style = STATE.prompt.clothingStyle || 'One-Piece';
@@ -1872,30 +1896,6 @@ function focusPromptDisplay() {
   } catch (e) {}
 }
 
-async function handleImagePromptFile(evt) {
-  const file = evt.target.files && evt.target.files[0];
-  if (!file) return;
-  pushUndo();
-  try {
-    toast('Analyzing image...');
-    const prompt = await describeImageToPrompt(file);
-    STATE.manualPrompt = prompt;
-    STATE.promptMode = 'manual';
-    STATE.lastImagePromptSource = file.name || 'uploaded image';
-    try {
-      localStorage.setItem('maternity_prompt_mode', STATE.promptMode);
-      localStorage.setItem('maternity_manual_prompt', STATE.manualPrompt || '');
-    } catch(e){}
-    refresh();
-    toast('Image converted to prompt');
-  } catch (e) {
-    console.error(e);
-    toast('Image to prompt failed');
-  } finally {
-    evt.target.value = '';
-  }
-}
-
 function fileToDataURL(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -1903,55 +1903,6 @@ function fileToDataURL(file) {
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
-}
-
-function localImagePromptFallback(file) {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      const orientation = img.width === img.height ? 'square' : (img.width > img.height ? 'landscape' : 'portrait');
-      URL.revokeObjectURL(url);
-      const base = (file.name || 'uploaded image').replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
-      resolve(`Photorealistic ${orientation} portrait or lifestyle scene inspired by ${base || 'the uploaded image'}, natural composition, realistic lighting, human-focused details, clean background separation, high detail.`);
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve('Photorealistic portrait or lifestyle image inspired by the uploaded reference, realistic lighting, natural composition, detailed human features, high detail.');
-    };
-    img.src = url;
-  });
-}
-
-async function describeImageToPrompt(file) {
-  const apiKey = getApiKey();
-  if (!apiKey) return await localImagePromptFallback(file);
-  const dataUrl = await fileToDataURL(file);
-  const body = {
-    model: 'gpt-4.1-mini',
-    input: [{
-      role: 'user',
-      content: [
-        { type: 'input_text', text: 'Turn this image into one polished image-generation prompt. Focus on people, clothing, lighting, composition, background, and photographic style. Keep it under 700 characters. Return only the prompt text with no bullets or commentary.' },
-        { type: 'input_image', image_url: dataUrl, detail: 'low' }
-      ]
-    }]
-  };
-  try {
-    const resp = await fetch('https://api.openai.com/v1/responses', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
-      body: JSON.stringify(body)
-    });
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message || 'OpenAI image description failed');
-    const text = (data.output_text || '').trim();
-    if (text) return text;
-    throw new Error('No description returned');
-  } catch (e) {
-    console.log('Image prompt OpenAI fallback:', e.message || e);
-    return await localImagePromptFallback(file);
-  }
 }
 
 // ==========================================
@@ -3345,35 +3296,6 @@ function sanitizeImagePromptResult(text, charLimit) {
   if (out.length > charLimit) out = out.slice(0, charLimit).trim();
   return out;
 }
-function localImagePromptFallback(file, mode = 'literal') {
-  return new Promise((resolve) => {
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      const orientation = img.width === img.height ? 'square' : (img.width > img.height ? 'landscape' : 'portrait');
-      URL.revokeObjectURL(url);
-      const profile = buildDefaultSubjectForImagePrompt() || 'an adult subject';
-      const creativeType = STATE.creativePromptType || 'merge_saved';
-      const map = {
-        product: `Photorealistic ${orientation} product display of a packaged item in a refrigerator or kitchen setting, realistic lighting, clear label details, detailed textures, no people.`,
-        lifestyle: `Lifestyle scene of ${profile} interacting with a refrigerated packaged item, natural home lighting, candid composition, realistic details.`,
-        portrait: `Portrait scene of ${profile} holding a refrigerated packaged item, soft indoor lighting, lifestyle photography style.`,
-        merge_saved: `Photorealistic lifestyle scene featuring ${profile}, naturally interacting with a refrigerated packaged item, realistic home lighting and detailed textures.`,
-        background: `Photorealistic refrigerator or kitchen environment, cool indoor lighting, reflective shelf surfaces, realistic household setting.`,
-        inspire: `Cinematic prompt inspired by a refrigerator interior, cool lighting, reflective textures, and a modern home atmosphere.`
-      };
-      if (mode === 'creative') resolve(map[creativeType] || map.merge_saved);
-      else resolve(`A close-up ${orientation} photo of a packaged food or drink item inside a refrigerator, realistic indoor lighting, visible label details, natural composition, no people visible.`);
-    };
-    img.onerror = () => {
-      URL.revokeObjectURL(url);
-      resolve(mode === 'creative'
-        ? 'Photorealistic lifestyle prompt based on the uploaded scene, realistic lighting, natural composition.'
-        : 'Literal description of a packaged item or visible scene with realistic lighting and clear details.');
-    };
-    img.src = url;
-  });
-}
 async function extractImageLiteralJSON(file) {
   const apiKey = getApiKey();
   if (!apiKey) throw new Error('No API key');
@@ -3506,14 +3428,6 @@ async function handleImagePromptFile(evt) {
   } finally {
     evt.target.value = '';
   }
-}
-function triggerImagePrompt(mode = 'literal') {
-  if (!selectedImageToolFile) {
-    toast('Choose an image first');
-    triggerImagePick();
-    return;
-  }
-  executeSelectedImagePrompt(mode === 'creative' ? 'creative' : 'literal');
 }
 const _openPanelOriginal = openPanel;
 openPanel = function(name) {
