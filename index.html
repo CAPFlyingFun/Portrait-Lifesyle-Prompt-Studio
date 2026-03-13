@@ -531,11 +531,49 @@ padding: 0 16px 24px;
   border-color: rgba(196, 112, 112, 0.3);
 }
 
-.ac-wrap { position: relative; }
+.ac-wrap { position: relative; display: flex; gap: 4px; align-items: center; }
+.ac-wrap .field-input { flex: 1; min-width: 0; }
+
+.ac-clear-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 38px;
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: color 0.15s;
+  line-height: 1;
+}
+.ac-clear-btn:hover { color: var(--accent-rose); }
+.ac-clear-btn.hidden { visibility: hidden; pointer-events: none; }
+
+.ac-arrow-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 38px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  padding: 0;
+  transition: all 0.15s;
+}
+.ac-arrow-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
 
 .ac-list {
   position: absolute;
-  left: 0; 
+  left: 0;
   right: 0;
   top: calc(100% + 4px);
   z-index: 9999;
@@ -543,25 +581,57 @@ padding: 0 16px 24px;
   border: 1px solid var(--border-accent);
   border-radius: var(--radius-sm);
   box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-  max-height: 250px;
+  max-height: 300px;
   overflow-y: auto;
   display: none;
 }
 
 .ac-list.show { display: block; }
 
+.ac-count {
+  padding: 5px 10px;
+  font-size: 10px;
+  color: var(--text-muted);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-subtle);
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 .ac-item {
-  padding: 12px;
-  font-size: 14px;
+  padding: 9px 12px;
+  font-size: 13px;
   color: var(--text-primary);
   cursor: pointer;
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid rgba(61,55,51,0.5);
   background: #1C1917;
 }
 
-.ac-item:hover, .ac-item.active { 
-  background: var(--accent-gold); 
-  color: #12100E; 
+.ac-item:hover, .ac-item.active {
+  background: var(--accent-gold);
+  color: #12100E;
+}
+
+.ac-show-all {
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-gold);
+  cursor: pointer;
+  text-align: center;
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+  letter-spacing: 0.02em;
+}
+.ac-show-all:hover { background: rgba(212,168,83,0.12); }
+
+.ac-empty {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+  font-style: italic;
 }
 
 .chip-row {
@@ -2126,7 +2196,10 @@ function buildBuilder() {
       h += buildFieldHTML(f, hardLocked);
     });
     if (sec.title.includes('Clothing')) {
-      h += `<div class="field-row"><div class="field-label"><span class="field-label-text">Clothing Preset</span><button class="lock-btn ${STATE.locks.clothingPreset?'locked':'unlocked'}" onclick="toggleLock('clothingPreset')">${STATE.locks.clothingPreset?'🔒':'🔓'}</button></div><div class="ac-wrap"><input class="field-input${STATE.locks.clothingPreset?' locked-input':''}" id="fi-clothingPreset" value="${(STATE.prompt.clothingPreset||'').replace(/"/g,'&quot;')}" ${STATE.locks.clothingPreset?'disabled':''} oninput="updateField('clothingPreset',this.value);showAC('clothingPreset',this.value)" onfocus="showAC('clothingPreset',this.value)" onblur="setTimeout(()=>hideAC('clothingPreset'),150)" onkeydown="acKey('clothingPreset',event)" autocomplete="off" placeholder="Choose a preset..."><div class="ac-list" id="ac-clothingPreset"></div></div></div>`;
+      const cpLocked = STATE.locks.clothingPreset;
+      const cpVal = (STATE.prompt.clothingPreset||'').replace(/"/g,'&quot;');
+      const cpHasVal = !!(STATE.prompt.clothingPreset);
+      h += `<div class="field-row"><div class="field-label"><span class="field-label-text">Clothing Preset</span><button class="lock-btn ${cpLocked?'locked':'unlocked'}" onclick="toggleLock('clothingPreset')">${cpLocked?'🔒':'🔓'}</button></div><div class="ac-wrap"><input class="field-input${cpLocked?' locked-input':''}" id="fi-clothingPreset" value="${cpVal}" ${cpLocked?'disabled':''} oninput="updateField('clothingPreset',this.value);showAC('clothingPreset',this.value);updateACButtons('clothingPreset')" onfocus="showAC('clothingPreset',this.value)" onblur="setTimeout(()=>hideAC('clothingPreset'),150)" onkeydown="acKey('clothingPreset',event)" autocomplete="off" placeholder="Choose a preset...">${!cpLocked?`<button class="ac-clear-btn${cpHasVal?'':' hidden'}" id="clr-clothingPreset" title="Clear" onmousedown="event.preventDefault();clearField('clothingPreset')">×</button>`:''}${!cpLocked?`<button class="ac-arrow-btn" title="Show all options" onmousedown="event.preventDefault();showAC('clothingPreset','',true);document.getElementById('fi-clothingPreset').focus()">▾</button>`:''}    <div class="ac-list" id="ac-clothingPreset"></div></div></div>`;
       h += `<div class="setting-row" style="margin-top:6px;"><label class="setting-label">Sync preset with theme</label><label class="switch"><input type="checkbox" ${STATE.autoClothingPresetSync?'checked':''} onchange="setAutoClothingPresetSync(this.checked)"><span class="slider"></span></label></div>`;
       h += `<div class="field-hint" style="margin-top:4px;opacity:.8;">Presets are filtered automatically by your clothing theme and style.</div>`;
       h += `<div style="display:flex;gap:8px;margin:8px 0 10px 0;"><button class="act-btn" style="flex:1;" onclick="applyCurrentClothingPreset()">🧥 Apply Preset</button><button class="act-btn" style="flex:1;" onclick="toggleClothingDetails()">${STATE.showClothingDetails?'🔼 Hide Details':'✍️ Edit Details'}</button></div>`;
@@ -2157,14 +2230,17 @@ function buildFieldHTML(field, hardLocked) {
   }
 
   const dis = hardLocked || isLocked;
+  const hasVal = !!(STATE.prompt[field]);
   return `<div class="field-row"><div class="field-label">
     <span class="field-label-text">${label}${hardLocked?' 🔐':''}${isLocked&&!hardLocked?'<span class="locked-badge">LOCKED</span>':''}</span>
     ${!hardLocked?`<button class="lock-btn ${isLocked?'locked':'unlocked'}" onclick="toggleLock('${field}')">${isLocked?'🔒':'🔓'}</button>`:''}
   </div><div class="ac-wrap">
     <input class="field-input${isLocked&&!hardLocked?' locked-input':''}" id="fi-${field}" value="${val}" ${dis?'disabled':''}
-      oninput="updateField('${field}',this.value);showAC('${field}',this.value)"
+      oninput="updateField('${field}',this.value);showAC('${field}',this.value);updateACButtons('${field}')"
       onfocus="showAC('${field}',this.value)" onblur="setTimeout(()=>hideAC('${field}'),150)"
       onkeydown="acKey('${field}',event)" autocomplete="off" placeholder="Type or search...">
+    ${!dis?`<button class="ac-clear-btn${hasVal?'':' hidden'}" id="clr-${field}" title="Clear" onmousedown="event.preventDefault();clearField('${field}')">×</button>`:''}
+    ${!dis?`<button class="ac-arrow-btn" title="Show all options" onmousedown="event.preventDefault();showAC('${field}','',true);document.getElementById('fi-${field}').focus()">▾</button>`:''}
     <div class="ac-list" id="ac-${field}"></div>
   </div><div class="chip-row" id="chips-${field}"></div></div>`;
 }
@@ -2267,31 +2343,61 @@ function toggleLock(f) {
 // ==========================================
 // AUTOCOMPLETE
 // ==========================================
-function showAC(field, q) {
+function showAC(field, q, showAll) {
   const list = document.getElementById('ac-'+field);
   if (!list || STATE.locks[field]) { hideAC(field); return; }
   q = (q||'').toLowerCase().trim();
   const raw = field === 'clothingPreset' ? getAvailableClothingPresets() : nonEmpty(FIELDS[field]||[]);
   let results;
-  if (!q) { results = raw.slice(0,12); }
-  else {
+  if (!q) {
+    results = showAll ? raw : raw.slice(0, 30);
+  } else {
     results = raw.filter(v => v.toLowerCase().includes(q))
       .sort((a,b) => {
         const al = a.toLowerCase(), bl = b.toLowerCase();
         if (al.startsWith(q) && !bl.startsWith(q)) return -1;
         if (!al.startsWith(q) && bl.startsWith(q)) return 1;
         return al.localeCompare(bl);
-      }).slice(0,12);
+      });
   }
-  if (!results.length) { list.classList.remove('show'); return; }
-  list.innerHTML = results.map((v,i) => {
-    const hl = q ? v.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<span class="ac-match">$1</span>') : v;
+  if (!results.length) {
+    list.innerHTML = `<div class="ac-empty">No matches for "${q}"</div>`;
+    list.classList.add('show');
+    return;
+  }
+  const total = !q ? raw.length : results.length;
+  const showing = results.length;
+  const hasMore = !q && !showAll && raw.length > 30;
+  const countHtml = `<div class="ac-count">${q ? `${showing} match${showing!==1?'es':''}` : `${showing} of ${total}`}</div>`;
+  const itemsHtml = results.map((v,i) => {
+    const hl = q ? v.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<span class="ac-match">$1</span>') : escHtml(v);
     return `<div class="ac-item" data-val="${esc(v)}" data-i="${i}" onmousedown="event.preventDefault();pickAC('${field}','${v.replace(/'/g,"\\'")}')">${hl}</div>`;
   }).join('');
+  const moreHtml = hasMore ? `<div class="ac-show-all" onmousedown="event.preventDefault();showAC('${field}','',true)">Show all ${total} options ▾</div>` : '';
+  list.innerHTML = countHtml + itemsHtml + moreHtml;
   list.classList.add('show');
 }
 
 function hideAC(f) { const l=document.getElementById('ac-'+f); if(l)l.classList.remove('show'); }
+
+function clearField(f) {
+  if (STATE.locks[f]) return;
+  if (!ensureBuilderModeForEdit('Builder Mode')) return;
+  pushUndo();
+  STATE.prompt[f] = '';
+  const el = document.getElementById('fi-'+f);
+  if (el) { el.value = ''; el.focus(); }
+  updateACButtons(f);
+  updateField(f, '');
+  showAC(f, '');
+}
+
+function updateACButtons(f) {
+  const btn = document.getElementById('clr-'+f);
+  if (!btn) return;
+  const val = (document.getElementById('fi-'+f)||{}).value || '';
+  btn.classList.toggle('hidden', !val);
+}
 
 function pickAC(f, v) {
   if (STATE.locks[f]) return;
