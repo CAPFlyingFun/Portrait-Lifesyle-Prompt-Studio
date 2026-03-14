@@ -2149,6 +2149,9 @@ function generateBuilderPromptText() {
   const fmt = STATE.settings.promptFormat || 'grouped';
   let r = '';
 
+  // Strip inner parentheses to prevent nested parens in CategoryName (value) format
+  const cleanVal = v => String(v||'').replace(/[()]/g, '');
+
   // Helper: determine which clothing categories are active based on clothingStyle
   const cs = p.clothingStyle || 'One-Piece';
   const showDress    = ['One-Piece','Fantasy / Armor','Swimwear'].includes(cs);
@@ -2175,19 +2178,19 @@ function generateBuilderPromptText() {
     if(p.skin)parts.push(`Skin (${p.skin})`); if(p.occupation)parts.push(`Occupation (${p.occupation})`);
     if(p.expression)parts.push(`Expression (${p.expression})`); if(p.makeup)parts.push(`Makeup (${p.makeup})`);
     if(d.hairDesc)parts.push(`Hair (${d.hairDesc})`);
-    if(showDress && d.onePiece)      parts.push(`Dresses (${d.onePiece})`);
-    if(showTopwear && d.top)         parts.push(`Topwear (${d.top})`);
-    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${d.bottom})`);
-    if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
-    if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
-    if(d.footwear)parts.push(`Footwear (${d.footwear})`);
-    if(d.jewelry)parts.push(`Jewelry (${d.jewelry})`);
-    if(d.headwear)parts.push(`Headwear (${d.headwear})`);
-    if(p.accessories)parts.push(`Accessories (${p.accessories})`);
-    if(d.holdingItem)parts.push(`Holding Item (${d.holdingItem})`);
-    if(d.sceneProp)parts.push(`Scene Prop (${d.sceneProp})`);
-    if(d.backgroundProp)parts.push(`Background Prop (${d.backgroundProp})`);
-    if(d.magicProp)parts.push(`Magic Prop (${d.magicProp})`);
+    if(showDress && d.onePiece)      parts.push(`Dresses (${cleanVal(d.onePiece)})`);
+    if(showTopwear && d.top)         parts.push(`Topwear (${cleanVal(d.top)})`);
+    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${cleanVal(d.bottom)})`);
+    if(d.outerwear)parts.push(`Outerwear (${cleanVal(d.outerwear)})`);
+    if(d.hosiery)parts.push(`Hosiery (${cleanVal(d.hosiery)})`);
+    if(d.footwear)parts.push(`Footwear (${cleanVal(d.footwear)})`);
+    if(d.jewelry)parts.push(`Jewelry (${cleanVal(d.jewelry)})`);
+    if(d.headwear)parts.push(`Headwear (${cleanVal(d.headwear)})`);
+    if(p.accessories)parts.push(`Accessories (${cleanVal(p.accessories)})`);
+    if(d.holdingItem)parts.push(`Holding Item (${cleanVal(d.holdingItem)})`);
+    if(d.sceneProp)parts.push(`Scene Prop (${cleanVal(d.sceneProp)})`);
+    if(d.backgroundProp)parts.push(`Background Prop (${cleanVal(d.backgroundProp)})`);
+    if(d.magicProp)parts.push(`Magic Prop (${cleanVal(d.magicProp)})`);
     parts.push(`Pose (${p.pose})`,`Location (${p.environment})`,`Lighting (${p.lighting})`,`Mood (${p.mood})`);
     r = parts.join(', ');
   } else if (fmt === 'grouped') {
@@ -2196,21 +2199,21 @@ function generateBuilderPromptText() {
     parts.push(`Subject (${sg.filter(Boolean).join(', ')})`);
     const lg = []; if(d.hairDesc)lg.push(d.hairDesc); if(p.expression)lg.push(p.expression); if(p.makeup)lg.push(p.makeup);
     if(lg.length)parts.push(`Hair & Look (${lg.join(', ')})`);
-    if(showTopwear && d.top)         parts.push(`Topwear (${d.top})`);
-    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${d.bottom})`);
-    if(showDress && d.onePiece)      parts.push(`Dresses (${d.onePiece})`);
-    if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
-    if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
-    if(d.footwear)parts.push(`Footwear (${d.footwear})`);
-    if(d.jewelry)parts.push(`Jewelry (${d.jewelry})`);
-    if(d.headwear)parts.push(`Headwear (${d.headwear})`);
-    if(p.accessories)parts.push(`Accessories (${p.accessories})`);
-    if(d.holdingItem)parts.push(`Holding Item (${d.holdingItem})`);
-    if(d.sceneProp)parts.push(`Scene Prop (${d.sceneProp})`);
-    if(d.backgroundProp)parts.push(`Background Prop (${d.backgroundProp})`);
-    if(d.magicProp)parts.push(`Magic Prop (${d.magicProp})`);
+    if(showTopwear && d.top)         parts.push(`Topwear (${cleanVal(d.top)})`);
+    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${cleanVal(d.bottom)})`);
+    if(showDress && d.onePiece)      parts.push(`Dresses (${cleanVal(d.onePiece)})`);
+    if(d.outerwear)parts.push(`Outerwear (${cleanVal(d.outerwear)})`);
+    if(d.hosiery)parts.push(`Hosiery (${cleanVal(d.hosiery)})`);
+    if(d.footwear)parts.push(`Footwear (${cleanVal(d.footwear)})`);
+    if(d.jewelry)parts.push(`Jewelry (${cleanVal(d.jewelry)})`);
+    if(d.headwear)parts.push(`Headwear (${cleanVal(d.headwear)})`);
+    if(p.accessories)parts.push(`Accessories (${cleanVal(p.accessories)})`);
+    if(d.holdingItem)parts.push(`Holding Item (${cleanVal(d.holdingItem)})`);
+    if(d.sceneProp)parts.push(`Scene Prop (${cleanVal(d.sceneProp)})`);
+    if(d.backgroundProp)parts.push(`Background Prop (${cleanVal(d.backgroundProp)})`);
+    if(d.magicProp)parts.push(`Magic Prop (${cleanVal(d.magicProp)})`);
     parts.push(`Scene (${[p.pose,p.environment,p.lighting].filter(Boolean).join(', ')})`);
-    parts.push(`Mood (${p.mood})`);
+    parts.push(`Mood (${cleanVal(p.mood)})`);
     r = parts.join(', ');
   } else if (fmt === 'tags') {
     const tags = [p.camera,p.shot]; if(p.pregnancy!=='not pregnant')tags.push(p.pregnancy);
