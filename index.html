@@ -652,10 +652,50 @@ padding: 0 16px 24px;
   transition: all 0.15s;
 }
 
-.chip:hover { 
-  border-color: var(--accent-gold); 
-  color: var(--text-secondary); 
+.chip:hover {
+  border-color: var(--accent-gold);
+  color: var(--text-secondary);
 }
+
+.chip.active {
+  border-color: var(--accent-gold);
+  background: rgba(212,168,83,0.15);
+  color: var(--accent-gold);
+}
+
+.neg-char-info {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 3px;
+}
+
+/* ===== QUICK PRESETS ===== */
+.quick-preset-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.preset-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1.5px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: var(--font-body);
+}
+.preset-chip:hover {
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: scale(1.03);
+}
+.preset-chip:active { transform: scale(0.97); }
 
 .clothing-toggle {
   display: grid;
@@ -968,7 +1008,8 @@ margin-bottom: 4px;
         <button class="act-btn" onclick="openPanel('image')">🖼️ Image Tools</button>
       </div>
     </div>
-    <input class="neg-input" id="negative-prompt" placeholder="Negative prompt (optional): blurry, low quality...">
+    <input class="neg-input" id="negative-prompt" placeholder="Negative prompt (optional): blurry, low quality..." maxlength="500" oninput="onNegativeInput(this.value)">
+    <div class="neg-char-info"><span id="neg-char-count">0 / 500</span></div>
     <div class="actions-row" style="margin-top:10px;">
       <button class="act-btn" onclick="copyPrompt()">📋 Copy</button>
       <button class="act-btn" onclick="toggleFavorite()">⭐ Save</button>
@@ -981,12 +1022,26 @@ margin-bottom: 4px;
       <button class="act-btn" onclick="undoState()">↩️ Undo</button>
       <button class="act-btn" onclick="generatePreview()">🖼️ Preview</button>
     </div>
+    <div class="actions-row" style="margin-top:6px;">
+      <button class="act-btn" onclick="resetAll()" style="color:var(--accent-rose);border-color:rgba(196,112,112,0.4);">🔄 Reset All</button>
+    </div>
   </div>
 
   <!-- STYLE + THEMES COMBINED -->
 
   <div class="card">
     <div class="card-title">🎨 Style & Themes</div>
+    <div style="margin-bottom:8px;">
+      <div style="font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px;">Quick Presets</div>
+      <div class="quick-preset-row" id="quick-preset-row">
+        <button class="preset-chip" onclick="applyQuickPreset('portrait')">🖼️ Portrait</button>
+        <button class="preset-chip" onclick="applyQuickPreset('lifestyle')">✨ Lifestyle</button>
+        <button class="preset-chip" onclick="applyQuickPreset('editorial')">📰 Editorial</button>
+        <button class="preset-chip" onclick="applyQuickPreset('travel')">🚗 Travel</button>
+        <button class="preset-chip" onclick="applyQuickPreset('fitness')">🏋️ Fitness</button>
+        <button class="preset-chip" onclick="applyQuickPreset('maternity')">🤱 Maternity</button>
+      </div>
+    </div>
     <div class="style-row" id="style-row"></div>
     <div style="margin-top:10px;">
       <div class="search-wrap">
@@ -1279,7 +1334,8 @@ let STATE = {
     clothingPreset:'', clothingPresetType:'',
     accessories:'', props:'',
     environment:'park', lighting:'golden hour sunset',
-    pose:'standing confidently', mood:'joyful happy mood'
+    pose:'standing confidently', mood:'joyful happy mood',
+    negative:''
   },
   settings: { defaultGender:'', defaultPregnancy:'', defaultAge:'', promptFormat:'grouped' },
   favorites: [],
@@ -2583,7 +2639,8 @@ function applyDefaults() {
     footwear: '',
     footwearColor: '',
     footwearFabric: '',
-    mood: 'joyful happy mood'
+    mood: 'joyful happy mood',
+    negative: ''
   };
 
   STATE.prompt = Object.assign({}, defaults, STATE.prompt || {});
@@ -2683,6 +2740,94 @@ function importFavorites(evt) {
   };
   reader.readAsText(file);
   evt.target.value='';
+}
+
+// ==========================================
+// NEGATIVE PROMPT COUNTER
+// ==========================================
+function onNegativeInput(val) {
+  const counter = document.getElementById('neg-char-count');
+  if (counter) counter.textContent = val.length + ' / 500';
+  STATE.prompt.negative = val;
+}
+
+// ==========================================
+// RESET ALL
+// ==========================================
+function resetAll() {
+  if (!confirm('Reset all fields to defaults?')) return;
+  pushUndo();
+  STATE.prompt = {};
+  applyDefaults();
+  document.getElementById('negative-prompt').value = '';
+  onNegativeInput('');
+  renderAllChips();
+  updatePromptDisplay();
+  toast('🔄 Reset to defaults');
+}
+
+// ==========================================
+// QUICK PRESETS
+// ==========================================
+const QUICK_PRESETS = {
+  portrait: {
+    camera: 'studio portrait photography',
+    shot: 'Head-and-shoulders portrait',
+    lighting: 'soft studio lighting',
+    environment: 'studio',
+    mood: 'confident serene mood',
+    pose: 'standing confidently'
+  },
+  lifestyle: {
+    camera: 'candid lifestyle photography',
+    shot: 'Medium shot',
+    lighting: 'golden hour sunset',
+    environment: 'park',
+    mood: 'joyful happy mood',
+    pose: 'walking casually'
+  },
+  editorial: {
+    camera: 'editorial fashion photography',
+    shot: 'Full body portrait',
+    lighting: 'dramatic directional lighting',
+    environment: 'urban street',
+    mood: 'fierce editorial mood',
+    pose: 'striking editorial pose'
+  },
+  travel: {
+    camera: 'travel editorial photography',
+    shot: 'Environmental portrait',
+    lighting: 'natural daylight',
+    environment: 'mountain landscape',
+    mood: 'adventurous carefree mood',
+    pose: 'exploring with curiosity'
+  },
+  fitness: {
+    camera: 'sports editorial photography',
+    shot: 'Full body portrait',
+    lighting: 'bright energetic lighting',
+    environment: 'gym',
+    mood: 'powerful energetic mood',
+    pose: 'athletic dynamic pose'
+  },
+  maternity: {
+    camera: 'fine art portrait photography',
+    shot: 'Three-quarter portrait',
+    lighting: 'soft natural light',
+    environment: 'studio',
+    mood: 'serene glowing mood',
+    pose: 'cradling bump tenderly'
+  }
+};
+
+function applyQuickPreset(name) {
+  const preset = QUICK_PRESETS[name];
+  if (!preset) return;
+  pushUndo();
+  Object.assign(STATE.prompt, preset);
+  renderAllChips();
+  updatePromptDisplay();
+  toast('✨ Applied ' + name + ' preset');
 }
 
 // ==========================================
@@ -3791,6 +3936,13 @@ function init() {
     renderSelectedImageUI();
     updateImageToolCharBar();
     if (STATE.promptMode === 'manual' && !(STATE.manualPrompt||'').trim()) STATE.promptMode = 'builder';
+
+    // Restore negative prompt field
+    const negEl = document.getElementById('negative-prompt');
+    if (negEl && STATE.prompt.negative) {
+      negEl.value = STATE.prompt.negative;
+      onNegativeInput(STATE.prompt.negative);
+    }
 
     // Welcome
     if (!STATE.settings.defaultGender) {
