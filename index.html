@@ -1333,6 +1333,8 @@ let STATE = {
     footwear:'', footwearColor:'', footwearFabric:'',
     clothingPreset:'', clothingPresetType:'',
     accessories:'', props:'',
+    jewelry:'', headwear:'',
+    holdingItem:'', sceneProp:'', backgroundProp:'', magicProp:'',
     environment:'park', lighting:'golden hour sunset',
     pose:'standing confidently', mood:'joyful happy mood',
     negative:''
@@ -1430,6 +1432,19 @@ const FIELDS = {
   accessories: ['Anklet', 'Aura glow', 'Backpack', 'Bangle bracelet', 'Baseball cap', 'Beaded necklace', 'Belt', 'Beret', 'Body chain', 'Bow tie', 'Bracelet', 'Brooch', 'Cape', 'Chain belt', 'Charm bracelet', 'Choker', 'Clutch bag', 'Cowboy hat', 'Crown', 'Crystal pendant', 'Cuff bracelet', 'Drop earrings', 'Ear cuff', 'Earrings', 'Elbow gloves', 'Embroidered bag', 'Fanny pack', 'Feather boa', 'Fedora hat', 'Flower crown', 'Gas mask', 'Glasses', 'Gloves', 'Gold chain', 'Hair bow', 'Hair clip', 'Hair pins', 'Handbag', 'Hat', 'Headband', 'Headphones', 'Hoop earrings', 'Jewelry', 'Knit beanie', 'Lace collar', 'Leather gloves', 'Leg holster', 'Locket necklace', 'Midi rings', 'Mini backpack', 'Monocle', 'Moon pendant', 'Neck scarf', 'Necklace', 'Pearl necklace', 'Rings', 'Sash', 'Scarf', 'Shoulder bag', 'Silk gloves', 'Silk scarf', 'Snake bracelet', 'Stacked bracelets', 'Stacked rings', 'Statement earrings', 'Straw hat', 'Sunglasses', 'Sword', 'Tennis bracelet', 'Tiara', 'Toe ring', 'Tote bag', 'Umbrella', 'Veil', 'Visor', 'Waist chain', 'Wand', 'Watch', 'Wide brim hat'],
 
   props: ['Acoustic guitar', 'Artifact', 'Baby blanket', 'Balloon', 'Balloons', 'Basket of fruit', 'Blanket', 'Book', 'Bouquet', 'Briefcase', 'Bubbles', 'Camera', 'Camp lantern', 'Candles', 'Canvas painting', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Deck of cards', 'Designer shopping bags', 'Dreamcatcher', 'Dumbbells', 'Envelope', 'Fairy lights', 'Film camera', 'Fishing rod', 'Flowers', 'Fruit bowl', 'Gift box', 'Guitar', 'Hockey stick', 'Horseback', 'Ice cream cone', 'Journal notebook', 'Jump rope', 'Kite', 'Lantern', 'Laptop', 'Luggage', 'Map', 'Microphone', 'Mirror', 'Musical instrument', 'Paint palette', 'Parasol', 'Phone', 'Picnic basket', 'Pillow', 'Polaroid camera', 'Pottery wheel', 'Purse', 'Rose', 'Scroll', 'Shield', 'Shopping bags', 'Single flower', 'Skateboard', 'Sketchbook', 'Smoothie cup', 'Snack box', 'Snowboard', 'Soccer ball', 'Sparkler', 'Staff', 'Stuffed animal', 'Suitcase', 'Sun hat', 'Surfboard', 'Tea cup', 'Teddy bear', 'Tennis racket', 'Towel', 'Trophy', 'Umbrella', 'Violin', 'Water bottle', 'Watering can', 'Wine glass', 'Yoga mat'],
+
+  // New structured categories
+  jewelry: ['Anklet', 'Bangle bracelet', 'Beaded necklace', 'Body chain', 'Bracelet', 'Brooch', 'Charm bracelet', 'Choker', 'Crystal pendant', 'Cuff bracelet', 'Drop earrings', 'Ear cuff', 'Earrings', 'Gold chain', 'Hoop earrings', 'Locket necklace', 'Midi rings', 'Moon pendant', 'Necklace', 'Pearl necklace', 'Rings', 'Snake bracelet', 'Stacked bracelets', 'Stacked rings', 'Statement earrings', 'Tennis bracelet', 'Tiara', 'Toe ring', 'Waist chain'],
+
+  headwear: ['Baseball cap', 'Beret', 'Cowboy hat', 'Crown', 'Fedora hat', 'Flower crown', 'Hair bow', 'Hair clip', 'Hair pins', 'Headband', 'Knit beanie', 'Straw hat', 'Sun hat', 'Tiara', 'Veil', 'Visor', 'Wide brim hat'],
+
+  holdingItem: ['Acoustic guitar', 'Balloon', 'Book', 'Bouquet', 'Bubbles', 'Camera', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Deck of cards', 'Dumbbells', 'Envelope', 'Film camera', 'Flowers', 'Gift box', 'Guitar', 'Ice cream cone', 'Journal notebook', 'Jump rope', 'Kite', 'Lantern', 'Laptop', 'Map', 'Microphone', 'Mirror', 'Paint palette', 'Parasol', 'Phone', 'Polaroid camera', 'Rose', 'Scroll', 'Shield', 'Single flower', 'Skateboard', 'Sketchbook', 'Smoothie cup', 'Sparkler', 'Staff', 'Stuffed animal', 'Tea cup', 'Teddy bear', 'Tennis racket', 'Umbrella', 'Violin', 'Wand', 'Water bottle', 'Wine glass'],
+
+  sceneProp: ['Basket of fruit', 'Blanket', 'Briefcase', 'Candles', 'Canvas painting', 'Dreamcatcher', 'Fishing rod', 'Fruit bowl', 'Hockey stick', 'Luggage', 'Picnic basket', 'Pillow', 'Pottery wheel', 'Shopping bags', 'Snack box', 'Snowboard', 'Soccer ball', 'Suitcase', 'Surfboard', 'Towel', 'Trophy', 'Watering can', 'Yoga mat'],
+
+  backgroundProp: ['Balloon arch', 'Bokeh lights', 'Canopy of vines', 'Confetti cloud', 'Fairy lights', 'Flower wall', 'Garden arch', 'Hanging lanterns', 'Neon sign', 'Northern lights', 'Petal rain', 'String lights', 'Vintage car', 'Waterfall', 'Wildflowers'],
+
+  magicProp: ['Conjured fire', 'Crystal orb', 'Energy tendrils', 'Floating petals', 'Floating roses', 'Glowing aura', 'Glowing runes', 'Halo of light', 'Magical mist', 'Magic sparkles', 'Orbs of light', 'Spirit flames', 'Summoned lightning', 'Swirling leaves', 'Swirling stars'],
 
   environment: ['Abandoned amusement park', 'Abandoned asylum', 'Airport', 'Ancient Egypt', 'Ancient library', 'Ancient temple ruins', 'Apple orchard', 'Aquarium tunnel', 'Art gallery', 'Art studio', 'Astronomy observatory', 'Autumn forest', 'Backyard garden', 'Balcony overlook', 'Ballroom', 'Bamboo forest', 'Barn', 'Beach', 'Beach bonfire', 'Beach resort', 'Boardwalk', 'Bookstore', 'Botanical garden', 'Boutique', 'Butterfly garden', 'Cafe', 'Calm lake', 'Candy land', 'Canyon', 'Castle courtyard', 'Cathedral', 'Cave', 'Cherry blossom garden', 'Cherry blossom park', 'City alley', 'City rooftop', 'City street', 'Cliffside overlook', 'Cloud kingdom', 'Coastal village', 'Cobblestone alley', 'Concert hall', 'Conference room', 'Coral reef', 'Countryside', 'Cozy bedroom', 'Cozy fireplace', 'Cozy kitchen', 'Covered bridge', 'Cruise ship', 'Crystal cave', 'Cyberpunk alley', 'Dance studio', 'Desert dunes', 'Desert oasis', 'Drive-in theater', 'Dreamy greenhouse', 'Enchanted forest', 'Fairy garden', 'Farm', 'Farmhouse', 'Field', 'Floating island', 'Flower field', 'Flower market', 'Fog-covered moors', 'Forest cabin', 'Forest clearing', 'Forest waterfall', 'Futuristic city', 'Garden', 'Garden maze', 'Glacier', 'Gothic castle', 'Graffiti wall', 'Grand staircase', 'Greenhouse', 'Gym', 'Harbor', 'Historic townhouse', 'Home studio', 'Hospital', 'Hot air balloon', 'Hotel lobby', 'Ice cave', 'Indoor pool', 'Infinity pool', 'Irish countryside', 'Japanese tea house', 'Jungle', 'Koi pond', 'Laboratory', 'Lake dock', 'Lake reflections', 'Lakeside cabin', 'Lavender field', 'Library', 'Lighthouse', 'Lotus pond', 'Luxury penthouse', 'Luxury yacht', 'Market bazaar', 'Mars colony', 'Meadow', 'Medieval castle', 'Misty forest', 'Modern apartment', 'Modern living room', 'Monastery', 'Moonlit beach', 'Moroccan riad', 'Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Movie set', 'Museum', 'Music festival', 'Nature trail', 'Neon arcade', 'Night market', 'Nightclub', 'Oasis', 'Ocean', 'Office', 'Olive grove', 'Open field', 'Orchard', 'Orchard in bloom', 'Outdoor cinema', 'Palace', 'Parisian street', 'Park', 'Pier', 'Pink salt lake', 'Pine forest', 'Poolside lounge', 'Post-apocalyptic ruins', 'Pottery studio', 'Prairie', 'Pumpkin patch', 'Rain-slicked street', 'Rainforest', 'Ranch', 'Recording studio', 'Restaurant', 'Rice terraces', 'Rock concert', 'Rocky cliffs', 'Rolling hills', 'Rooftop bar', 'Rooftop garden', 'Rose garden', 'Sailboat', 'Salon', 'Sand dunes at dawn', 'Savanna', 'Secret garden', 'Ski resort', 'Snowy cabin', 'Snowy landscape', 'Spa', 'Space station', 'Spring meadow', 'Stable', 'Summer garden', 'Sunflower field', 'Swimming pool', 'Tea plantation', 'Temple', 'Terraced garden', 'Theater stage', 'Throne room', 'Tidal pool', 'Train station', 'Treehouse', 'Tropical beach', 'Tropical island', 'Tundra', 'Underground cavern', 'Underground speakeasy', 'Underwater', 'Urban garden', 'Urban loft', 'Urban street', 'Valley', 'Victorian parlor', 'Vineyard', 'Volcano summit', 'Water park', 'Waterfall', 'Watermill', 'Wheat field', 'Wildflower meadow', 'Winery', 'Winter wonderland', 'Yoga studio', 'Zen garden'],
 
@@ -1886,6 +1901,15 @@ function applyTheme(id) {
   if (!STATE.locks.skin) STATE.prompt.skin = pick(nonEmpty(FIELDS.skin));
   if (!STATE.locks.accessories) STATE.prompt.accessories = pick(nonEmpty(FIELDS.accessories));
   if (!STATE.locks.props) STATE.prompt.props = pick(nonEmpty(theme.props || FIELDS.props));
+  if (!STATE.locks.jewelry) STATE.prompt.jewelry = Math.random() > 0.5 ? pick(nonEmpty(FIELDS.jewelry)) : '';
+  if (!STATE.locks.headwear) STATE.prompt.headwear = Math.random() > 0.6 ? pick(nonEmpty(FIELDS.headwear)) : '';
+  // Pick one prop placement category
+  const propCats = ['holdingItem','sceneProp','backgroundProp','magicProp'];
+  const chosenCat = pick(propCats);
+  propCats.forEach(f => {
+    if (STATE.locks[f]) return;
+    STATE.prompt[f] = f === chosenCat ? pick(nonEmpty(FIELDS[f])) : '';
+  });
   if (!STATE.locks.occupation) STATE.prompt.occupation = theme.occupations ? pick(theme.occupations) : '';
 
   if (!STATE.locks.clothingTheme) STATE.prompt.clothingTheme = getThemeClothingTheme(id);
@@ -1913,13 +1937,21 @@ function randomizeAll() {
   pushUndo();
   if (STATE.currentTheme && THEMES[STATE.currentTheme]) { applyTheme(STATE.currentTheme); return; }
   // No theme — full random
-  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+  const propCategories = ['holdingItem','sceneProp','backgroundProp','magicProp'];
+  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
+    ...propCategories];
   Object.keys(FIELDS).forEach(f => {
     if (skip.includes(f) || STATE.locks[f]) return;
     const opts = nonEmpty(FIELDS[f]);
     if (opts.length) STATE.prompt[f] = pick(opts);
   });
   randomizeClothing(null);
+  // Pick one prop category randomly
+  const activeProp = pick(propCategories);
+  propCategories.forEach(f => {
+    if (STATE.locks[f]) return;
+    STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
+  });
   applyDefaults();
   refresh();
   toast('🎲 Randomized!');
@@ -2040,11 +2072,19 @@ function batchGenerate() {
   STATE.batchPrompts = [];
   const saved = JSON.parse(JSON.stringify(STATE.prompt));
   for (let i = 0; i < 5; i++) {
-    const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+    const batchPropCats = ['holdingItem','sceneProp','backgroundProp','magicProp'];
+    const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
+      ...batchPropCats];
     Object.keys(FIELDS).forEach(f => {
       if (skip.includes(f) || STATE.locks[f]) return;
       const opts = nonEmpty(FIELDS[f]);
       if (opts.length) STATE.prompt[f] = pick(opts);
+    });
+    // Pick one prop category per batch prompt
+    const activeProp = pick(batchPropCats);
+    batchPropCats.forEach(f => {
+      if (STATE.locks[f]) return;
+      STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
     });
     randomizeClothing(STATE.currentTheme);
     applyDefaults();
@@ -2094,7 +2134,13 @@ function assembleData(inputPrompt) {
   const footwear = [p.footwearColor, p.footwearFabric, p.footwear].filter(Boolean).join(' ');
   const clothing = [baseClothing, outerwear, hosiery, footwear].filter(Boolean).join(', ');
   const items = [p.accessories, p.props].filter(Boolean).join(', ');
-  return { subject, hairDesc, look, clothing, items, baseClothing, hosiery, footwear, outerwear, onePiece, top, bottom };
+  const jewelry = p.jewelry || '';
+  const headwear = p.headwear || '';
+  const holdingItem = p.holdingItem || '';
+  const sceneProp = p.sceneProp || '';
+  const backgroundProp = p.backgroundProp || '';
+  const magicProp = p.magicProp || '';
+  return { subject, hairDesc, look, clothing, items, baseClothing, hosiery, footwear, outerwear, onePiece, top, bottom, jewelry, headwear, holdingItem, sceneProp, backgroundProp, magicProp };
 }
 
 function generateBuilderPromptText() {
@@ -2103,8 +2149,25 @@ function generateBuilderPromptText() {
   const fmt = STATE.settings.promptFormat || 'grouped';
   let r = '';
 
+  // Helper: determine which clothing categories are active based on clothingStyle
+  const cs = p.clothingStyle || 'One-Piece';
+  const showDress    = ['One-Piece','Fantasy / Armor','Swimwear'].includes(cs);
+  const showTopwear  = ['Two-Piece','Layered','Swimwear'].includes(cs);
+  const showBottomwear = ['Two-Piece','Layered','Swimwear'].includes(cs);
+
   if (fmt === 'standard') {
-    r = `A ${p.shot.toLowerCase()} in ${p.camera} of a ${d.subject}${d.hairDesc?', '+d.hairDesc:''}${d.look?', '+d.look:''} wearing ${d.clothing}${d.items?', '+d.items:''}, ${p.pose} in ${p.environment} lit by ${p.lighting}, rendered in photorealistic style with ${p.mood}.`;
+    const wearParts = [];
+    if (showDress && d.onePiece)      wearParts.push(d.onePiece);
+    if (showTopwear && d.top)         wearParts.push(d.top);
+    if (showBottomwear && d.bottom)   wearParts.push(d.bottom);
+    if (d.outerwear)   wearParts.push(d.outerwear);
+    if (d.hosiery)     wearParts.push(d.hosiery);
+    if (d.footwear)    wearParts.push(d.footwear);
+    if (d.jewelry)     wearParts.push(d.jewelry);
+    if (d.headwear)    wearParts.push(d.headwear);
+    if (p.accessories) wearParts.push(p.accessories);
+    const propParts = [d.holdingItem, d.sceneProp, d.backgroundProp, d.magicProp].filter(Boolean);
+    r = `A ${p.shot.toLowerCase()} in ${p.camera} of a ${d.subject}${d.hairDesc?', '+d.hairDesc:''}${d.look?', '+d.look:''} wearing ${wearParts.join(', ')||'casual attire'}${propParts.length?', '+propParts.join(', '):''}, ${p.pose} in ${p.environment} lit by ${p.lighting}, rendered in photorealistic style with ${p.mood}.`;
   } else if (fmt === 'labeled') {
     const parts = [`Photography Style (${p.camera})`,`Framing (${p.shot})`];
     if(p.pregnancy!=='not pregnant') parts.push(`Pregnancy (${p.pregnancy})`);
@@ -2112,11 +2175,19 @@ function generateBuilderPromptText() {
     if(p.skin)parts.push(`Skin (${p.skin})`); if(p.occupation)parts.push(`Occupation (${p.occupation})`);
     if(p.expression)parts.push(`Expression (${p.expression})`); if(p.makeup)parts.push(`Makeup (${p.makeup})`);
     if(d.hairDesc)parts.push(`Hair (${d.hairDesc})`);
-    parts.push(`Clothing (${d.clothing})`);
+    if(showDress && d.onePiece)      parts.push(`Dresses (${d.onePiece})`);
+    if(showTopwear && d.top)         parts.push(`Topwear (${d.top})`);
+    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${d.bottom})`);
     if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
     if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
     if(d.footwear)parts.push(`Footwear (${d.footwear})`);
-    if(p.accessories)parts.push(`Accessories (${p.accessories})`); if(p.props)parts.push(`Props (${p.props})`);
+    if(d.jewelry)parts.push(`Jewelry (${d.jewelry})`);
+    if(d.headwear)parts.push(`Headwear (${d.headwear})`);
+    if(p.accessories)parts.push(`Accessories (${p.accessories})`);
+    if(d.holdingItem)parts.push(`Holding Item (${d.holdingItem})`);
+    if(d.sceneProp)parts.push(`Scene Prop (${d.sceneProp})`);
+    if(d.backgroundProp)parts.push(`Background Prop (${d.backgroundProp})`);
+    if(d.magicProp)parts.push(`Magic Prop (${d.magicProp})`);
     parts.push(`Pose (${p.pose})`,`Location (${p.environment})`,`Lighting (${p.lighting})`,`Mood (${p.mood})`);
     r = parts.join(', ');
   } else if (fmt === 'grouped') {
@@ -2125,12 +2196,19 @@ function generateBuilderPromptText() {
     parts.push(`Subject (${sg.filter(Boolean).join(', ')})`);
     const lg = []; if(d.hairDesc)lg.push(d.hairDesc); if(p.expression)lg.push(p.expression); if(p.makeup)lg.push(p.makeup);
     if(lg.length)parts.push(`Hair & Look (${lg.join(', ')})`);
-    if(d.baseClothing)parts.push(`Outfit (${d.baseClothing})`);
+    if(showTopwear && d.top)         parts.push(`Topwear (${d.top})`);
+    if(showBottomwear && d.bottom)   parts.push(`Bottomwear (${d.bottom})`);
+    if(showDress && d.onePiece)      parts.push(`Dresses (${d.onePiece})`);
     if(d.outerwear)parts.push(`Outerwear (${d.outerwear})`);
     if(d.hosiery)parts.push(`Hosiery (${d.hosiery})`);
     if(d.footwear)parts.push(`Footwear (${d.footwear})`);
-    const ig = []; if(p.accessories)ig.push(p.accessories); if(p.props)ig.push(p.props);
-    if(ig.length)parts.push(`Items (${ig.join(', ')})`);
+    if(d.jewelry)parts.push(`Jewelry (${d.jewelry})`);
+    if(d.headwear)parts.push(`Headwear (${d.headwear})`);
+    if(p.accessories)parts.push(`Accessories (${p.accessories})`);
+    if(d.holdingItem)parts.push(`Holding Item (${d.holdingItem})`);
+    if(d.sceneProp)parts.push(`Scene Prop (${d.sceneProp})`);
+    if(d.backgroundProp)parts.push(`Background Prop (${d.backgroundProp})`);
+    if(d.magicProp)parts.push(`Magic Prop (${d.magicProp})`);
     parts.push(`Scene (${[p.pose,p.environment,p.lighting].filter(Boolean).join(', ')})`);
     parts.push(`Mood (${p.mood})`);
     r = parts.join(', ');
@@ -2139,11 +2217,19 @@ function generateBuilderPromptText() {
     tags.push(p.age,p.gender); if(p.skin)tags.push(p.skin); if(p.occupation)tags.push(p.occupation);
     if(p.expression)tags.push(p.expression); if(p.makeup)tags.push(p.makeup);
     if(d.hairDesc)tags.push(d.hairDesc);
-    if(d.baseClothing)tags.push('wearing '+d.baseClothing);
-    if(d.outerwear)tags.push(d.outerwear);
-    if(d.hosiery)tags.push(d.hosiery);
-    if(d.footwear)tags.push(d.footwear);
-    if(p.accessories)tags.push(p.accessories); if(p.props)tags.push(p.props);
+    if(showTopwear && d.top)       tags.push(d.top);
+    if(showBottomwear && d.bottom) tags.push(d.bottom);
+    if(showDress && d.onePiece)    tags.push('wearing '+d.onePiece);
+    if(d.outerwear)    tags.push(d.outerwear);
+    if(d.hosiery)      tags.push(d.hosiery);
+    if(d.footwear)     tags.push(d.footwear);
+    if(d.jewelry)      tags.push(d.jewelry);
+    if(d.headwear)     tags.push(d.headwear);
+    if(p.accessories)  tags.push(p.accessories);
+    if(d.holdingItem)  tags.push(d.holdingItem);
+    if(d.sceneProp)    tags.push(d.sceneProp);
+    if(d.backgroundProp) tags.push(d.backgroundProp);
+    if(d.magicProp)    tags.push(d.magicProp);
     tags.push(p.pose,p.environment,p.lighting,p.mood);
     r = tags.filter(Boolean).join(', ');
   }
@@ -2176,15 +2262,27 @@ function updatePromptDisplay() {
   } else if (fmt === 'grouped') {
     const p = STATE.prompt;
     const d = assembleData();
+    const cs2 = p.clothingStyle || 'One-Piece';
+    const showD = ['One-Piece','Fantasy / Armor','Swimwear'].includes(cs2);
+    const showT = ['Two-Piece','Layered','Swimwear'].includes(cs2);
+    const showB = ['Two-Piece','Layered','Swimwear'].includes(cs2);
     el.innerHTML = [
       `<span class="prompt-tag tag-camera">📸</span> ${esc(p.camera)}, ${esc(p.shot)}`,
       `<span class="prompt-tag tag-subject">👤</span> ${esc(d.subject)}`,
       d.hairDesc ? `<span class="prompt-tag tag-hair">💇</span> ${esc(d.hairDesc)}` : '',
-      `<span class="prompt-tag tag-outfit">${STATE.prompt.clothingStyle==='Two-Piece'?'👚':'👗'}</span> ${esc(d.baseClothing || d.clothing)}`,
-      d.outerwear ? `<span class="prompt-tag tag-items">🧥</span> ${esc(d.outerwear)}` : '',
-      d.hosiery ? `<span class="prompt-tag tag-items">🧦</span> ${esc(d.hosiery)}` : '',
-      d.footwear ? `<span class="prompt-tag tag-items">👠</span> ${esc(d.footwear)}` : '',
-      d.items ? `<span class="prompt-tag tag-items">🎁</span> ${esc(d.items)}` : '',
+      showT && d.top    ? `<span class="prompt-tag tag-outfit">👚</span> Topwear — ${esc(d.top)}` : '',
+      showB && d.bottom ? `<span class="prompt-tag tag-outfit">👖</span> Bottomwear — ${esc(d.bottom)}` : '',
+      showD && d.onePiece ? `<span class="prompt-tag tag-outfit">👗</span> Dresses — ${esc(d.onePiece)}` : '',
+      d.outerwear ? `<span class="prompt-tag tag-items">🧥</span> Outerwear — ${esc(d.outerwear)}` : '',
+      d.hosiery   ? `<span class="prompt-tag tag-items">🧦</span> Hosiery — ${esc(d.hosiery)}` : '',
+      d.footwear  ? `<span class="prompt-tag tag-items">👠</span> Footwear — ${esc(d.footwear)}` : '',
+      d.jewelry   ? `<span class="prompt-tag tag-items">💍</span> Jewelry — ${esc(d.jewelry)}` : '',
+      d.headwear  ? `<span class="prompt-tag tag-items">🎩</span> Headwear — ${esc(d.headwear)}` : '',
+      p.accessories ? `<span class="prompt-tag tag-items">🎁</span> Accessories — ${esc(p.accessories)}` : '',
+      d.holdingItem   ? `<span class="prompt-tag tag-items">🤲</span> Holding Item — ${esc(d.holdingItem)}` : '',
+      d.sceneProp     ? `<span class="prompt-tag tag-items">🏕️</span> Scene Prop — ${esc(d.sceneProp)}` : '',
+      d.backgroundProp ? `<span class="prompt-tag tag-items">🖼️</span> Background Prop — ${esc(d.backgroundProp)}` : '',
+      d.magicProp     ? `<span class="prompt-tag tag-items">✨</span> Magic Prop — ${esc(d.magicProp)}` : '',
       `<span class="prompt-tag tag-scene">🌅</span> ${esc(p.pose)}, ${esc(p.environment)}, ${esc(p.lighting)}`,
       `<span class="prompt-tag tag-mood">✨</span> ${esc(p.mood)}`
     ].filter(Boolean).join('<br>');
@@ -2244,7 +2342,10 @@ function buildBuilder() {
     { title:'👤 Subject', fields:['gender','pregnancy','age','skin','occupation'], lockedFields:['gender','pregnancy','age'] },
     { title:'💇 Hair & Look', fields:['hairColor','hairLength','hairStyle','expression','makeup'] },
     { title:'👗 Clothing', fields:['clothingTheme','clothingStyle'] },
-    { title:'🎁 Accessories', fields:['accessories','props'] },
+    { title:'💍 Jewelry', fields:['jewelry'] },
+    { title:'🎩 Headwear', fields:['headwear'] },
+    { title:'🎁 Accessories', fields:['accessories'] },
+    { title:'🤲 Props', fields:['holdingItem','sceneProp','backgroundProp','magicProp'] },
     { title:'🌅 Scene', fields:['environment','lighting','pose','mood'] }
   ];
   sections.forEach(sec => {
@@ -2630,6 +2731,12 @@ function applyDefaults() {
     outerwearFabric: '',
     accessories: '',
     props: '',
+    jewelry: '',
+    headwear: '',
+    holdingItem: '',
+    sceneProp: '',
+    backgroundProp: '',
+    magicProp: '',
     environment: 'park',
     lighting: 'golden hour sunset',
     pose: 'standing confidently',
