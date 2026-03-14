@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Portrait & Lifestyle Prompt Studio v1.16</title>
+<title>Portrait & Lifestyle Prompt Studio v1.20</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -948,7 +948,7 @@ margin-bottom: 4px;
 
 <div class="app-header">
   <h1>✨ Portrait &amp; Lifestyle Prompt Studio</h1>
-  <div class="version">v1.10 — Expanded Assets &amp; Bug Fixes</div>
+  <div class="version">v1.20 — Smarter Randomization Update</div>
 </div>
 
 <div class="container" id="main-content">
@@ -1009,6 +1009,10 @@ margin-bottom: 4px;
       </div>
     </div>
     <input class="neg-input" id="negative-prompt" placeholder="Negative prompt (optional): blurry, low quality..." maxlength="500" oninput="onNegativeInput(this.value)">
+    <div style="display:flex;gap:6px;margin-top:4px;">
+      <button class="act-btn" onclick="autoFillNegative()" style="flex:none;padding:4px 10px;font-size:11px;">🪄 Auto Negative</button>
+      <button class="act-btn" onclick="document.getElementById('negative-prompt').value=''" style="flex:none;padding:4px 10px;font-size:11px;">✕ Clear</button>
+    </div>
     <div class="neg-char-info"><span id="neg-char-count">0 / 500</span></div>
     <div class="actions-row" style="margin-top:10px;">
       <button class="act-btn" onclick="copyPrompt()">📋 Copy</button>
@@ -1233,24 +1237,18 @@ margin-bottom: 4px;
     <option value="young child">Young Child (3-5)</option>
     <option value="child">Child (6-9)</option>
     <option value="preteen">Preteen (10-12)</option>
-    <option value="early teenager">Early Teenager (13-14)</option>
-    <option value="mid teenager">Mid Teenager (15-16)</option>
-    <option value="late teenager">Late Teenager (17-19) ✓</option>
-    <option value="young adult">Young Adult (20-24) ✓</option>
-    <option value="mid twenties">Mid Twenties (25-27) ✓</option>
-    <option value="late twenties">Late Twenties (28-29) ✓</option>
-    <option value="early thirties">Early Thirties (30-34) ✓</option>
-    <option value="mid thirties">Mid Thirties (35-39) ✓</option>
-    <option value="early forties">Early Forties (40-44) ✓</option>
-    <option value="mid forties">Mid Forties (45-49) ✓</option>
-    <option value="early fifties">Early Fifties (50-54) ✓</option>
-    <option value="mid fifties">Mid Fifties (55-59) ✓</option>
-    <option value="early sixties">Early Sixties (60-64) ✓</option>
-    <option value="mid sixties">Mid Sixties (65-69) ✓</option>
-    <option value="late sixties">Late Sixties (67-69) ✓</option>
-    <option value="early seventies">Early Seventies (70-74) ✓</option>
-    <option value="mid seventies">Mid Seventies (75-79) ✓</option>
-    <option value="senior">Senior (80+) ✓</option>
+    <option value="early teen">Early Teen (13-14)</option>
+    <option value="mid teen">Mid Teen (15-16)</option>
+    <option value="late teen">Late Teen (17-19) ✓</option>
+    <option value="early twenties">Early Twenties (20-22) ✓</option>
+    <option value="mid twenties">Mid Twenties (23-26) ✓</option>
+    <option value="late twenties">Late Twenties (27-29) ✓</option>
+    <option value="thirties">Thirties (30-39) ✓</option>
+    <option value="forties">Forties (40-49) ✓</option>
+    <option value="fifties">Fifties (50-59) ✓</option>
+    <option value="sixties">Sixties (60-69)</option>
+    <option value="seventies">Seventies (70-79)</option>
+    <option value="eighties+">Eighties+ (80+)</option>
   </select>
       <div class="setting-hint">✓ = Pregnancy available</div>
     </div>
@@ -1370,11 +1368,11 @@ const FIELDS = {
 
   pregnancy: ['heavily pregnant', 'not pregnant', 'pregnant'],
 
-  age: ['baby', 'child', 'early fifties', 'early forties', 'early sixties', 'early teenager', 'early thirties', 'early twenties', 'late fifties', 'late forties', 'late sixties', 'late teenager', 'late thirties', 'late twenties', 'mid fifties', 'mid forties', 'mid sixties', 'mid teenager', 'mid thirties', 'mid twenties', 'newborn', 'older adult', 'preteen', 'senior citizen', 'teenager', 'toddler', 'young adult', 'young child'],
+  age: ['baby', 'toddler', 'young child', 'child', 'preteen', 'early teen', 'mid teen', 'late teen', 'early twenties', 'mid twenties', 'late twenties', 'thirties', 'forties', 'fifties', 'sixties', 'seventies', 'eighties+'],
 
   hairColor: ['Ash blonde', 'Auburn', 'Black', 'Blonde', 'Blue', 'Brown', 'Burgundy', 'Caramel brown', 'Champagne blonde', 'Charcoal', 'Chestnut', 'Chocolate brown', 'Copper', 'Dark brown', 'Dirty blonde', 'Ginger', 'Gray', 'Green', 'Honey blonde', 'Indigo', 'Jet black', 'Lavender', 'Light brown', 'Lilac', 'Mahogany', 'Neon green', 'Ombre', 'Pastel blue', 'Pastel pink', 'Pink', 'Platinum blonde', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Sandy blonde', 'Silver', 'Strawberry blonde', 'Teal', 'White', 'Wine red'],
 
-  hairLength: ['Bald', 'Buzz cut', 'Chin-length', 'Ear-length', 'Hip-length', 'Long', 'Medium', 'Pixie length', 'Short', 'Shoulder-length', 'Very long', 'Very short', 'Waist-length'],
+  hairLength: ['Chin-length', 'Ear-length', 'Hip-length', 'Long', 'Medium', 'Pixie length', 'Short', 'Shoulder-length', 'Very long', 'Very short', 'Waist-length'],
 
   hairStyle: ['Afro', 'Bangs', 'Beach waves', 'Blunt bob', 'Bob', 'Box braids', 'Braided', 'Braided crown', 'Bun', 'Buzz cut', 'Coily', 'Cornrows', 'Curly', 'Curtain bangs', 'Dreadlocks', 'Faux hawk', 'Feathered layers', 'Finger waves', 'Flowing', 'French braid', 'Half-up half-down', 'High bun', 'High ponytail', 'Layered', 'Locs', 'Loose curls', 'Low bun', 'Messy bun', 'Mohawk', 'Mullet', 'Pigtails', 'Pixie cut', 'Ponytail', 'Ringlets', 'Shag cut', 'Side braid', 'Sleek bob', 'Slicked back', 'Space buns', 'Straight', 'Tight curls', 'Top knot', 'Twists', 'Undercut', 'Updo', 'Voluminous', 'Wavy', 'Wet look', 'Wolf cut'],
 
@@ -1393,7 +1391,7 @@ const FIELDS = {
   clothingPresetType: ['At Home', 'Autumn', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Holiday', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel', 'Urban', 'Wedding'],
   clothingPreset: ['Autumn Harvest Set', 'Beach Cover-Up Set', 'Beach Lounge Set', 'Bikini Set', 'Boho Festival Set', 'Bridal Shower Set', 'Casual Coffee Run Set', 'Classic Office Set', 'Cozy At-Home Set', 'Date Night Dress Set', 'Enchanted Grove Set', 'Explorer Jungle Set', 'Fall Hiking Set', 'Fantasy Armor Set', 'Fitness Training Set', 'Flowing Party Dress Set', 'Garden Party Set', 'Holiday Glam Set', 'Jungle Adventure Set', 'Maternity Studio Set', 'Moonlit Sorceress Set', 'Picnic Day Set', 'Pool Party Set', 'Prehistoric Huntress Set', 'Resort Swim Set', 'Safari Linen Set', 'Ski Lodge Set', 'Smart Casual Office Set', 'Street Style Set', 'Studio Glam Set', 'Sunset Boardwalk Set', 'Tropical Waterfall Set', 'Travel Day Set', 'Urban Night Set', 'Wedding Day Set', 'Winter Coat Set'],
 
-  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Asymmetric dress', 'Babydoll dress', 'Ball gown', 'Bathrobe', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Bustier dress', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Co-ord set', 'Corset dress', 'Corset gown', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Duster coat dress', 'Elegant dress', 'Embroidered dress', 'Empire waist dress', 'Evening gown', 'Feathered gown', 'Figure skating dress', 'Fit-and-flare dress', 'Flamenco dress', 'Floral maxi dress', 'Floral sundress', 'Folk costume', 'Fringe dress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Latex bodysuit', 'Leather jumpsuit', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'Off-shoulder dress', 'One-piece swimsuit', 'Open-back dress', 'Overall shorts', 'Overalls', 'Pencil dress', 'Pinafore dress', 'Robe', 'Romper', 'Ruched dress', 'Ruffle dress', 'Sari', 'Sequin dress', 'Sheath dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Smock dress', 'Space suit', 'Strapless dress', 'Sun dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Swimdress', 'Tactical suit', 'Tiered dress', 'Toga', 'Tulle dress', 'Tuxedo jumpsuit', 'Uniform', 'Velvet dress', 'Velvet gown', 'Victorian gown', 'Vintage tea dress', 'Wedding dress', 'Witch robes', 'Wrap dress'],
+  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Asymmetric dress', 'Babydoll dress', 'Ball gown', 'Bathrobe', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Bustier dress', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Co-ord set', 'Corset dress', 'Corset gown', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Duster coat dress', 'Elegant dress', 'Embroidered dress', 'Empire waist dress', 'Evening gown', 'Feathered gown', 'Figure skating dress', 'Fit-and-flare dress', 'Flamenco dress', 'Floral maxi dress', 'Floral sundress', 'Folk costume', 'Fringe dress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Latex bodysuit', 'Leather jumpsuit', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'Off-shoulder dress', 'One-piece swimsuit', 'Open-back dress', 'Overall shorts', 'Overalls', 'Pencil dress', 'Pinafore dress', 'Robe', 'Romper', 'Ruched dress', 'Ruffle dress', 'Sari', 'Sequin dress', 'Sheath dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Smock dress', 'Space suit', 'Strapless dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Swimdress', 'Tactical suit', 'Tiered dress', 'Toga', 'Tulle dress', 'Tuxedo jumpsuit', 'Uniform', 'Velvet dress', 'Velvet gown', 'Victorian gown', 'Vintage tea dress', 'Wedding dress', 'Witch robes', 'Wrap dress'],
 
   onePieceColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Bronze', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Chocolate', 'Copper', 'Coral', 'Cream', 'Dusty rose', 'Emerald green', 'Floral print', 'Forest green', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Iridescent', 'Ivory', 'Lavender', 'Leopard print', 'Lilac', 'Magenta', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy blue', 'Neon orange', 'Olive', 'Orange', 'Pastel pink', 'Peach', 'Pearl white', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Royal blue', 'Sage green', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
 
@@ -1423,7 +1421,7 @@ const FIELDS = {
 
   hosieryFabric: ['cashmere blend', 'cotton', 'fishnet', 'lace', 'merino wool', 'mesh', 'microfiber', 'nylon', 'ribbed knit', 'sheer nylon', 'silk blend', 'spandex blend', 'wool'],
 
-  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'platform heels', 'running shoes', 'sandals', 'slip on shoes', 'snow boots', 'stilettos', 'tennis shoes', 'wedges', 'work boots'],
+  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'platform heels', 'running shoes', 'sandals', 'slip on shoes', 'snow boots', 'stilettos', 'wedges', 'work boots'],
 
   footwearColor: ['beige', 'black', 'blue', 'brown', 'burgundy', 'charcoal', 'cream', 'gold', 'gray', 'green', 'ivory', 'navy', 'pink', 'purple', 'red', 'silver', 'tan', 'teal', 'white', 'yellow'],
 
@@ -1450,12 +1448,232 @@ const FIELDS = {
 
   lighting: ['Aurora glow', 'Backlit sunset', 'Bioluminescent glow', 'Blue hour light', 'Blue water reflections', 'Bonfire light', 'Bright blue sky', 'Bright fluorescent', 'Bright gym lighting', 'Bright midday sunlight', 'Bright natural sunlight', 'Candlelight', 'Chandelier glow', 'Christmas lights', 'Cinematic lighting', 'Clinical lighting', 'Colorful neon lights', 'Cosmic glow', 'Cyberpunk neon', 'Dappled sunlight', 'Dawn light', 'Desert midday sun', 'Divine golden light', 'Dramatic side lighting', 'Dramatic stage light', 'Dramatic storm lighting', 'Dramatic sunset', 'Edison bulbs', 'Fairy lights', 'Fire glow', 'Flickering torchlight', 'Floating candles', 'Fog machine haze', 'Foggy atmosphere', 'Galaxy glow', 'Glittering sparkle', 'Golden hour sunset', 'Hazy light', 'Holographic signs', 'Lantern light', 'Laser beams', 'Lightning storm', 'Magical energy', 'Misty light', 'Moonlight', 'Natural daylight', 'Neon signs', 'Northern lights', 'Overcast light', 'Pink sunset glow', 'Purple magical energy', 'Ray tracing', 'Reflection light', 'Ring light', 'Rim lighting', 'Snow-reflected light', 'Soft diffused light', 'Soft morning light', 'Soft natural light', 'Soft studio lighting', 'Spotlights', 'Stage lighting', 'Starlight', 'String lights', 'Studio lighting', 'Sunbeam through window', 'Sunset city lights', 'Torch light', 'Twilight glow', 'Underwater sunbeams', 'Volumetric lighting', 'Warm amber lighting', 'Warm cafe lighting', 'Warm indoor lighting', 'Warm lamp light', 'Warm sunlight', 'Warm window light'],
 
-  pose: ['Arms crossed', 'Arms spread wide', 'Back to camera', 'Blowing a kiss', 'Braiding hair', 'Carrying shopping bags', 'Checking phone', 'Cradling belly', 'Crouching down', 'Dancing', 'Doing cartwheels', 'Doing splits', 'Drinking coffee', 'Eating fruit', 'Feeding birds', 'Floating in water', 'Gardening', 'Hands in pockets', 'Hanging from bar', 'Holding coffee', 'Holding flowers', 'Holding hands to face', 'Holding hat brim', 'Hugging knees', 'Jumping mid-air', 'Jumping rope', 'Kneeling gracefully', 'Laughing with head tilted back', 'Leaning against wall', 'Looking away thoughtfully', 'Looking down softly', 'Looking over shoulder', 'Lying in flowers', 'Lying on back', 'Meditating', 'Overhead stretch', 'Painting canvas', 'Picking flowers', 'Playing guitar', 'Playing with pet', 'Pushing hair back', 'Reading book', 'Reclining elegantly', 'Relaxed pose', 'Riding bicycle', 'Running lightly', 'Running with arms back', 'Seated elegantly', 'Sitting comfortably', 'Sitting on floor', 'Skateboarding', 'Spinning around', 'Standing confidently', 'Standing elegantly', 'Standing powerfully', 'Stretching', 'Strolling', 'Surfing wave', 'Throwing confetti', 'Twirling dress', 'Walking away', 'Walking confidently', 'Walking naturally', 'Walking on tiptoes', 'Warrior pose', 'Waving', 'Windswept pose', 'Working on laptop', 'Writing in journal', 'Yoga pose'],
+  pose: [
+    'Arms crossed over chest, feet shoulder-width apart',
+    'Arms spread wide, feet planted firmly',
+    'Back to camera, looking over right shoulder',
+    'Blowing a kiss, weight on one hip',
+    'Carrying shopping bags in both hands, walking forward',
+    'Checking phone held in one hand, other hand relaxed at side',
+    'Cradling belly with both hands, feet together',
+    'Crouching down on both feet, knees bent',
+    'Dancing with arms raised, one foot lifted',
+    'Doing splits on the ground',
+    'Drinking coffee from cup held in right hand',
+    'Feeding birds with hand extended forward',
+    'Floating on back in water, arms spread',
+    'Gardening while kneeling on one knee',
+    'Hands in jacket pockets, standing with feet together',
+    'Holding coffee cup with both hands near face',
+    'Holding flowers in one arm against chest',
+    'Holding hands up to face, fingers touching cheeks',
+    'Holding hat brim with one hand, other at side',
+    'Hugging knees while sitting on ground',
+    'Jumping mid-air with both feet off ground, arms up',
+    'Kneeling gracefully on both knees, hands on thighs',
+    'Laughing with head tilted back, one hand on chest',
+    'Leaning against wall with one shoulder, arms relaxed',
+    'Looking away thoughtfully, chin slightly raised',
+    'Looking down softly, hands clasped in front',
+    'Looking over shoulder, body angled away from camera',
+    'Lying on back in field of flowers, arms spread',
+    'Lying on side, head propped on hand',
+    'Meditating cross-legged on ground, palms on knees',
+    'Overhead stretch with both arms raised, feet together',
+    'Painting on canvas, holding brush in right hand',
+    'Picking flowers while bending forward slightly',
+    'Playing guitar while seated, instrument on lap',
+    'Pushing hair back with one hand, other on hip',
+    'Reading book held in both hands',
+    'Reclining on side, one elbow supporting upper body',
+    'Relaxed pose with weight on one hip, arms loose',
+    'Running lightly with natural stride, one foot forward',
+    'Seated elegantly in chair, ankles crossed, hands on armrests',
+    'Sitting comfortably with legs to one side, leaning on hand',
+    'Sitting cross-legged on floor, hands in lap',
+    'Spinning around with arms extended, dress flowing',
+    'Standing confidently with feet shoulder-width apart, hands at sides',
+    'Standing elegantly with one foot slightly forward, chin up',
+    'Standing powerfully with wide stance, fists at sides',
+    'Stretching arms overhead, standing on tiptoes',
+    'Strolling with relaxed gait, one hand swinging',
+    'Twirling dress hem with one hand while spinning',
+    'Walking away from camera, natural stride',
+    'Walking confidently toward camera, one foot forward mid-stride',
+    'Walking naturally along path, arms swinging gently',
+    'Walking on tiptoes with arms out for balance',
+    'Warrior yoga pose with lunging front leg, arms extended',
+    'Waving with one hand raised, other at side',
+    'Windswept pose standing with hair blowing, feet planted',
+    'Working on laptop while seated at desk',
+    'Writing in journal while seated, pen in hand',
+    'Yoga tree pose balanced on one foot, arms overhead'
+  ],
 
   mood: ['adventurous exploratory mood', 'artistic creative mood', 'bold daring mood', 'calm tranquil mood', 'carefree lighthearted mood', 'cheerful bubbly mood', 'confident heroic mood', 'cozy intimate mood', 'dark brooding mood', 'dreamy ethereal mood', 'earthy grounded mood', 'elegant sophisticated mood', 'empowered confident mood', 'energetic vibrant mood', 'ethereal otherworldly mood', 'festive celebratory mood', 'fierce powerful mood', 'flirty playful mood', 'glamorous dazzling mood', 'happy relaxed mood', 'healthy active mood', 'introspective quiet mood', 'joyful happy mood', 'lively energetic mood', 'luxurious refined mood', 'magical whimsical mood', 'melancholic wistful mood', 'mysterious enchanting mood', 'nostalgic reflective mood', 'passionate intense mood', 'peaceful content mood', 'peaceful serene mood', 'playful adventurous mood', 'powerful bold mood', 'raw authentic mood', 'relaxed comfortable mood', 'romantic cozy mood', 'sensual alluring mood', 'soft feminine mood', 'soft whimsical mood', 'sporty dynamic mood', 'tender emotional mood', 'timeless classic mood', 'victorious triumphant mood', 'wild untamed mood']
 
 };
 
+
+const CHILD_AGES = ['baby', 'toddler', 'young child', 'child', 'preteen', 'early teen', 'mid teen'];
+const CHILD_SAFE_MAKEUP = ['No makeup', 'Natural makeup', 'Minimal makeup', 'Face paint'];
+const CHILD_SAFE_EXPRESSIONS = ['Smiling', 'Laughing', 'Curious', 'Playful', 'Shy', 'Cheerful', 'Excited', 'Calm', 'Peaceful', 'Joyful', 'Amazed', 'Dreamy'];
+
+function applyAgeRestrictions() {
+  const age = STATE.prompt.age || '';
+  if (CHILD_AGES.includes(age)) {
+    if (!STATE.locks.makeup && !CHILD_SAFE_MAKEUP.includes(STATE.prompt.makeup)) {
+      STATE.prompt.makeup = pick(CHILD_SAFE_MAKEUP);
+    }
+    if (!STATE.locks.expression && !CHILD_SAFE_EXPRESSIONS.includes(STATE.prompt.expression)) {
+      STATE.prompt.expression = pick(CHILD_SAFE_EXPRESSIONS);
+    }
+    STATE.prompt.pregnancy = 'not pregnant';
+  }
+}
+
+const RANDOMIZER_CORE = {
+  expression: ['Adoring', 'Amazed', 'Beaming', 'Bold', 'Calm', 'Cheerful', 'Confident', 'Contemplative', 'Curious', 'Defiant', 'Determined', 'Dreamy', 'Elegant', 'Excited', 'Fierce', 'Focused', 'Joyful', 'Laughing', 'Loving', 'Melancholic', 'Mysterious', 'Peaceful', 'Playful', 'Proud', 'Regal', 'Relaxed', 'Serene', 'Serious', 'Shy', 'Smiling', 'Smirking', 'Soft smile', 'Stoic', 'Sultry', 'Surprised', 'Tender', 'Thoughtful', 'Wistful'],
+  hairStyle: ['Afro', 'Bangs', 'Beach waves', 'Bob', 'Box braids', 'Braided crown', 'Bun', 'Buzz cut', 'Coily', 'Cornrows', 'Curly', 'Curtain bangs', 'Dreadlocks', 'Faux hawk', 'Feathered layers', 'Finger waves', 'Flowing', 'French braid', 'Half-up half-down', 'High ponytail', 'Layered', 'Locs', 'Messy bun', 'Mohawk', 'Mullet', 'Pigtails', 'Pixie cut', 'Ponytail', 'Shag cut', 'Side braid', 'Slicked back', 'Space buns', 'Straight', 'Top knot', 'Twists', 'Undercut', 'Updo', 'Voluminous', 'Wavy', 'Wolf cut'],
+  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'sandals', 'slip on shoes', 'snow boots', 'wedges', 'work boots'],
+};
+
+function pickRand(field) {
+  const core = RANDOMIZER_CORE[field];
+  if (core && core.length) return pick(core);
+  const full = FIELDS[field];
+  if (full && full.length) return pick(nonEmpty(full));
+  return '';
+}
+
+const ENV_CATEGORIES = {
+  beach: ['Beach', 'Beach resort', 'Boardwalk', 'Tropical beach', 'Tropical island', 'Ocean', 'Pier', 'Harbor', 'Coastal village', 'Cruise ship', 'Luxury yacht', 'Sailboat', 'Moonlit beach', 'Beach bonfire', 'Tidal pool', 'Poolside lounge', 'Swimming pool', 'Infinity pool'],
+  nature: ['Park', 'Garden', 'Meadow', 'Spring meadow', 'Wildflower meadow', 'Flower field', 'Lavender field', 'Sunflower field', 'Rose garden', 'Botanical garden', 'Countryside', 'Rolling hills', 'Field', 'Prairie', 'Wheat field', 'Backyard garden', 'Cherry blossom garden', 'Cherry blossom park', 'Olive grove', 'Orchard', 'Apple orchard', 'Vineyard', 'Summer garden', 'Nature trail', 'Secret garden', 'Butterfly garden', 'Terraced garden', 'Rooftop garden', 'Urban garden', 'Zen garden', 'Fairy garden', 'Koi pond', 'Lotus pond'],
+  forest: ['Forest clearing', 'Pine forest', 'Autumn forest', 'Bamboo forest', 'Enchanted forest', 'Forest cabin', 'Forest waterfall', 'Rainforest', 'Jungle', 'Treehouse', 'Misty forest'],
+  mountain: ['Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Cliffside overlook', 'Rocky cliffs', 'Canyon', 'Valley', 'Glacier', 'Tundra', 'Volcano summit'],
+  snow: ['Snowy landscape', 'Snowy cabin', 'Winter wonderland', 'Ski resort', 'Ice cave'],
+  urban: ['City street', 'City rooftop', 'City alley', 'Urban street', 'Urban loft', 'Modern apartment', 'Modern living room', 'Parisian street', 'Night market', 'Boutique', 'Cobblestone alley', 'Graffiti wall', 'Neon arcade', 'Rain-slicked street'],
+  indoor_cozy: ['Cozy bedroom', 'Cozy kitchen', 'Cozy fireplace', 'Farmhouse', 'Lakeside cabin', 'Historic townhouse', 'Victorian parlor'],
+  formal: ['Ballroom', 'Concert hall', 'Hotel lobby', 'Grand staircase', 'Palace', 'Cathedral', 'Museum', 'Restaurant', 'Winery', 'Theater stage', 'Castle courtyard'],
+  office: ['Office', 'Conference room', 'Library', 'Bookstore'],
+  fantasy: ['Gothic castle', 'Medieval castle', 'Throne room', 'Cloud kingdom', 'Floating island', 'Ancient temple ruins', 'Underground cavern', 'Temple', 'Monastery', 'Crystal cave'],
+  fitness: ['Gym', 'Yoga studio', 'Spa', 'Dance studio', 'Indoor pool'],
+  nightlife: ['Nightclub', 'Rooftop bar', 'Rock concert', 'Recording studio', 'Underground speakeasy', 'Music festival'],
+  studio: ['Art studio', 'Home studio', 'Movie set', 'Salon', 'Pottery studio'],
+  scifi: ['Futuristic city', 'Cyberpunk alley', 'Space station', 'Mars colony', 'Laboratory', 'Post-apocalyptic ruins', 'Astronomy observatory'],
+  water: ['Underwater', 'Aquarium tunnel', 'Calm lake', 'Lake dock', 'Waterfall', 'Coral reef', 'Lake reflections', 'Watermill']
+};
+
+const AFFINITY = {
+  beach: {
+    footwear: ['sandals', 'flip flops', 'espadrilles', 'barefoot', 'wedges'],
+    accessories: ['Sunglasses', 'Hat', 'Anklet', 'Bracelet', 'Hair clip', 'Straw hat'],
+    props: ['Towel', 'Umbrella', 'Sun hat', 'Water bottle', 'Picnic basket', 'Surfboard', 'Ice cream cone'],
+    makeup: ['Sun-kissed makeup', 'Bronzed makeup', 'Natural makeup', 'Dewy skin', 'Glossy lips', 'No makeup', 'Minimal makeup']
+  },
+  nature: {
+    footwear: ['sandals', 'ankle boots', 'ballet flats', 'espadrilles', 'barefoot', 'athletic sneakers', 'moccasins'],
+    accessories: ['Flower crown', 'Hat', 'Sunglasses', 'Bracelet', 'Necklace', 'Hair bow', 'Headband', 'Straw hat', 'Wide brim hat'],
+    props: ['Bouquet', 'Flowers', 'Single flower', 'Picnic basket', 'Book', 'Blanket', 'Camera', 'Watering can', 'Basket of fruit', 'Kite'],
+    makeup: ['Natural makeup', 'Dewy skin', 'Sun-kissed makeup', 'Light makeup', 'Minimal makeup', 'Peach blush', 'No makeup']
+  },
+  forest: {
+    footwear: ['hiking boots', 'ankle boots', 'combat boots', 'work boots', 'moccasins', 'athletic sneakers'],
+    accessories: ['Backpack', 'Hat', 'Scarf', 'Flower crown', 'Bracelet'],
+    props: ['Lantern', 'Camp lantern', 'Camera', 'Book', 'Staff', 'Blanket', 'Map'],
+    makeup: ['Natural makeup', 'No makeup', 'Minimal makeup', 'Dewy skin', 'Sun-kissed makeup']
+  },
+  mountain: {
+    footwear: ['hiking boots', 'combat boots', 'work boots', 'ankle boots', 'athletic sneakers'],
+    accessories: ['Backpack', 'Scarf', 'Hat', 'Sunglasses', 'Gloves', 'Knit beanie'],
+    props: ['Camera', 'Water bottle', 'Camp lantern', 'Blanket', 'Map'],
+    makeup: ['Natural makeup', 'No makeup', 'Sun-kissed makeup', 'Minimal makeup']
+  },
+  snow: {
+    footwear: ['snow boots', 'ankle boots', 'combat boots', 'knee high boots'],
+    accessories: ['Scarf', 'Gloves', 'Knit beanie', 'Hat', 'Earrings'],
+    props: ['Blanket', 'Coffee cup', 'Tea cup', 'Lantern', 'Umbrella', 'Sparkler'],
+    makeup: ['Dewy skin', 'Natural makeup', 'Soft glam', 'Red lips', 'Minimal makeup']
+  },
+  urban: {
+    footwear: ['athletic sneakers', 'ankle boots', 'high heels', 'loafers', 'slip on shoes', 'combat boots', 'mary janes'],
+    accessories: ['Sunglasses', 'Watch', 'Handbag', 'Headphones', 'Necklace', 'Earrings', 'Belt', 'Baseball cap', 'Fanny pack'],
+    props: ['Coffee cup', 'Phone', 'Shopping bags', 'Camera', 'Skateboard', 'Book', 'Smoothie cup'],
+    makeup: ['Everyday makeup', 'Bold makeup', 'Smokey eye', 'Cat eye', 'Natural makeup', 'Winged eyeliner', 'Red lips']
+  },
+  indoor_cozy: {
+    footwear: ['barefoot', 'slip on shoes', 'ballet flats', 'moccasins'],
+    accessories: ['Bracelet', 'Rings', 'Necklace', 'Hair clip', 'Glasses'],
+    props: ['Book', 'Coffee cup', 'Tea cup', 'Blanket', 'Pillow', 'Candles', 'Stuffed animal', 'Journal notebook'],
+    makeup: ['No makeup', 'Minimal makeup', 'Natural makeup', 'Dewy skin', 'Light makeup']
+  },
+  formal: {
+    footwear: ['high heels', 'stilettos', 'dress shoes', 'mary janes', 'wedges', 'ballet flats'],
+    accessories: ['Pearl necklace', 'Drop earrings', 'Clutch bag', 'Bracelet', 'Necklace', 'Rings', 'Tiara', 'Veil', 'Watch', 'Tennis bracelet'],
+    props: ['Champagne glass', 'Wine glass', 'Bouquet', 'Candles', 'Rose', 'Mirror'],
+    makeup: ['Soft glam', 'Red lips', 'Smokey eye', 'Dramatic makeup', 'Contour makeup', 'Bold makeup', 'Shimmer makeup']
+  },
+  office: {
+    footwear: ['high heels', 'loafers', 'dress shoes', 'ballet flats', 'mary janes'],
+    accessories: ['Watch', 'Glasses', 'Pearl necklace', 'Earrings', 'Belt', 'Handbag', 'Shoulder bag'],
+    props: ['Laptop', 'Book', 'Briefcase', 'Coffee cup', 'Phone', 'Journal notebook'],
+    makeup: ['Natural makeup', 'Everyday makeup', 'Light makeup', 'Minimal makeup', 'Soft glam']
+  },
+  fantasy: {
+    footwear: ['knee high boots', 'ankle boots', 'barefoot', 'combat boots', 'mary janes'],
+    accessories: ['Crown', 'Tiara', 'Sword', 'Wand', 'Aura glow', 'Cape', 'Veil', 'Body chain', 'Flower crown', 'Crystal pendant', 'Moon pendant'],
+    props: ['Crystal ball', 'Staff', 'Shield', 'Artifact', 'Candles', 'Lantern', 'Fairy lights', 'Scroll', 'Dreamcatcher'],
+    makeup: ['Dramatic makeup', 'Gothic makeup', 'Glitter highlights', 'Face gems', 'Face paint', 'Editorial high-fashion', 'Cosplay makeup']
+  },
+  fitness: {
+    footwear: ['running shoes', 'athletic sneakers', 'barefoot', 'slip on shoes'],
+    accessories: ['Headband', 'Watch', 'Hair clip', 'Bracelet'],
+    props: ['Yoga mat', 'Water bottle', 'Dumbbells', 'Towel', 'Jump rope', 'Smoothie cup'],
+    makeup: ['No makeup', 'Minimal makeup', 'Dewy skin', 'Natural makeup', 'Glowing skin']
+  },
+  nightlife: {
+    footwear: ['high heels', 'stilettos', 'platform heels', 'ankle boots', 'combat boots'],
+    accessories: ['Statement earrings', 'Choker', 'Body chain', 'Clutch bag', 'Hoop earrings', 'Rings', 'Headphones', 'Gold chain', 'Ear cuff'],
+    props: ['Champagne glass', 'Wine glass', 'Microphone', 'Phone', 'Sparkler'],
+    makeup: ['Smokey eye', 'Bold makeup', 'Dramatic makeup', 'Glitter highlights', '80s neon makeup', 'Red lips', 'Graphic eyeliner']
+  },
+  studio: {
+    footwear: ['high heels', 'barefoot', 'ballet flats', 'stilettos', 'ankle boots'],
+    accessories: ['Jewelry', 'Earrings', 'Necklace', 'Bracelet', 'Hair clip', 'Veil', 'Lace collar'],
+    props: ['Mirror', 'Flowers', 'Bouquet', 'Candles', 'Fairy lights', 'Film camera', 'Paint palette', 'Polaroid camera'],
+    makeup: ['Soft glam', 'Airbrushed glam', 'Natural makeup', 'Dewy skin', 'Editorial high-fashion', 'Contour makeup']
+  },
+  scifi: {
+    footwear: ['combat boots', 'ankle boots', 'athletic sneakers', 'work boots', 'knee high boots'],
+    accessories: ['Gas mask', 'Headphones', 'Glasses', 'Belt', 'Gloves', 'Body chain', 'Leg holster', 'Monocle'],
+    props: ['Laptop', 'Phone', 'Camera', 'Artifact'],
+    makeup: ['Cyberpunk face decals', 'Graphic eyeliner', 'Bold makeup', '80s neon makeup', 'Monochrome makeup', 'No makeup']
+  },
+  water: {
+    footwear: ['barefoot', 'sandals', 'flip flops'],
+    accessories: ['Anklet', 'Bracelet', 'Necklace', 'Hair clip', 'Toe ring'],
+    props: ['Towel', 'Water bottle', 'Single flower', 'Fishing rod'],
+    makeup: ['No makeup', 'Dewy skin', 'Natural makeup', 'Glossy lips', 'Minimal makeup']
+  }
+};
+
+function getEnvCategory(env) {
+  if (!env) return null;
+  const lower = env.toLowerCase();
+  for (const [cat, envs] of Object.entries(ENV_CATEGORIES)) {
+    if (envs.some(e => e.toLowerCase() === lower)) return cat;
+  }
+  for (const [cat, envs] of Object.entries(ENV_CATEGORIES)) {
+    if (envs.some(e => lower.includes(e.toLowerCase()) || e.toLowerCase().includes(lower))) return cat;
+  }
+  return null;
+}
+
+function pickAffinity(field, envCategory) {
+  if (!envCategory || !AFFINITY[envCategory] || !AFFINITY[envCategory][field]) return null;
+  const pool = AFFINITY[envCategory][field];
+  return pool.length ? pick(pool) : null;
+}
 
 const CLOTHING_PRESETS = {
   'Beach Cover-Up Set': { tags:['Beach', 'Swimwear', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'swim cover-up', hosiery:'', footwear:'sandals' },
@@ -1895,8 +2113,8 @@ function applyTheme(id) {
   if (!STATE.locks.shot) STATE.prompt.shot = pick(nonEmpty(FIELDS.shot));
   if (!STATE.locks.hairColor) STATE.prompt.hairColor = pick(nonEmpty(FIELDS.hairColor));
   if (!STATE.locks.hairLength) STATE.prompt.hairLength = pick(nonEmpty(FIELDS.hairLength));
-  if (!STATE.locks.hairStyle) STATE.prompt.hairStyle = pick(nonEmpty(FIELDS.hairStyle));
-  if (!STATE.locks.expression) STATE.prompt.expression = pick(nonEmpty(FIELDS.expression));
+  if (!STATE.locks.hairStyle) STATE.prompt.hairStyle = pickRand('hairStyle');
+  if (!STATE.locks.expression) STATE.prompt.expression = pickRand('expression');
   if (!STATE.locks.makeup) STATE.prompt.makeup = pick(nonEmpty(FIELDS.makeup));
   if (!STATE.locks.skin) STATE.prompt.skin = pick(nonEmpty(FIELDS.skin));
   if (!STATE.locks.accessories) STATE.prompt.accessories = pick(nonEmpty(FIELDS.accessories));
@@ -1921,6 +2139,7 @@ function applyTheme(id) {
     applyClothingPreset(pick(choicePool), true);
   }
   applyDefaults();
+  applyAgeRestrictions();
   refresh();
   toast(`✨ ${theme.name} applied!`);
 }
@@ -1936,16 +2155,32 @@ function randomizeAll() {
   if (STATE.promptMode === 'manual' && !setPromptMode('builder')) return;
   pushUndo();
   if (STATE.currentTheme && THEMES[STATE.currentTheme]) { applyTheme(STATE.currentTheme); return; }
-  // No theme — full random
+  // No theme — full random with environment affinity
   const propCategories = ['holdingItem','sceneProp','backgroundProp','magicProp'];
   const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
+    'expression','hairStyle','footwear','accessories','props','makeup',
     ...propCategories];
   Object.keys(FIELDS).forEach(f => {
     if (skip.includes(f) || STATE.locks[f]) return;
     const opts = nonEmpty(FIELDS[f]);
     if (opts.length) STATE.prompt[f] = pick(opts);
   });
-  randomizeClothing(null);
+  // Pick environment first, then use affinity for related fields
+  if (!STATE.locks.environment) STATE.prompt.environment = pick(nonEmpty(FIELDS.environment));
+  const envCat = getEnvCategory(STATE.prompt.environment);
+  if (!STATE.locks.expression) STATE.prompt.expression = pickRand('expression');
+  if (!STATE.locks.hairStyle) STATE.prompt.hairStyle = pickRand('hairStyle');
+  if (!STATE.locks.footwear) STATE.prompt.footwear = pickAffinity('footwear', envCat) || pickRand('footwear');
+  if (!STATE.locks.accessories) STATE.prompt.accessories = pickAffinity('accessories', envCat) || pick(nonEmpty(FIELDS.accessories));
+  if (!STATE.locks.props) STATE.prompt.props = pickAffinity('props', envCat) || pick(nonEmpty(FIELDS.props));
+  if (!STATE.locks.makeup) STATE.prompt.makeup = pickAffinity('makeup', envCat) || pickRand('expression');
+  // 40% chance to use a random clothing preset for outfit coherence
+  if (!STATE.locks.clothingPreset && Math.random() < 0.4) {
+    const presetNames = Object.keys(CLOTHING_PRESETS);
+    applyClothingPreset(pick(presetNames), true);
+  } else {
+    randomizeClothing(null);
+  }
   // Pick one prop category randomly
   const activeProp = pick(propCategories);
   propCategories.forEach(f => {
@@ -1953,6 +2188,7 @@ function randomizeAll() {
     STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
   });
   applyDefaults();
+  applyAgeRestrictions();
   refresh();
   toast('🎲 Randomized!');
 }
@@ -1960,18 +2196,53 @@ function randomizeAll() {
 function randomizeChaos() {
   if (STATE.promptMode === 'manual' && !setPromptMode('builder')) return;
   pushUndo();
-  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric'];
+  STATE.currentTheme = null;
+  updateThemeBar();
+  // Pick 2 random themes to mix
+  const themeKeys = Object.keys(THEMES);
+  const t1key = pick(themeKeys);
+  let t2key = pick(themeKeys);
+  while (t2key === t1key) t2key = pick(themeKeys);
+  const theme1 = THEMES[t1key];
+  const theme2 = THEMES[t2key];
+  // Environment from theme1, lighting from theme2
+  if (!STATE.locks.environment) STATE.prompt.environment = pick(theme1.environments || nonEmpty(FIELDS.environment));
+  if (!STATE.locks.lighting) STATE.prompt.lighting = pick(theme2.lighting || nonEmpty(FIELDS.lighting));
+  // Mix poses and moods from both themes
+  const mixedPoses = [...(theme1.poses || []), ...(theme2.poses || [])];
+  const mixedMoods = [...(theme1.moods || []), ...(theme2.moods || [])];
+  const mixedOccs = [...(theme1.occupations || []), ...(theme2.occupations || []), ...nonEmpty(FIELDS.occupation)];
+  if (!STATE.locks.pose) STATE.prompt.pose = pick(mixedPoses.length ? mixedPoses : nonEmpty(FIELDS.pose));
+  if (!STATE.locks.mood) STATE.prompt.mood = pick(mixedMoods.length ? mixedMoods : nonEmpty(FIELDS.mood));
+  if (!STATE.locks.occupation) STATE.prompt.occupation = Math.random() > 0.3 ? pick(mixedOccs) : '';
+  // 50% chance to use a preset from either theme
+  if (!STATE.locks.clothingPreset && Math.random() < 0.5) {
+    const presets1 = theme1.clothingPresets || [];
+    const presets2 = theme2.clothingPresets || [];
+    const combined = [...presets1, ...presets2];
+    if (combined.length) applyClothingPreset(pick(combined), true);
+    else randomizeClothing(null);
+  } else {
+    randomizeClothing(null);
+  }
+  // Fully random for remaining fields (no affinity — that's the chaos)
+  const propCategories = ['holdingItem','sceneProp','backgroundProp','magicProp'];
+  const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
+    'environment','lighting','pose','mood','occupation', ...propCategories];
   Object.keys(FIELDS).forEach(f => {
     if (skip.includes(f) || STATE.locks[f]) return;
     const opts = nonEmpty(FIELDS[f]);
     if (opts.length) STATE.prompt[f] = pick(opts);
   });
-  randomizeClothing(null);
-  STATE.currentTheme = null;
-  updateThemeBar();
+  const activeProp = pick(propCategories);
+  propCategories.forEach(f => {
+    if (STATE.locks[f]) return;
+    STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
+  });
   applyDefaults();
+  applyAgeRestrictions();
   refresh();
-  toast('🌀 Chaos!');
+  toast('🌀 Chaos! Mixed themes for wild results');
 }
 
 // ==========================================
@@ -2074,12 +2345,22 @@ function batchGenerate() {
   for (let i = 0; i < 5; i++) {
     const batchPropCats = ['holdingItem','sceneProp','backgroundProp','magicProp'];
     const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
+      'expression','hairStyle','footwear','accessories','props','makeup','environment',
       ...batchPropCats];
     Object.keys(FIELDS).forEach(f => {
       if (skip.includes(f) || STATE.locks[f]) return;
       const opts = nonEmpty(FIELDS[f]);
       if (opts.length) STATE.prompt[f] = pick(opts);
     });
+    // Pick environment first, use affinity for related fields
+    if (!STATE.locks.environment) STATE.prompt.environment = pick(nonEmpty(FIELDS.environment));
+    const envCat = getEnvCategory(STATE.prompt.environment);
+    if (!STATE.locks.expression) STATE.prompt.expression = pickRand('expression');
+    if (!STATE.locks.hairStyle) STATE.prompt.hairStyle = pickRand('hairStyle');
+    if (!STATE.locks.footwear) STATE.prompt.footwear = pickAffinity('footwear', envCat) || pickRand('footwear');
+    if (!STATE.locks.accessories) STATE.prompt.accessories = pickAffinity('accessories', envCat) || pick(nonEmpty(FIELDS.accessories));
+    if (!STATE.locks.props) STATE.prompt.props = pickAffinity('props', envCat) || pick(nonEmpty(FIELDS.props));
+    if (!STATE.locks.makeup) STATE.prompt.makeup = pickAffinity('makeup', envCat) || pick(nonEmpty(FIELDS.makeup));
     // Pick one prop category per batch prompt
     const activeProp = pick(batchPropCats);
     batchPropCats.forEach(f => {
@@ -2088,6 +2369,7 @@ function batchGenerate() {
     });
     randomizeClothing(STATE.currentTheme);
     applyDefaults();
+    applyAgeRestrictions();
     STATE.batchPrompts.push(generatePromptText());
   }
   STATE.prompt = saved;
@@ -2222,7 +2504,7 @@ function generateBuilderPromptText() {
     if(d.hairDesc)tags.push(d.hairDesc);
     if(showTopwear && d.top)       tags.push(d.top);
     if(showBottomwear && d.bottom) tags.push(d.bottom);
-    if(showDress && d.onePiece)    tags.push('wearing '+d.onePiece);
+    if(showDress && d.onePiece)    tags.push(d.onePiece);
     if(d.outerwear)    tags.push(d.outerwear);
     if(d.hosiery)      tags.push(d.hosiery);
     if(d.footwear)     tags.push(d.footwear);
@@ -2247,6 +2529,29 @@ function generateBuilderPromptText() {
 
 function generatePromptText() {
   return getActivePromptText();
+}
+
+function getAutoNegativePrompt() {
+  const pose = (STATE.prompt.pose || '').toLowerCase();
+  const negatives = ['blurry', 'low quality', 'distorted face', 'extra fingers', 'mutated hands', 'extra limbs'];
+  if (pose.includes('standing') || pose.includes('walking') || pose.includes('running')) {
+    negatives.push('crossed legs', 'twisted limbs', 'feet overlapping', 'contorted pose');
+  }
+  if (pose.includes('seated') || pose.includes('sitting')) {
+    negatives.push('floating', 'no chair visible', 'legs twisted unnaturally');
+  }
+  if (pose.includes('jumping') || pose.includes('dancing') || pose.includes('spinning')) {
+    negatives.push('motion blur on face', 'extra arms', 'merged limbs');
+  }
+  return negatives.join(', ');
+}
+
+function autoFillNegative() {
+  const neg = document.getElementById('negative-prompt');
+  if (neg) {
+    neg.value = getAutoNegativePrompt();
+    toast('🪄 Auto negative prompt set');
+  }
 }
 
 // ==========================================
@@ -2637,6 +2942,11 @@ function validateSettings() {
   const p = document.getElementById('pref-pregnancy').value;
   if (g==='male' && p!=='not pregnant') { document.getElementById('pref-pregnancy').value='not pregnant'; toast('Males cannot be pregnant'); }
   if ((p==='pregnant'||p==='heavily pregnant') && g!=='female') { document.getElementById('pref-gender').value='female'; toast('Pregnancy requires female'); }
+  const a = document.getElementById('pref-age').value;
+  if (a && CHILD_AGES.includes(a) && (p==='pregnant'||p==='heavily pregnant')) {
+    document.getElementById('pref-pregnancy').value='not pregnant';
+    toast('Pregnancy not available for this age');
+  }
 }
 
 function saveSettings() {
@@ -2758,7 +3068,7 @@ function applyDefaults() {
   if (STATE.settings.defaultPregnancy) STATE.prompt.pregnancy = STATE.settings.defaultPregnancy;
   if (STATE.settings.defaultAge) STATE.prompt.age = STATE.settings.defaultAge;
   if (STATE.prompt.gender === 'male') STATE.prompt.pregnancy = 'not pregnant';
-  const underage = ['baby','toddler','young child','child','preteen','early teenager','mid teenager'];
+  const underage = ['baby','toddler','young child','child','preteen','early teen','mid teen'];
   if (underage.includes(STATE.prompt.age)) STATE.prompt.pregnancy = 'not pregnant';
 }
 
