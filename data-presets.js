@@ -2,21 +2,21 @@
 // ENV_CATEGORIES — maps environment names to category keys
 // ==========================================
 const ENV_CATEGORIES = {
-  beach: ['Beach', 'Beach resort', 'Boardwalk', 'Tropical beach', 'Tropical island', 'Ocean', 'Pier', 'Harbor', 'Coastal village', 'Cruise ship', 'Luxury yacht', 'Sailboat', 'Moonlit beach', 'Beach bonfire', 'Tidal pool', 'Poolside lounge', 'Swimming pool', 'Infinity pool'],
-  nature: ['Park', 'Garden', 'Meadow', 'Spring meadow', 'Wildflower meadow', 'Flower field', 'Lavender field', 'Sunflower field', 'Rose garden', 'Botanical garden', 'Countryside', 'Rolling hills', 'Field', 'Prairie', 'Wheat field', 'Backyard garden', 'Cherry blossom garden', 'Cherry blossom park', 'Olive grove', 'Orchard', 'Apple orchard', 'Vineyard', 'Summer garden', 'Nature trail', 'Secret garden', 'Butterfly garden', 'Terraced garden', 'Rooftop garden', 'Urban garden', 'Zen garden', 'Fairy garden', 'Koi pond', 'Lotus pond'],
+  beach: ['Beach', 'Beach resort', 'Boardwalk', 'Tropical beach', 'Tropical island', 'Ocean', 'Pier', 'Harbor', 'Coastal village', 'Cruise ship', 'Luxury yacht', 'Sailboat', 'Moonlit beach', 'Beach bonfire', 'Tidal pool', 'Poolside lounge', 'Swimming pool', 'Infinity pool', 'Treasure island'],
+  nature: ['Park', 'Garden', 'Meadow', 'Spring meadow', 'Wildflower meadow', 'Flower field', 'Lavender field', 'Sunflower field', 'Rose garden', 'Botanical garden', 'Countryside', 'Rolling hills', 'Field', 'Prairie', 'Wheat field', 'Backyard garden', 'Cherry blossom garden', 'Cherry blossom park', 'Olive grove', 'Orchard', 'Apple orchard', 'Vineyard', 'Summer garden', 'Nature trail', 'Secret garden', 'Butterfly garden', 'Terraced garden', 'Rooftop garden', 'Urban garden', 'Zen garden', 'Fairy garden', 'Koi pond', 'Lotus pond', 'Mushroom grove', 'Tropical rainforest canopy', 'Wildflower cottage'],
   forest: ['Forest clearing', 'Pine forest', 'Autumn forest', 'Bamboo forest', 'Enchanted forest', 'Forest cabin', 'Forest waterfall', 'Rainforest', 'Jungle', 'Treehouse', 'Misty forest'],
-  mountain: ['Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Cliffside overlook', 'Rocky cliffs', 'Canyon', 'Valley', 'Glacier', 'Tundra', 'Volcano summit'],
+  mountain: ['Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Cliffside overlook', 'Rocky cliffs', 'Canyon', 'Valley', 'Glacier', 'Tundra', 'Volcano summit', 'Nordic fjord', 'Desert canyon at sunset', 'Gold rush mine', 'Sunset cliff edge'],
   snow: ['Snowy landscape', 'Snowy cabin', 'Winter wonderland', 'Ski resort', 'Ice cave'],
-  urban: ['City street', 'City rooftop', 'City alley', 'Urban street', 'Urban loft', 'Modern apartment', 'Modern living room', 'Parisian street', 'Night market', 'Boutique', 'Cobblestone alley', 'Graffiti wall', 'Neon arcade', 'Rain-slicked street'],
-  indoor_cozy: ['Cozy bedroom', 'Cozy kitchen', 'Cozy fireplace', 'Farmhouse', 'Lakeside cabin', 'Historic townhouse', 'Victorian parlor'],
-  formal: ['Ballroom', 'Concert hall', 'Hotel lobby', 'Grand staircase', 'Palace', 'Cathedral', 'Museum', 'Restaurant', 'Winery', 'Theater stage', 'Castle courtyard'],
+  urban: ['City street', 'City rooftop', 'City alley', 'Urban street', 'Urban loft', 'Modern apartment', 'Modern living room', 'Parisian street', 'Night market', 'Boutique', 'Cobblestone alley', 'Graffiti wall', 'Neon arcade', 'Rain-slicked street', 'Cyberpunk nightclub', 'Wild West saloon', 'Frontier town', 'Anime city street', 'Carnival midway'],
+  indoor_cozy: ['Cozy bedroom', 'Cozy kitchen', 'Cozy fireplace', 'Farmhouse', 'Lakeside cabin', 'Historic townhouse', 'Victorian parlor', 'Candlelit study room', 'Cozy country kitchen', 'Norse longhouse', 'Norse village', 'Viking longhouse'],
+  formal: ['Ballroom', 'Concert hall', 'Hotel lobby', 'Grand staircase', 'Palace', 'Cathedral', 'Museum', 'Restaurant', 'Winery', 'Theater stage', 'Castle courtyard', 'Gothic university hallway', 'Old stone library'],
   office: ['Office', 'Conference room', 'Library', 'Bookstore'],
-  fantasy: ['Gothic castle', 'Medieval castle', 'Throne room', 'Cloud kingdom', 'Floating island', 'Ancient temple ruins', 'Underground cavern', 'Temple', 'Monastery', 'Crystal cave'],
+  fantasy: ['Gothic castle', 'Medieval castle', 'Throne room', 'Cloud kingdom', 'Floating island', 'Ancient temple ruins', 'Underground cavern', 'Temple', 'Monastery', 'Crystal cave', 'Gothic cathedral ruins', 'Haunted mansion', 'Cemetery at midnight', 'Catacombs', 'Mount Olympus', 'Ancient Greek temple', 'Egyptian pyramid chamber', 'Secret underground lair', 'Floating sky castle', 'Ancient spirit forest', 'Destroyed cityscape', 'Cherry blossom shrine'],
   fitness: ['Gym', 'Yoga studio', 'Spa', 'Dance studio', 'Indoor pool'],
   nightlife: ['Nightclub', 'Rooftop bar', 'Rock concert', 'Recording studio', 'Underground speakeasy', 'Music festival'],
   studio: ['Art studio', 'Home studio', 'Movie set', 'Salon', 'Pottery studio'],
-  scifi: ['Futuristic city', 'Cyberpunk alley', 'Space station', 'Mars colony', 'Laboratory', 'Post-apocalyptic ruins', 'Astronomy observatory'],
-  water: ['Underwater', 'Aquarium tunnel', 'Calm lake', 'Lake dock', 'Waterfall', 'Coral reef', 'Lake reflections', 'Watermill']
+  scifi: ['Futuristic city', 'Cyberpunk alley', 'Space station', 'Mars colony', 'Laboratory', 'Post-apocalyptic ruins', 'Astronomy observatory', 'Steampunk airship dock', 'Victorian clockwork factory', 'Steam-powered city', 'Holographic plaza', 'Neon corridor', 'Underground hacker den', 'Brass workshop'],
+  water: ['Underwater', 'Aquarium tunnel', 'Calm lake', 'Lake dock', 'Waterfall', 'Coral reef', 'Lake reflections', 'Watermill', 'Caribbean cove', 'Sunken shipwreck', 'Pirate ship deck']
 };
 
 // ==========================================
@@ -37,14 +37,14 @@ const AFFINITY = {
   },
   forest: {
     footwear: ['hiking boots', 'ankle boots', 'combat boots', 'work boots', 'moccasins', 'athletic sneakers'],
-    accessories: ['Backpack', 'Hat', 'Scarf', 'Flower crown', 'Bracelet'],
-    props: ['Lantern', 'Camp lantern', 'Camera', 'Book', 'Staff', 'Blanket', 'Map'],
+    accessories: ['Backpack', 'Hat', 'Scarf', 'Flower crown', 'Bracelet', 'Compass pendant', 'Leather bracer'],
+    props: ['Lantern', 'Camp lantern', 'Camera', 'Book', 'Staff', 'Blanket', 'Map', 'Compass', 'Binoculars'],
     makeup: ['Natural makeup', 'No makeup', 'Minimal makeup', 'Dewy skin', 'Sun-kissed makeup']
   },
   mountain: {
     footwear: ['hiking boots', 'combat boots', 'work boots', 'ankle boots', 'athletic sneakers'],
-    accessories: ['Backpack', 'Scarf', 'Hat', 'Sunglasses', 'Gloves', 'Knit beanie'],
-    props: ['Camera', 'Water bottle', 'Camp lantern', 'Blanket', 'Map'],
+    accessories: ['Backpack', 'Scarf', 'Hat', 'Sunglasses', 'Gloves', 'Knit beanie', 'Compass pendant'],
+    props: ['Camera', 'Water bottle', 'Camp lantern', 'Blanket', 'Map', 'Binoculars', 'Compass', 'Telescope'],
     makeup: ['Natural makeup', 'No makeup', 'Sun-kissed makeup', 'Minimal makeup']
   },
   snow: {
@@ -62,13 +62,13 @@ const AFFINITY = {
   indoor_cozy: {
     footwear: ['barefoot', 'slip on shoes', 'ballet flats', 'moccasins'],
     accessories: ['Bracelet', 'Rings', 'Necklace', 'Hair clip', 'Glasses'],
-    props: ['Book', 'Coffee cup', 'Tea cup', 'Blanket', 'Pillow', 'Candles', 'Stuffed animal', 'Journal notebook'],
+    props: ['Book', 'Coffee cup', 'Tea cup', 'Blanket', 'Pillow', 'Candles', 'Stuffed animal', 'Journal notebook', 'Hourglass', 'Ancient tome', 'Quill pen', 'Pocket watch'],
     makeup: ['No makeup', 'Minimal makeup', 'Natural makeup', 'Dewy skin', 'Light makeup']
   },
   formal: {
     footwear: ['high heels', 'stilettos', 'dress shoes', 'mary janes', 'wedges', 'ballet flats'],
-    accessories: ['Pearl necklace', 'Drop earrings', 'Clutch bag', 'Bracelet', 'Necklace', 'Rings', 'Tiara', 'Veil', 'Watch', 'Tennis bracelet'],
-    props: ['Champagne glass', 'Wine glass', 'Bouquet', 'Candles', 'Rose', 'Mirror'],
+    accessories: ['Pearl necklace', 'Drop earrings', 'Clutch bag', 'Bracelet', 'Necklace', 'Rings', 'Tiara', 'Veil', 'Watch', 'Tennis bracelet', 'Laurel wreath', 'Pocket watch chain'],
+    props: ['Champagne glass', 'Wine glass', 'Bouquet', 'Candles', 'Rose', 'Mirror', 'Hourglass', 'Quill pen'],
     makeup: ['Soft glam', 'Red lips', 'Smokey eye', 'Dramatic makeup', 'Contour makeup', 'Bold makeup', 'Shimmer makeup']
   },
   office: {
@@ -79,8 +79,8 @@ const AFFINITY = {
   },
   fantasy: {
     footwear: ['knee high boots', 'ankle boots', 'barefoot', 'combat boots', 'mary janes'],
-    accessories: ['Crown', 'Tiara', 'Sword', 'Wand', 'Aura glow', 'Cape', 'Veil', 'Body chain', 'Flower crown', 'Crystal pendant', 'Moon pendant'],
-    props: ['Crystal ball', 'Staff', 'Shield', 'Artifact', 'Candles', 'Lantern', 'Fairy lights', 'Scroll', 'Dreamcatcher'],
+    accessories: ['Crown', 'Tiara', 'Sword', 'Wand', 'Aura glow', 'Cape', 'Veil', 'Body chain', 'Flower crown', 'Crystal pendant', 'Moon pendant', 'Viking armband', 'Hero cape', 'Laurel wreath', 'Leather bracer', 'Crossbow quiver', 'Compass pendant', 'Finger armor rings'],
+    props: ['Crystal ball', 'Staff', 'Shield', 'Artifact', 'Candles', 'Lantern', 'Fairy lights', 'Scroll', 'Dreamcatcher', 'Torch', 'Ancient tome', 'Potion bottle', 'Horn', 'Spell book', 'Treasure chest'],
     makeup: ['Dramatic makeup', 'Gothic makeup', 'Glitter highlights', 'Face gems', 'Face paint', 'Editorial high-fashion', 'Cosplay makeup']
   },
   fitness: {
@@ -103,14 +103,14 @@ const AFFINITY = {
   },
   scifi: {
     footwear: ['combat boots', 'ankle boots', 'athletic sneakers', 'work boots', 'knee high boots'],
-    accessories: ['Gas mask', 'Headphones', 'Glasses', 'Belt', 'Gloves', 'Body chain', 'Leg holster', 'Monocle'],
-    props: ['Laptop', 'Phone', 'Camera', 'Artifact'],
+    accessories: ['Gas mask', 'Headphones', 'Glasses', 'Belt', 'Gloves', 'Body chain', 'Leg holster', 'Monocle', 'Steampunk goggles', 'Pocket watch chain'],
+    props: ['Laptop', 'Phone', 'Camera', 'Artifact', 'Compass', 'Telescope', 'Binoculars', 'Hourglass'],
     makeup: ['Cyberpunk face decals', 'Graphic eyeliner', 'Bold makeup', '80s neon makeup', 'Monochrome makeup', 'No makeup']
   },
   water: {
     footwear: ['barefoot', 'sandals', 'flip flops'],
-    accessories: ['Anklet', 'Bracelet', 'Necklace', 'Hair clip', 'Toe ring'],
-    props: ['Towel', 'Water bottle', 'Single flower', 'Fishing rod'],
+    accessories: ['Anklet', 'Bracelet', 'Necklace', 'Hair clip', 'Toe ring', 'Pirate tricorn hat', 'Sailor hat'],
+    props: ['Towel', 'Water bottle', 'Single flower', 'Fishing rod', 'Compass', 'Treasure map', 'Binoculars'],
     makeup: ['No makeup', 'Dewy skin', 'Natural makeup', 'Glossy lips', 'Minimal makeup']
   }
 };
@@ -154,5 +154,17 @@ const CLOTHING_PRESETS = {
   'Street Style Set': { tags:['Urban', 'Shopping'], clothingTheme:'Urban', clothingStyle:'Layered', top:'crop top', bottom:'jeans', outerwear:'leather jacket', hosiery:'ankle socks', footwear:'athletic sneakers' },
   'Urban Night Set': { tags:['Urban', 'Nightlife'], clothingTheme:'Urban', clothingStyle:'Two-Piece', top:'halter top', bottom:'leather pants', hosiery:'', footwear:'stilettos' },
   'Wedding Day Set': { tags:['Wedding', 'Events'], clothingTheme:'Wedding', clothingStyle:'One-Piece', onePiece:'wedding dress', hosiery:'sheer tights', footwear:'stilettos' },
-  'Winter Coat Set': { tags:['Travel', 'Seasons'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'dress pants', outerwear:'trench coat', hosiery:'pantyhose', footwear:'ankle boots' }
+  'Winter Coat Set': { tags:['Travel', 'Seasons'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'dress pants', outerwear:'trench coat', hosiery:'pantyhose', footwear:'ankle boots' },
+  'Steampunk Explorer Set': { tags:['Steampunk', 'Creative'], clothingTheme:'Steampunk', clothingStyle:'Layered', top:'blouse', bottom:'high-waisted shorts', outerwear:'vest', hosiery:'thigh high stockings', footwear:'ankle boots' },
+  'Cyberpunk Street Set': { tags:['Cyberpunk', 'Urban'], clothingTheme:'Cyberpunk', clothingStyle:'Layered', top:'crop top', bottom:'leather pants', outerwear:'utility jacket', hosiery:'', footwear:'combat boots' },
+  'Gothic Romance Set': { tags:['Gothic', 'Fantasy'], clothingTheme:'Gothic', clothingStyle:'One-Piece', onePiece:'Gothic dress', hosiery:'thigh high stockings', footwear:'ankle boots' },
+  'Western Cowgirl Set': { tags:['Western', 'Travel'], clothingTheme:'Western', clothingStyle:'Layered', top:'flannel shirt', bottom:'jeans', outerwear:'vest', hosiery:'ankle socks', footwear:'cowboy boots' },
+  'Greek Goddess Set': { tags:['Mythology', 'Fantasy'], clothingTheme:'Mythology', clothingStyle:'One-Piece', onePiece:'toga', hosiery:'', footwear:'barefoot' },
+  'Superhero Cape Set': { tags:['Superhero', 'Fantasy'], clothingTheme:'Superhero', clothingStyle:'One-Piece', onePiece:'superhero suit', hosiery:'', footwear:'knee high boots' },
+  'Pirate Queen Set': { tags:['Pirate', 'Historical'], clothingTheme:'Pirate', clothingStyle:'Layered', top:'blouse', bottom:'cargo pants', outerwear:'coat', hosiery:'knee high socks', footwear:'knee high boots' },
+  'Viking Shield Maiden Set': { tags:['Viking', 'Fantasy'], clothingTheme:'Viking', clothingStyle:'One-Piece', onePiece:'armor', hosiery:'thigh high stockings', footwear:'knee high boots' },
+  'Cottagecore Garden Set': { tags:['Cottagecore', 'Nature'], clothingTheme:'Cottagecore', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'ankle socks', footwear:'espadrilles' },
+  'Sci-Fi Commander Set': { tags:['Sci-Fi', 'Fantasy'], clothingTheme:'Sci-Fi', clothingStyle:'One-Piece', onePiece:'space suit', hosiery:'', footwear:'combat boots' },
+  'Dark Academia Set': { tags:['Dark Academia', 'Historical'], clothingTheme:'Dark Academia', clothingStyle:'Layered', top:'turtleneck', bottom:'wide-leg pants', outerwear:'blazer', hosiery:'pantyhose', footwear:'loafers' },
+  'Anime Style Set': { tags:['Anime', 'Creative'], clothingTheme:'Anime', clothingStyle:'One-Piece', onePiece:'kimono', hosiery:'ankle socks', footwear:'mary janes' }
 };
