@@ -1300,6 +1300,10 @@ margin-bottom: 4px;
   <button class="undo-btn" onclick="undoState()">Undo</button>
 </div>
 
+<script src="data-fields.js"></script>
+<script src="data-presets.js"></script>
+<script src="data-themes.js"></script>
+
 <script>
 'use strict';
 
@@ -1359,161 +1363,7 @@ const MAX_UNDO = 15;
 // ==========================================
 // EXPANDED FIELD DEFINITIONS
 // ==========================================
-const FIELDS = {
-  camera: ['action sports photography', 'aerial drone photography', 'beauty editorial photography', 'boudoir portrait photography', 'candid lifestyle photography', 'cinematic portrait photography', 'commercial campaign photography', 'documentary lifestyle photography', 'editorial fashion photography', 'environmental portrait photography', 'family portrait photography', 'fashion catalog photography', 'film-inspired portrait photography', 'fine art portrait photography', 'glamour portrait photography', 'high-end lifestyle photography', 'high-fashion editorial photography', 'indoor natural light photography', 'luxury campaign photography', 'magazine cover photography', 'moody portrait photography', 'newborn portrait photography', 'outdoor golden hour photography', 'petite studio portrait photography', 'professional portrait photography', 'raw street style photography', 'romantic portrait photography', 'runway backstage photography', 'soft natural light portrait photography', 'sports editorial photography', 'storytelling lifestyle photography', 'street style photography', 'studio beauty photography', 'studio portrait photography', 'travel editorial photography', 'vintage film photography', 'wedding portrait photography'],
-
-  shot: ['3/4 view shot', 'Aerial shot', 'Bird\'s eye view', 'Close-up shot', 'Detail shot', 'Dutch angle shot', 'Environmental portrait', 'Establishing shot', 'Extreme close-up', 'Eye-level shot', 'Fish-eye shot', 'Full body portrait', 'Full length shot', 'Ground level shot', 'Head-and-shoulders portrait', 'High angle shot', 'Low angle shot', 'Macro shot', 'Medium close-up shot', 'Medium shot', 'Over-the-shoulder shot', 'Panoramic shot', 'Point-of-view shot', 'Profile shot', 'Rear view shot', 'Side profile portrait', 'Symmetrical front shot', 'Three-quarter portrait', 'Top-down shot', 'Waist-up portrait', 'Wide lifestyle shot'],
-
-  gender: ['female', 'male'],
-
-  pregnancy: ['heavily pregnant', 'not pregnant', 'pregnant'],
-
-  age: ['baby', 'toddler', 'young child', 'child', 'preteen', 'early teen', 'mid teen', 'late teen', 'early twenties', 'mid twenties', 'late twenties', 'thirties', 'forties', 'fifties', 'sixties', 'seventies', 'eighties+'],
-
-  hairColor: ['Ash blonde', 'Auburn', 'Black', 'Blonde', 'Blue', 'Brown', 'Burgundy', 'Caramel brown', 'Champagne blonde', 'Charcoal', 'Chestnut', 'Chocolate brown', 'Copper', 'Dark brown', 'Dirty blonde', 'Ginger', 'Gray', 'Green', 'Honey blonde', 'Indigo', 'Jet black', 'Lavender', 'Light brown', 'Lilac', 'Mahogany', 'Neon green', 'Ombre', 'Pastel blue', 'Pastel pink', 'Pink', 'Platinum blonde', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Sandy blonde', 'Silver', 'Strawberry blonde', 'Teal', 'White', 'Wine red'],
-
-  hairLength: ['Chin-length', 'Ear-length', 'Hip-length', 'Long', 'Medium', 'Pixie length', 'Short', 'Shoulder-length', 'Very long', 'Very short', 'Waist-length'],
-
-  hairStyle: ['Afro', 'Bangs', 'Beach waves', 'Blunt bob', 'Bob', 'Box braids', 'Braided', 'Braided crown', 'Bun', 'Buzz cut', 'Coily', 'Cornrows', 'Curly', 'Curtain bangs', 'Dreadlocks', 'Faux hawk', 'Feathered layers', 'Finger waves', 'Flowing', 'French braid', 'Half-up half-down', 'High bun', 'High ponytail', 'Layered', 'Locs', 'Loose curls', 'Low bun', 'Messy bun', 'Mohawk', 'Mullet', 'Pigtails', 'Pixie cut', 'Ponytail', 'Ringlets', 'Shag cut', 'Side braid', 'Sleek bob', 'Slicked back', 'Space buns', 'Straight', 'Tight curls', 'Top knot', 'Twists', 'Undercut', 'Updo', 'Voluminous', 'Wavy', 'Wet look', 'Wolf cut'],
-
-  skin: ['Albino', 'Amber skin', 'Beige skin', 'Bronze skin', 'Brown skin', 'Caramel skin', 'Dark skin', 'Deep espresso skin', 'Fair skin', 'Freckled skin', 'Golden skin', 'Light brown skin', 'Medium tan skin', 'Olive skin', 'Pale skin', 'Porcelain skin', 'Rosy skin', 'Sun-kissed skin', 'Tan skin', 'Vitiligo skin', 'Warm brown skin'],
-
-  occupation: ['Actor', 'Adventurer', 'Alchemist', 'Angel', 'Architect', 'Artist', 'Astronaut', 'Athlete', 'Baker', 'Ballerina', 'Barista', 'Biker', 'Bodyguard', 'Botanist', 'Boxer', 'Chef', 'Content creator', 'Cowgirl', 'Cyberpunk hacker', 'Dancer', 'Detective', 'DJ', 'Doctor', 'Engineer', 'Explorer', 'Fairy', 'Farmer', 'Fashion designer', 'Firefighter', 'Florist', 'Gamer', 'Goddess', 'Guide', 'Influencer', 'Journalist', 'Knight', 'Librarian', 'Mage', 'Makeup artist', 'Mechanic', 'Mermaid', 'Model', 'Motorcyclist', 'Musician', 'Ninja', 'Nurse', 'Painter', 'Paramedic', 'Photographer', 'Pilot', 'Princess', 'Professor', 'Queen', 'Researcher', 'Rockstar', 'Sailor', 'Samurai', 'Scientist', 'Singer', 'Skater', 'Soldier', 'Stylist', 'Superhero', 'Surfer', 'Teacher', 'Traveler', 'Warrior', 'Witch', 'Writer', 'Yoga instructor'],
-
-  expression: ['Adoring', 'Amazed', 'Beaming', 'Bold', 'Bright smile', 'Calm', 'Cheerful', 'Confident', 'Contemplative', 'Coy smile', 'Curious', 'Defiant', 'Determined', 'Dreamy', 'Ecstatic', 'Elegant', 'Excited', 'Fierce', 'Focused', 'Gentle smile', 'Joyful', 'Laughing', 'Loving', 'Melancholic', 'Mysterious', 'Peaceful', 'Playful', 'Proud', 'Radiant smile', 'Regal', 'Relaxed', 'Serene', 'Serious', 'Shy', 'Smiling', 'Smirking', 'Soft smile', 'Stoic', 'Sultry', 'Surprised', 'Tender', 'Thoughtful', 'Wistful'],
-
-  makeup: ['80s neon makeup', 'Airbrushed glam', 'Bold makeup', 'Bronzed makeup', 'Cat eye', 'Colorful eyeliner', 'Contour makeup', 'Cosplay makeup', 'Cyberpunk face decals', 'Dewy skin', 'Dramatic makeup', 'Editorial high-fashion', 'Everyday makeup', 'Face gems', 'Face paint', 'Glitter highlights', 'Glossy lips', 'Glowing skin', 'Gothic makeup', 'Graphic eyeliner', 'Light makeup', 'Minimal makeup', 'Monochrome makeup', 'Natural makeup', 'No makeup', 'Pastel makeup', 'Peach blush', 'Red lips', 'Retro makeup', 'Shimmer makeup', 'Smokey eye', 'Soft glam', 'Sun-kissed makeup', 'Tribal markings', 'Vintage makeup', 'Winged eyeliner'],
-
-  clothingTheme: ['At Home', 'Autumn', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Holiday', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel', 'Urban', 'Wedding'],
-
-  clothingStyle: ['Fantasy / Armor', 'Layered', 'One-Piece', 'Swimwear', 'Two-Piece'],
-
-  clothingPresetType: ['At Home', 'Autumn', 'Beach', 'Creative', 'Dining', 'Events', 'Fantasy', 'Fitness', 'Historical', 'Holiday', 'Jungle', 'Maternity', 'Nightlife', 'Office', 'Prehistoric', 'Shopping', 'Studio', 'Swimwear', 'Travel', 'Urban', 'Wedding'],
-  clothingPreset: ['Autumn Harvest Set', 'Beach Cover-Up Set', 'Beach Lounge Set', 'Bikini Set', 'Boho Festival Set', 'Bridal Shower Set', 'Casual Coffee Run Set', 'Classic Office Set', 'Cozy At-Home Set', 'Date Night Dress Set', 'Enchanted Grove Set', 'Explorer Jungle Set', 'Fall Hiking Set', 'Fantasy Armor Set', 'Fitness Training Set', 'Flowing Party Dress Set', 'Garden Party Set', 'Holiday Glam Set', 'Jungle Adventure Set', 'Maternity Studio Set', 'Moonlit Sorceress Set', 'Picnic Day Set', 'Pool Party Set', 'Prehistoric Huntress Set', 'Resort Swim Set', 'Safari Linen Set', 'Ski Lodge Set', 'Smart Casual Office Set', 'Street Style Set', 'Studio Glam Set', 'Sunset Boardwalk Set', 'Tropical Waterfall Set', 'Travel Day Set', 'Urban Night Set', 'Wedding Day Set', 'Winter Coat Set'],
-
-  onePiece: ['A-line dress', 'Apron dress', 'Armor', 'Asymmetric dress', 'Babydoll dress', 'Ball gown', 'Bathrobe', 'Beach cover-up', 'Beach dress', 'Bodycon dress', 'Bodysuit', 'Bustier dress', 'Caftan', 'Cape dress', 'Catsuit', 'Cocktail dress', 'Co-ord set', 'Corset dress', 'Corset gown', 'Cosplay outfit', 'Costume', 'Coveralls', 'Cover-up dress', 'Cyberpunk techwear', 'Duster coat dress', 'Elegant dress', 'Embroidered dress', 'Empire waist dress', 'Evening gown', 'Feathered gown', 'Figure skating dress', 'Fit-and-flare dress', 'Flamenco dress', 'Floral maxi dress', 'Floral sundress', 'Folk costume', 'Fringe dress', 'Gothic dress', 'Gown', 'Halter dress', 'Hanfu', 'Hooded robe', 'Jumpsuit', 'Kaftan', 'Kimono', 'Knitted dress', 'Lace dress', 'Latex bodysuit', 'Leather jumpsuit', 'Little black dress', 'Maternity dress', 'Maxi dress', 'Mermaid gown', 'Midi dress', 'Mini dress', 'Nightgown', 'Off-shoulder dress', 'One-piece swimsuit', 'Open-back dress', 'Overall shorts', 'Overalls', 'Pencil dress', 'Pinafore dress', 'Robe', 'Romper', 'Ruched dress', 'Ruffle dress', 'Sari', 'Sequin dress', 'Sheath dress', 'Shift dress', 'Shirt dress', 'Slip dress', 'Smock dress', 'Space suit', 'Strapless dress', 'Sundress', 'Superhero suit', 'Sweater dress', 'Swim cover-up', 'Swimdress', 'Tactical suit', 'Tiered dress', 'Toga', 'Tulle dress', 'Tuxedo jumpsuit', 'Uniform', 'Velvet dress', 'Velvet gown', 'Victorian gown', 'Vintage tea dress', 'Wedding dress', 'Witch robes', 'Wrap dress'],
-
-  onePieceColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Bronze', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Chocolate', 'Copper', 'Coral', 'Cream', 'Dusty rose', 'Emerald green', 'Floral print', 'Forest green', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Iridescent', 'Ivory', 'Lavender', 'Leopard print', 'Lilac', 'Magenta', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy blue', 'Neon orange', 'Olive', 'Orange', 'Pastel pink', 'Peach', 'Pearl white', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Royal blue', 'Sage green', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
-
-  onePieceFabric: ['Brocade', 'Burlap', 'Canvas', 'Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Crepe', 'Denim', 'Faux fur', 'Flannel', 'Fleece', 'Holographic foil', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Neoprene', 'Nylon', 'Organza', 'PVC', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Taffeta', 'Tulle', 'Tweed', 'Velvet', 'Wool'],
-
-  top: ['Bikini top', 'Blazer', 'Blouse', 'Bolero jacket', 'Bralette', 'Button-up shirt', 'Camisole', 'Cape', 'Cardigan', 'Chainmail', 'Coat', 'Corset', 'Crop top', 'Denim jacket', 'Flannel shirt', 'Halter top', 'Henley shirt', 'Hoodie', 'Jacket', 'Kimono jacket', 'Leather jacket', 'Long-sleeve tee', 'Off-shoulder top', 'Oversized sweater', 'Polo shirt', 'Poncho', 'Rash guard', 'Shawl', 'Shirt', 'Sports bra', 'Sweater', 'Tankini top', 'T-shirt', 'Tank top', 'Trench coat', 'Triangle bikini top', 'Tunic top', 'Turtleneck', 'Utility jacket', 'V-neck shirt', 'Vest', 'Windbreaker', 'Wrap top'],
-
-  topColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Coral', 'Cream', 'Dusty rose', 'Emerald', 'Floral', 'Fuchsia', 'Gold', 'Gray', 'Green', 'Ivory', 'Khaki', 'Lavender', 'Leopard print', 'Lilac', 'Metallic', 'Mint', 'Mocha', 'Multicolor', 'Mustard', 'Navy', 'Olive', 'Orange', 'Pastel', 'Peach', 'Pink', 'Plum', 'Polka dot', 'Purple', 'Rainbow', 'Red', 'Rose gold', 'Sage', 'Silver', 'Sky blue', 'Striped', 'Tan', 'Taupe', 'Turquoise', 'White', 'Wine red', 'Yellow'],
-
-  topFabric: ['Boucle', 'Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Crochet', 'Denim', 'Faux fur', 'Fleece', 'Fur', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Neoprene', 'Nylon', 'Organza', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Tulle', 'Velvet', 'Wool'],
-
-  bottom: ['A-line skirt', 'Athletic shorts', 'Bikini bottoms', 'Bike shorts', 'Board shorts', 'Capri pants', 'Capris', 'Cargo pants', 'Chinos', 'Culottes', 'Denim shorts', 'Dress pants', 'Flared pants', 'Harem pants', 'High-waisted shorts', 'Jeans', 'Joggers', 'Leather pants', 'Leggings', 'Linen pants', 'Maxi skirt', 'Midi skirt', 'Mini skirt', 'Palazzo pants', 'Pencil skirt', 'Pleated skirt', 'Sarong', 'Shorts', 'Skater skirt', 'Skirt', 'Swim skirt', 'Sweatpants', 'Tattered jeans', 'Wide-leg pants', 'Yoga pants'],
-
-  bottomColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Chocolate', 'Cream', 'Denim blue', 'Emerald', 'Gray', 'Green', 'Khaki', 'Lavender', 'Mocha', 'Navy', 'Olive', 'Orange', 'Pink', 'Plum', 'Purple', 'Red', 'Sage', 'Silver', 'Sky blue', 'Tan', 'Taupe', 'White', 'Wine red', 'Yellow'],
-
-  bottomFabric: ['Cashmere', 'Chambray', 'Corduroy', 'Cotton', 'Denim', 'Faux leather', 'Fleece', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Nylon', 'Satin', 'Sequin', 'Silk', 'Spandex', 'Suede', 'Tulle', 'Velvet', 'Wool'],
-
-  outerwear: ['blazer', 'bolero jacket', 'cape', 'cardigan', 'coat', 'cropped jacket', 'denim jacket', 'hoodie', 'kimono jacket', 'leather jacket', 'poncho', 'shawl', 'trench coat', 'utility jacket', 'vest', 'windbreaker'],
-
-  outerwearColor: ['Beige', 'Black', 'Blue', 'Blush pink', 'Brown', 'Burgundy', 'Champagne', 'Charcoal', 'Coral', 'Cream', 'Dusty rose', 'Emerald', 'Gold', 'Gray', 'Green', 'Ivory', 'Lavender', 'Mint', 'Navy', 'Olive', 'Peach', 'Pink', 'Plum', 'Purple', 'Red', 'Rose gold', 'Royal blue', 'Sage', 'Silver', 'Sky blue', 'Tan', 'Taupe', 'Turquoise', 'White', 'Yellow'],
-
-  outerwearFabric: ['Cashmere', 'Chambray', 'Chiffon', 'Corduroy', 'Cotton', 'Denim', 'Faux fur', 'Fleece', 'Jersey knit', 'Knit', 'Lace', 'Leather', 'Linen', 'Mesh', 'Nylon', 'Satin', 'Silk', 'Suede', 'Tweed', 'Velvet', 'Wool'],
-
-  hosiery: ['ankle socks', 'compression socks', 'fishnet stockings', 'footless tights', 'knee high socks', 'leg warmers', 'pantyhose', 'patterned tights', 'sheer stockings', 'sheer tights', 'thigh high stockings', 'wool socks'],
-
-  hosieryColor: ['beige', 'black', 'blue', 'blush pink', 'brown', 'burgundy', 'charcoal', 'cream', 'gray', 'green', 'ivory', 'lavender', 'navy', 'nude', 'olive', 'pink', 'purple', 'red', 'tan', 'teal', 'white'],
-
-  hosieryFabric: ['cashmere blend', 'cotton', 'fishnet', 'lace', 'merino wool', 'mesh', 'microfiber', 'nylon', 'ribbed knit', 'sheer nylon', 'silk blend', 'spandex blend', 'wool'],
-
-  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'platform heels', 'running shoes', 'sandals', 'slip on shoes', 'snow boots', 'stilettos', 'wedges', 'work boots'],
-
-  footwearColor: ['beige', 'black', 'blue', 'brown', 'burgundy', 'charcoal', 'cream', 'gold', 'gray', 'green', 'ivory', 'navy', 'pink', 'purple', 'red', 'silver', 'tan', 'teal', 'white', 'yellow'],
-
-  footwearFabric: ['canvas', 'denim', 'fabric', 'faux leather', 'felt', 'knit', 'lace', 'leather', 'mesh', 'nubuck', 'patent leather', 'rubber', 'satin', 'suede', 'synthetic', 'velvet', 'wool'],
-
-  accessories: ['Anklet', 'Aura glow', 'Backpack', 'Bangle bracelet', 'Baseball cap', 'Beaded necklace', 'Belt', 'Beret', 'Body chain', 'Bow tie', 'Bracelet', 'Brooch', 'Cape', 'Chain belt', 'Charm bracelet', 'Choker', 'Clutch bag', 'Cowboy hat', 'Crown', 'Crystal pendant', 'Cuff bracelet', 'Drop earrings', 'Ear cuff', 'Earrings', 'Elbow gloves', 'Embroidered bag', 'Fanny pack', 'Feather boa', 'Fedora hat', 'Flower crown', 'Gas mask', 'Glasses', 'Gloves', 'Gold chain', 'Hair bow', 'Hair clip', 'Hair pins', 'Handbag', 'Hat', 'Headband', 'Headphones', 'Hoop earrings', 'Jewelry', 'Knit beanie', 'Lace collar', 'Leather gloves', 'Leg holster', 'Locket necklace', 'Midi rings', 'Mini backpack', 'Monocle', 'Moon pendant', 'Neck scarf', 'Necklace', 'Pearl necklace', 'Rings', 'Sash', 'Scarf', 'Shoulder bag', 'Silk gloves', 'Silk scarf', 'Snake bracelet', 'Stacked bracelets', 'Stacked rings', 'Statement earrings', 'Straw hat', 'Sunglasses', 'Sword', 'Tennis bracelet', 'Tiara', 'Toe ring', 'Tote bag', 'Umbrella', 'Veil', 'Visor', 'Waist chain', 'Wand', 'Watch', 'Wide brim hat'],
-
-  props: ['Acoustic guitar', 'Artifact', 'Baby blanket', 'Balloon', 'Balloons', 'Basket of fruit', 'Blanket', 'Book', 'Bouquet', 'Briefcase', 'Bubbles', 'Camera', 'Camp lantern', 'Candles', 'Canvas painting', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Deck of cards', 'Designer shopping bags', 'Dreamcatcher', 'Dumbbells', 'Envelope', 'Fairy lights', 'Film camera', 'Fishing rod', 'Flowers', 'Fruit bowl', 'Gift box', 'Guitar', 'Hockey stick', 'Horseback', 'Ice cream cone', 'Journal notebook', 'Jump rope', 'Kite', 'Lantern', 'Laptop', 'Luggage', 'Map', 'Microphone', 'Mirror', 'Musical instrument', 'Paint palette', 'Parasol', 'Phone', 'Picnic basket', 'Pillow', 'Polaroid camera', 'Pottery wheel', 'Purse', 'Rose', 'Scroll', 'Shield', 'Shopping bags', 'Single flower', 'Skateboard', 'Sketchbook', 'Smoothie cup', 'Snack box', 'Snowboard', 'Soccer ball', 'Sparkler', 'Staff', 'Stuffed animal', 'Suitcase', 'Sun hat', 'Surfboard', 'Tea cup', 'Teddy bear', 'Tennis racket', 'Towel', 'Trophy', 'Umbrella', 'Violin', 'Water bottle', 'Watering can', 'Wine glass', 'Yoga mat'],
-
-  // New structured categories
-  jewelry: ['Anklet', 'Bangle bracelet', 'Beaded necklace', 'Body chain', 'Bracelet', 'Brooch', 'Charm bracelet', 'Choker', 'Crystal pendant', 'Cuff bracelet', 'Drop earrings', 'Ear cuff', 'Earrings', 'Gold chain', 'Hoop earrings', 'Locket necklace', 'Midi rings', 'Moon pendant', 'Necklace', 'Pearl necklace', 'Rings', 'Snake bracelet', 'Stacked bracelets', 'Stacked rings', 'Statement earrings', 'Tennis bracelet', 'Tiara', 'Toe ring', 'Waist chain'],
-
-  headwear: ['Baseball cap', 'Beret', 'Cowboy hat', 'Crown', 'Fedora hat', 'Flower crown', 'Hair bow', 'Hair clip', 'Hair pins', 'Headband', 'Knit beanie', 'Straw hat', 'Sun hat', 'Tiara', 'Veil', 'Visor', 'Wide brim hat'],
-
-  holdingItem: ['Acoustic guitar', 'Balloon', 'Book', 'Bouquet', 'Bubbles', 'Camera', 'Champagne glass', 'Coffee cup', 'Crystal ball', 'Deck of cards', 'Dumbbells', 'Envelope', 'Film camera', 'Flowers', 'Gift box', 'Guitar', 'Ice cream cone', 'Journal notebook', 'Jump rope', 'Kite', 'Lantern', 'Laptop', 'Map', 'Microphone', 'Mirror', 'Paint palette', 'Parasol', 'Phone', 'Polaroid camera', 'Rose', 'Scroll', 'Shield', 'Single flower', 'Skateboard', 'Sketchbook', 'Smoothie cup', 'Sparkler', 'Staff', 'Stuffed animal', 'Tea cup', 'Teddy bear', 'Tennis racket', 'Umbrella', 'Violin', 'Wand', 'Water bottle', 'Wine glass'],
-
-  sceneProp: ['Basket of fruit', 'Blanket', 'Briefcase', 'Candles', 'Canvas painting', 'Dreamcatcher', 'Fishing rod', 'Fruit bowl', 'Hockey stick', 'Luggage', 'Picnic basket', 'Pillow', 'Pottery wheel', 'Shopping bags', 'Snack box', 'Snowboard', 'Soccer ball', 'Suitcase', 'Surfboard', 'Towel', 'Trophy', 'Watering can', 'Yoga mat'],
-
-  backgroundProp: ['Balloon arch', 'Bokeh lights', 'Canopy of vines', 'Confetti cloud', 'Fairy lights', 'Flower wall', 'Garden arch', 'Hanging lanterns', 'Neon sign', 'Northern lights', 'Petal rain', 'String lights', 'Vintage car', 'Waterfall', 'Wildflowers'],
-
-  magicProp: ['Conjured fire', 'Crystal orb', 'Energy tendrils', 'Floating petals', 'Floating roses', 'Glowing aura', 'Glowing runes', 'Halo of light', 'Magical mist', 'Magic sparkles', 'Orbs of light', 'Spirit flames', 'Summoned lightning', 'Swirling leaves', 'Swirling stars'],
-
-  environment: ['Abandoned amusement park', 'Abandoned asylum', 'Airport', 'Ancient Egypt', 'Ancient library', 'Ancient temple ruins', 'Apple orchard', 'Aquarium tunnel', 'Art gallery', 'Art studio', 'Astronomy observatory', 'Autumn forest', 'Backyard garden', 'Balcony overlook', 'Ballroom', 'Bamboo forest', 'Barn', 'Beach', 'Beach bonfire', 'Beach resort', 'Boardwalk', 'Bookstore', 'Botanical garden', 'Boutique', 'Butterfly garden', 'Cafe', 'Calm lake', 'Candy land', 'Canyon', 'Castle courtyard', 'Cathedral', 'Cave', 'Cherry blossom garden', 'Cherry blossom park', 'City alley', 'City rooftop', 'City street', 'Cliffside overlook', 'Cloud kingdom', 'Coastal village', 'Cobblestone alley', 'Concert hall', 'Conference room', 'Coral reef', 'Countryside', 'Cozy bedroom', 'Cozy fireplace', 'Cozy kitchen', 'Covered bridge', 'Cruise ship', 'Crystal cave', 'Cyberpunk alley', 'Dance studio', 'Desert dunes', 'Desert oasis', 'Drive-in theater', 'Dreamy greenhouse', 'Enchanted forest', 'Fairy garden', 'Farm', 'Farmhouse', 'Field', 'Floating island', 'Flower field', 'Flower market', 'Fog-covered moors', 'Forest cabin', 'Forest clearing', 'Forest waterfall', 'Futuristic city', 'Garden', 'Garden maze', 'Glacier', 'Gothic castle', 'Graffiti wall', 'Grand staircase', 'Greenhouse', 'Gym', 'Harbor', 'Historic townhouse', 'Home studio', 'Hospital', 'Hot air balloon', 'Hotel lobby', 'Ice cave', 'Indoor pool', 'Infinity pool', 'Irish countryside', 'Japanese tea house', 'Jungle', 'Koi pond', 'Laboratory', 'Lake dock', 'Lake reflections', 'Lakeside cabin', 'Lavender field', 'Library', 'Lighthouse', 'Lotus pond', 'Luxury penthouse', 'Luxury yacht', 'Market bazaar', 'Mars colony', 'Meadow', 'Medieval castle', 'Misty forest', 'Modern apartment', 'Modern living room', 'Monastery', 'Moonlit beach', 'Moroccan riad', 'Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Movie set', 'Museum', 'Music festival', 'Nature trail', 'Neon arcade', 'Night market', 'Nightclub', 'Oasis', 'Ocean', 'Office', 'Olive grove', 'Open field', 'Orchard', 'Orchard in bloom', 'Outdoor cinema', 'Palace', 'Parisian street', 'Park', 'Pier', 'Pink salt lake', 'Pine forest', 'Poolside lounge', 'Post-apocalyptic ruins', 'Pottery studio', 'Prairie', 'Pumpkin patch', 'Rain-slicked street', 'Rainforest', 'Ranch', 'Recording studio', 'Restaurant', 'Rice terraces', 'Rock concert', 'Rocky cliffs', 'Rolling hills', 'Rooftop bar', 'Rooftop garden', 'Rose garden', 'Sailboat', 'Salon', 'Sand dunes at dawn', 'Savanna', 'Secret garden', 'Ski resort', 'Snowy cabin', 'Snowy landscape', 'Spa', 'Space station', 'Spring meadow', 'Stable', 'Summer garden', 'Sunflower field', 'Swimming pool', 'Tea plantation', 'Temple', 'Terraced garden', 'Theater stage', 'Throne room', 'Tidal pool', 'Train station', 'Treehouse', 'Tropical beach', 'Tropical island', 'Tundra', 'Underground cavern', 'Underground speakeasy', 'Underwater', 'Urban garden', 'Urban loft', 'Urban street', 'Valley', 'Victorian parlor', 'Vineyard', 'Volcano summit', 'Water park', 'Waterfall', 'Watermill', 'Wheat field', 'Wildflower meadow', 'Winery', 'Winter wonderland', 'Yoga studio', 'Zen garden'],
-
-  lighting: ['Aurora glow', 'Backlit sunset', 'Bioluminescent glow', 'Blue hour light', 'Blue water reflections', 'Bonfire light', 'Bright blue sky', 'Bright fluorescent', 'Bright gym lighting', 'Bright midday sunlight', 'Bright natural sunlight', 'Candlelight', 'Chandelier glow', 'Christmas lights', 'Cinematic lighting', 'Clinical lighting', 'Colorful neon lights', 'Cosmic glow', 'Cyberpunk neon', 'Dappled sunlight', 'Dawn light', 'Desert midday sun', 'Divine golden light', 'Dramatic side lighting', 'Dramatic stage light', 'Dramatic storm lighting', 'Dramatic sunset', 'Edison bulbs', 'Fairy lights', 'Fire glow', 'Flickering torchlight', 'Floating candles', 'Fog machine haze', 'Foggy atmosphere', 'Galaxy glow', 'Glittering sparkle', 'Golden hour sunset', 'Hazy light', 'Holographic signs', 'Lantern light', 'Laser beams', 'Lightning storm', 'Magical energy', 'Misty light', 'Moonlight', 'Natural daylight', 'Neon signs', 'Northern lights', 'Overcast light', 'Pink sunset glow', 'Purple magical energy', 'Ray tracing', 'Reflection light', 'Ring light', 'Rim lighting', 'Snow-reflected light', 'Soft diffused light', 'Soft morning light', 'Soft natural light', 'Soft studio lighting', 'Spotlights', 'Stage lighting', 'Starlight', 'String lights', 'Studio lighting', 'Sunbeam through window', 'Sunset city lights', 'Torch light', 'Twilight glow', 'Underwater sunbeams', 'Volumetric lighting', 'Warm amber lighting', 'Warm cafe lighting', 'Warm indoor lighting', 'Warm lamp light', 'Warm sunlight', 'Warm window light'],
-
-  pose: [
-    'Arms crossed over chest, feet shoulder-width apart',
-    'Arms spread wide, feet planted firmly',
-    'Back to camera, looking over right shoulder',
-    'Blowing a kiss, weight on one hip',
-    'Carrying shopping bags in both hands, walking forward',
-    'Checking phone held in one hand, other hand relaxed at side',
-    'Cradling belly with both hands, feet together',
-    'Crouching down on both feet, knees bent',
-    'Dancing with arms raised, one foot lifted',
-    'Doing splits on the ground',
-    'Drinking coffee from cup held in right hand',
-    'Feeding birds with hand extended forward',
-    'Floating on back in water, arms spread',
-    'Gardening while kneeling on one knee',
-    'Hands in jacket pockets, standing with feet together',
-    'Holding coffee cup with both hands near face',
-    'Holding flowers in one arm against chest',
-    'Holding hands up to face, fingers touching cheeks',
-    'Holding hat brim with one hand, other at side',
-    'Hugging knees while sitting on ground',
-    'Jumping mid-air with both feet off ground, arms up',
-    'Kneeling gracefully on both knees, hands on thighs',
-    'Laughing with head tilted back, one hand on chest',
-    'Leaning against wall with one shoulder, arms relaxed',
-    'Looking away thoughtfully, chin slightly raised',
-    'Looking down softly, hands clasped in front',
-    'Looking over shoulder, body angled away from camera',
-    'Lying on back in field of flowers, arms spread',
-    'Lying on side, head propped on hand',
-    'Meditating cross-legged on ground, palms on knees',
-    'Overhead stretch with both arms raised, feet together',
-    'Painting on canvas, holding brush in right hand',
-    'Picking flowers while bending forward slightly',
-    'Playing guitar while seated, instrument on lap',
-    'Pushing hair back with one hand, other on hip',
-    'Reading book held in both hands',
-    'Reclining on side, one elbow supporting upper body',
-    'Relaxed pose with weight on one hip, arms loose',
-    'Running lightly with natural stride, one foot forward',
-    'Seated elegantly in chair, ankles crossed, hands on armrests',
-    'Sitting comfortably with legs to one side, leaning on hand',
-    'Sitting cross-legged on floor, hands in lap',
-    'Spinning around with arms extended, dress flowing',
-    'Standing confidently with feet shoulder-width apart, hands at sides',
-    'Standing elegantly with one foot slightly forward, chin up',
-    'Standing powerfully with wide stance, fists at sides',
-    'Stretching arms overhead, standing on tiptoes',
-    'Strolling with relaxed gait, one hand swinging',
-    'Twirling dress hem with one hand while spinning',
-    'Walking away from camera, natural stride',
-    'Walking confidently toward camera, one foot forward mid-stride',
-    'Walking naturally along path, arms swinging gently',
-    'Walking on tiptoes with arms out for balance',
-    'Warrior yoga pose with lunging front leg, arms extended',
-    'Waving with one hand raised, other at side',
-    'Windswept pose standing with hair blowing, feet planted',
-    'Working on laptop while seated at desk',
-    'Writing in journal while seated, pen in hand',
-    'Yoga tree pose balanced on one foot, arms overhead'
-  ],
-
-  mood: ['adventurous exploratory mood', 'artistic creative mood', 'bold daring mood', 'calm tranquil mood', 'carefree lighthearted mood', 'cheerful bubbly mood', 'confident heroic mood', 'cozy intimate mood', 'dark brooding mood', 'dreamy ethereal mood', 'earthy grounded mood', 'elegant sophisticated mood', 'empowered confident mood', 'energetic vibrant mood', 'ethereal otherworldly mood', 'festive celebratory mood', 'fierce powerful mood', 'flirty playful mood', 'glamorous dazzling mood', 'happy relaxed mood', 'healthy active mood', 'introspective quiet mood', 'joyful happy mood', 'lively energetic mood', 'luxurious refined mood', 'magical whimsical mood', 'melancholic wistful mood', 'mysterious enchanting mood', 'nostalgic reflective mood', 'passionate intense mood', 'peaceful content mood', 'peaceful serene mood', 'playful adventurous mood', 'powerful bold mood', 'raw authentic mood', 'relaxed comfortable mood', 'romantic cozy mood', 'sensual alluring mood', 'soft feminine mood', 'soft whimsical mood', 'sporty dynamic mood', 'tender emotional mood', 'timeless classic mood', 'victorious triumphant mood', 'wild untamed mood']
-
-};
-
+// FIELDS — see data-fields.js
 
 const CHILD_AGES = ['baby', 'toddler', 'young child', 'child', 'preteen', 'early teen', 'mid teen'];
 const CHILD_SAFE_MAKEUP = ['No makeup', 'Natural makeup', 'Minimal makeup', 'Face paint'];
@@ -1532,12 +1382,7 @@ function applyAgeRestrictions() {
   }
 }
 
-const RANDOMIZER_CORE = {
-  expression: ['Adoring', 'Amazed', 'Beaming', 'Bold', 'Calm', 'Cheerful', 'Confident', 'Contemplative', 'Curious', 'Defiant', 'Determined', 'Dreamy', 'Elegant', 'Excited', 'Fierce', 'Focused', 'Joyful', 'Laughing', 'Loving', 'Melancholic', 'Mysterious', 'Peaceful', 'Playful', 'Proud', 'Regal', 'Relaxed', 'Serene', 'Serious', 'Shy', 'Smiling', 'Smirking', 'Soft smile', 'Stoic', 'Sultry', 'Surprised', 'Tender', 'Thoughtful', 'Wistful'],
-  hairStyle: ['Afro', 'Bangs', 'Beach waves', 'Bob', 'Box braids', 'Braided crown', 'Bun', 'Buzz cut', 'Coily', 'Cornrows', 'Curly', 'Curtain bangs', 'Dreadlocks', 'Faux hawk', 'Feathered layers', 'Finger waves', 'Flowing', 'French braid', 'Half-up half-down', 'High ponytail', 'Layered', 'Locs', 'Messy bun', 'Mohawk', 'Mullet', 'Pigtails', 'Pixie cut', 'Ponytail', 'Shag cut', 'Side braid', 'Slicked back', 'Space buns', 'Straight', 'Top knot', 'Twists', 'Undercut', 'Updo', 'Voluminous', 'Wavy', 'Wolf cut'],
-  footwear: ['ankle boots', 'athletic sneakers', 'ballet flats', 'barefoot', 'combat boots', 'cowboy boots', 'dress shoes', 'espadrilles', 'flip flops', 'high heels', 'hiking boots', 'knee high boots', 'loafers', 'mary janes', 'moccasins', 'sandals', 'slip on shoes', 'snow boots', 'wedges', 'work boots'],
-};
-
+// RANDOMIZER_CORE — see data-fields.js
 function pickRand(field) {
   const core = RANDOMIZER_CORE[field];
   if (core && core.length) return pick(core);
@@ -1546,117 +1391,7 @@ function pickRand(field) {
   return '';
 }
 
-const ENV_CATEGORIES = {
-  beach: ['Beach', 'Beach resort', 'Boardwalk', 'Tropical beach', 'Tropical island', 'Ocean', 'Pier', 'Harbor', 'Coastal village', 'Cruise ship', 'Luxury yacht', 'Sailboat', 'Moonlit beach', 'Beach bonfire', 'Tidal pool', 'Poolside lounge', 'Swimming pool', 'Infinity pool'],
-  nature: ['Park', 'Garden', 'Meadow', 'Spring meadow', 'Wildflower meadow', 'Flower field', 'Lavender field', 'Sunflower field', 'Rose garden', 'Botanical garden', 'Countryside', 'Rolling hills', 'Field', 'Prairie', 'Wheat field', 'Backyard garden', 'Cherry blossom garden', 'Cherry blossom park', 'Olive grove', 'Orchard', 'Apple orchard', 'Vineyard', 'Summer garden', 'Nature trail', 'Secret garden', 'Butterfly garden', 'Terraced garden', 'Rooftop garden', 'Urban garden', 'Zen garden', 'Fairy garden', 'Koi pond', 'Lotus pond'],
-  forest: ['Forest clearing', 'Pine forest', 'Autumn forest', 'Bamboo forest', 'Enchanted forest', 'Forest cabin', 'Forest waterfall', 'Rainforest', 'Jungle', 'Treehouse', 'Misty forest'],
-  mountain: ['Mountain peak', 'Mountain trail', 'Mountain waterfall', 'Mountains', 'Cliffside overlook', 'Rocky cliffs', 'Canyon', 'Valley', 'Glacier', 'Tundra', 'Volcano summit'],
-  snow: ['Snowy landscape', 'Snowy cabin', 'Winter wonderland', 'Ski resort', 'Ice cave'],
-  urban: ['City street', 'City rooftop', 'City alley', 'Urban street', 'Urban loft', 'Modern apartment', 'Modern living room', 'Parisian street', 'Night market', 'Boutique', 'Cobblestone alley', 'Graffiti wall', 'Neon arcade', 'Rain-slicked street'],
-  indoor_cozy: ['Cozy bedroom', 'Cozy kitchen', 'Cozy fireplace', 'Farmhouse', 'Lakeside cabin', 'Historic townhouse', 'Victorian parlor'],
-  formal: ['Ballroom', 'Concert hall', 'Hotel lobby', 'Grand staircase', 'Palace', 'Cathedral', 'Museum', 'Restaurant', 'Winery', 'Theater stage', 'Castle courtyard'],
-  office: ['Office', 'Conference room', 'Library', 'Bookstore'],
-  fantasy: ['Gothic castle', 'Medieval castle', 'Throne room', 'Cloud kingdom', 'Floating island', 'Ancient temple ruins', 'Underground cavern', 'Temple', 'Monastery', 'Crystal cave'],
-  fitness: ['Gym', 'Yoga studio', 'Spa', 'Dance studio', 'Indoor pool'],
-  nightlife: ['Nightclub', 'Rooftop bar', 'Rock concert', 'Recording studio', 'Underground speakeasy', 'Music festival'],
-  studio: ['Art studio', 'Home studio', 'Movie set', 'Salon', 'Pottery studio'],
-  scifi: ['Futuristic city', 'Cyberpunk alley', 'Space station', 'Mars colony', 'Laboratory', 'Post-apocalyptic ruins', 'Astronomy observatory'],
-  water: ['Underwater', 'Aquarium tunnel', 'Calm lake', 'Lake dock', 'Waterfall', 'Coral reef', 'Lake reflections', 'Watermill']
-};
-
-const AFFINITY = {
-  beach: {
-    footwear: ['sandals', 'flip flops', 'espadrilles', 'barefoot', 'wedges'],
-    accessories: ['Sunglasses', 'Hat', 'Anklet', 'Bracelet', 'Hair clip', 'Straw hat'],
-    props: ['Towel', 'Umbrella', 'Sun hat', 'Water bottle', 'Picnic basket', 'Surfboard', 'Ice cream cone'],
-    makeup: ['Sun-kissed makeup', 'Bronzed makeup', 'Natural makeup', 'Dewy skin', 'Glossy lips', 'No makeup', 'Minimal makeup']
-  },
-  nature: {
-    footwear: ['sandals', 'ankle boots', 'ballet flats', 'espadrilles', 'barefoot', 'athletic sneakers', 'moccasins'],
-    accessories: ['Flower crown', 'Hat', 'Sunglasses', 'Bracelet', 'Necklace', 'Hair bow', 'Headband', 'Straw hat', 'Wide brim hat'],
-    props: ['Bouquet', 'Flowers', 'Single flower', 'Picnic basket', 'Book', 'Blanket', 'Camera', 'Watering can', 'Basket of fruit', 'Kite'],
-    makeup: ['Natural makeup', 'Dewy skin', 'Sun-kissed makeup', 'Light makeup', 'Minimal makeup', 'Peach blush', 'No makeup']
-  },
-  forest: {
-    footwear: ['hiking boots', 'ankle boots', 'combat boots', 'work boots', 'moccasins', 'athletic sneakers'],
-    accessories: ['Backpack', 'Hat', 'Scarf', 'Flower crown', 'Bracelet'],
-    props: ['Lantern', 'Camp lantern', 'Camera', 'Book', 'Staff', 'Blanket', 'Map'],
-    makeup: ['Natural makeup', 'No makeup', 'Minimal makeup', 'Dewy skin', 'Sun-kissed makeup']
-  },
-  mountain: {
-    footwear: ['hiking boots', 'combat boots', 'work boots', 'ankle boots', 'athletic sneakers'],
-    accessories: ['Backpack', 'Scarf', 'Hat', 'Sunglasses', 'Gloves', 'Knit beanie'],
-    props: ['Camera', 'Water bottle', 'Camp lantern', 'Blanket', 'Map'],
-    makeup: ['Natural makeup', 'No makeup', 'Sun-kissed makeup', 'Minimal makeup']
-  },
-  snow: {
-    footwear: ['snow boots', 'ankle boots', 'combat boots', 'knee high boots'],
-    accessories: ['Scarf', 'Gloves', 'Knit beanie', 'Hat', 'Earrings'],
-    props: ['Blanket', 'Coffee cup', 'Tea cup', 'Lantern', 'Umbrella', 'Sparkler'],
-    makeup: ['Dewy skin', 'Natural makeup', 'Soft glam', 'Red lips', 'Minimal makeup']
-  },
-  urban: {
-    footwear: ['athletic sneakers', 'ankle boots', 'high heels', 'loafers', 'slip on shoes', 'combat boots', 'mary janes'],
-    accessories: ['Sunglasses', 'Watch', 'Handbag', 'Headphones', 'Necklace', 'Earrings', 'Belt', 'Baseball cap', 'Fanny pack'],
-    props: ['Coffee cup', 'Phone', 'Shopping bags', 'Camera', 'Skateboard', 'Book', 'Smoothie cup'],
-    makeup: ['Everyday makeup', 'Bold makeup', 'Smokey eye', 'Cat eye', 'Natural makeup', 'Winged eyeliner', 'Red lips']
-  },
-  indoor_cozy: {
-    footwear: ['barefoot', 'slip on shoes', 'ballet flats', 'moccasins'],
-    accessories: ['Bracelet', 'Rings', 'Necklace', 'Hair clip', 'Glasses'],
-    props: ['Book', 'Coffee cup', 'Tea cup', 'Blanket', 'Pillow', 'Candles', 'Stuffed animal', 'Journal notebook'],
-    makeup: ['No makeup', 'Minimal makeup', 'Natural makeup', 'Dewy skin', 'Light makeup']
-  },
-  formal: {
-    footwear: ['high heels', 'stilettos', 'dress shoes', 'mary janes', 'wedges', 'ballet flats'],
-    accessories: ['Pearl necklace', 'Drop earrings', 'Clutch bag', 'Bracelet', 'Necklace', 'Rings', 'Tiara', 'Veil', 'Watch', 'Tennis bracelet'],
-    props: ['Champagne glass', 'Wine glass', 'Bouquet', 'Candles', 'Rose', 'Mirror'],
-    makeup: ['Soft glam', 'Red lips', 'Smokey eye', 'Dramatic makeup', 'Contour makeup', 'Bold makeup', 'Shimmer makeup']
-  },
-  office: {
-    footwear: ['high heels', 'loafers', 'dress shoes', 'ballet flats', 'mary janes'],
-    accessories: ['Watch', 'Glasses', 'Pearl necklace', 'Earrings', 'Belt', 'Handbag', 'Shoulder bag'],
-    props: ['Laptop', 'Book', 'Briefcase', 'Coffee cup', 'Phone', 'Journal notebook'],
-    makeup: ['Natural makeup', 'Everyday makeup', 'Light makeup', 'Minimal makeup', 'Soft glam']
-  },
-  fantasy: {
-    footwear: ['knee high boots', 'ankle boots', 'barefoot', 'combat boots', 'mary janes'],
-    accessories: ['Crown', 'Tiara', 'Sword', 'Wand', 'Aura glow', 'Cape', 'Veil', 'Body chain', 'Flower crown', 'Crystal pendant', 'Moon pendant'],
-    props: ['Crystal ball', 'Staff', 'Shield', 'Artifact', 'Candles', 'Lantern', 'Fairy lights', 'Scroll', 'Dreamcatcher'],
-    makeup: ['Dramatic makeup', 'Gothic makeup', 'Glitter highlights', 'Face gems', 'Face paint', 'Editorial high-fashion', 'Cosplay makeup']
-  },
-  fitness: {
-    footwear: ['running shoes', 'athletic sneakers', 'barefoot', 'slip on shoes'],
-    accessories: ['Headband', 'Watch', 'Hair clip', 'Bracelet'],
-    props: ['Yoga mat', 'Water bottle', 'Dumbbells', 'Towel', 'Jump rope', 'Smoothie cup'],
-    makeup: ['No makeup', 'Minimal makeup', 'Dewy skin', 'Natural makeup', 'Glowing skin']
-  },
-  nightlife: {
-    footwear: ['high heels', 'stilettos', 'platform heels', 'ankle boots', 'combat boots'],
-    accessories: ['Statement earrings', 'Choker', 'Body chain', 'Clutch bag', 'Hoop earrings', 'Rings', 'Headphones', 'Gold chain', 'Ear cuff'],
-    props: ['Champagne glass', 'Wine glass', 'Microphone', 'Phone', 'Sparkler'],
-    makeup: ['Smokey eye', 'Bold makeup', 'Dramatic makeup', 'Glitter highlights', '80s neon makeup', 'Red lips', 'Graphic eyeliner']
-  },
-  studio: {
-    footwear: ['high heels', 'barefoot', 'ballet flats', 'stilettos', 'ankle boots'],
-    accessories: ['Jewelry', 'Earrings', 'Necklace', 'Bracelet', 'Hair clip', 'Veil', 'Lace collar'],
-    props: ['Mirror', 'Flowers', 'Bouquet', 'Candles', 'Fairy lights', 'Film camera', 'Paint palette', 'Polaroid camera'],
-    makeup: ['Soft glam', 'Airbrushed glam', 'Natural makeup', 'Dewy skin', 'Editorial high-fashion', 'Contour makeup']
-  },
-  scifi: {
-    footwear: ['combat boots', 'ankle boots', 'athletic sneakers', 'work boots', 'knee high boots'],
-    accessories: ['Gas mask', 'Headphones', 'Glasses', 'Belt', 'Gloves', 'Body chain', 'Leg holster', 'Monocle'],
-    props: ['Laptop', 'Phone', 'Camera', 'Artifact'],
-    makeup: ['Cyberpunk face decals', 'Graphic eyeliner', 'Bold makeup', '80s neon makeup', 'Monochrome makeup', 'No makeup']
-  },
-  water: {
-    footwear: ['barefoot', 'sandals', 'flip flops'],
-    accessories: ['Anklet', 'Bracelet', 'Necklace', 'Hair clip', 'Toe ring'],
-    props: ['Towel', 'Water bottle', 'Single flower', 'Fishing rod'],
-    makeup: ['No makeup', 'Dewy skin', 'Natural makeup', 'Glossy lips', 'Minimal makeup']
-  }
-};
-
+// ENV_CATEGORIES + AFFINITY — see data-presets.js
 function getEnvCategory(env) {
   if (!env) return null;
   const lower = env.toLowerCase();
@@ -1675,90 +1410,10 @@ function pickAffinity(field, envCategory) {
   return pool.length ? pick(pool) : null;
 }
 
-const CLOTHING_PRESETS = {
-  'Beach Cover-Up Set': { tags:['Beach', 'Swimwear', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'swim cover-up', hosiery:'', footwear:'sandals' },
-  'Beach Lounge Set': { tags:['Beach', 'Travel'], clothingTheme:'Beach', clothingStyle:'Two-Piece', top:'camisole', bottom:'shorts', hosiery:'', footwear:'espadrilles' },
-  'Bikini Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'bikini bottoms', hosiery:'', footwear:'flip flops' },
-  'Boho Festival Set': { tags:['Creative', 'Events'], clothingTheme:'Creative', clothingStyle:'Layered', top:'crop top', bottom:'maxi skirt', outerwear:'kimono jacket', hosiery:'', footwear:'ankle boots' },
-  'Casual Coffee Run Set': { tags:['At Home', 'Shopping', 'Travel'], clothingTheme:'At Home', clothingStyle:'Layered', top:'cardigan', bottom:'jeans', outerwear:'utility jacket', hosiery:'ankle socks', footwear:'athletic sneakers' },
-  'Classic Office Set': { tags:['Office'], clothingTheme:'Office', clothingStyle:'Layered', top:'blouse', bottom:'dress pants', outerwear:'blazer', hosiery:'pantyhose', footwear:'high heels' },
-  'Cozy At-Home Set': { tags:['At Home'], clothingTheme:'At Home', clothingStyle:'Two-Piece', top:'oversized sweater', bottom:'leggings', hosiery:'wool socks', footwear:'barefoot' },
-  'Date Night Dress Set': { tags:['Dining', 'Events', 'Nightlife'], clothingTheme:'Nightlife', clothingStyle:'One-Piece', onePiece:'cocktail dress', hosiery:'sheer tights', footwear:'stilettos' },
-  'Enchanted Grove Set': { tags:['Fantasy'], clothingTheme:'Fantasy', clothingStyle:'Layered', top:'corset', bottom:'maxi skirt', outerwear:'cape', hosiery:'thigh high stockings', footwear:'mary janes' },
-  'Explorer Jungle Set': { tags:['Jungle', 'Travel'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'button-up shirt', bottom:'cargo pants', outerwear:'utility jacket', hosiery:'ankle socks', footwear:'hiking boots' },
-  'Fantasy Armor Set': { tags:['Fantasy'], clothingTheme:'Fantasy', clothingStyle:'Fantasy / Armor', onePiece:'armor', hosiery:'thigh high stockings', footwear:'knee high boots' },
-  'Fitness Training Set': { tags:['Fitness'], clothingTheme:'Fitness', clothingStyle:'Two-Piece', top:'sports bra', bottom:'leggings', hosiery:'ankle socks', footwear:'running shoes' },
-  'Flowing Party Dress Set': { tags:['Events', 'Nightlife', 'Studio'], clothingTheme:'Events', clothingStyle:'One-Piece', onePiece:'maxi dress', hosiery:'sheer tights', footwear:'high heels' },
-  'Jungle Adventure Set': { tags:['Jungle', 'Prehistoric'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'tank top', bottom:'shorts', outerwear:'utility jacket', hosiery:'knee high socks', footwear:'combat boots' },
-  'Maternity Studio Set': { tags:['Maternity', 'Studio'], clothingTheme:'Maternity', clothingStyle:'One-Piece', onePiece:'maternity dress', hosiery:'', footwear:'barefoot' },
-  'Moonlit Sorceress Set': { tags:['Fantasy', 'Nightlife'], clothingTheme:'Fantasy', clothingStyle:'Fantasy / Armor', onePiece:'witch robes', hosiery:'sheer tights', footwear:'ankle boots' },
-  'Prehistoric Huntress Set': { tags:['Jungle', 'Prehistoric'], clothingTheme:'Prehistoric', clothingStyle:'Layered', top:'crop top', bottom:'sarong', outerwear:'shawl', hosiery:'leg warmers', footwear:'knee high boots' },
-  'Resort Swim Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', onePiece:'one-piece swimsuit', hosiery:'', footwear:'sandals' },
-  'Safari Linen Set': { tags:['Jungle', 'Travel'], clothingTheme:'Jungle', clothingStyle:'Layered', top:'button-up shirt', bottom:'high-waisted shorts', outerwear:'vest', hosiery:'ankle socks', footwear:'ankle boots' },
-  'Smart Casual Office Set': { tags:['Office', 'Shopping'], clothingTheme:'Office', clothingStyle:'Layered', top:'blouse', bottom:'pencil skirt', outerwear:'cardigan', hosiery:'pantyhose', footwear:'mary janes' },
-  'Studio Glam Set': { tags:['Studio'], clothingTheme:'Studio', clothingStyle:'One-Piece', onePiece:'slip dress', hosiery:'sheer tights', footwear:'stilettos' },
-  'Sunset Boardwalk Set': { tags:['Beach', 'Travel'], clothingTheme:'Beach', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'', footwear:'wedges' },
-  'Travel Day Set': { tags:['Travel'], clothingTheme:'Travel', clothingStyle:'Layered', top:'t-shirt', bottom:'joggers', outerwear:'jacket', hosiery:'ankle socks', footwear:'slip on shoes' },
-  'Tropical Waterfall Set': { tags:['Beach', 'Jungle', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Swimwear', top:'bikini top', bottom:'sarong', hosiery:'', footwear:'sandals' },
-  'Autumn Harvest Set': { tags:['Autumn', 'Nature', 'Seasons'], clothingTheme:'Autumn', clothingStyle:'Layered', top:'flannel shirt', bottom:'high-waisted shorts', outerwear:'cardigan', hosiery:'knee high socks', footwear:'ankle boots' },
-  'Bridal Shower Set': { tags:['Wedding', 'Events'], clothingTheme:'Wedding', clothingStyle:'One-Piece', onePiece:'slip dress', hosiery:'sheer tights', footwear:'ballet flats' },
-  'Fall Hiking Set': { tags:['Autumn', 'Nature', 'Travel'], clothingTheme:'Autumn', clothingStyle:'Layered', top:'henley shirt', bottom:'cargo pants', outerwear:'windbreaker', hosiery:'wool socks', footwear:'hiking boots' },
-  'Garden Party Set': { tags:['Events', 'Nature'], clothingTheme:'Events', clothingStyle:'One-Piece', onePiece:'midi dress', hosiery:'sheer tights', footwear:'wedges' },
-  'Holiday Glam Set': { tags:['Holiday', 'Events', 'Nightlife'], clothingTheme:'Holiday', clothingStyle:'One-Piece', onePiece:'sequin dress', hosiery:'sheer tights', footwear:'high heels' },
-  'Picnic Day Set': { tags:['At Home', 'Nature'], clothingTheme:'At Home', clothingStyle:'One-Piece', onePiece:'sundress', hosiery:'', footwear:'espadrilles' },
-  'Pool Party Set': { tags:['Beach', 'Swimwear'], clothingTheme:'Swimwear', clothingStyle:'Two-Piece', top:'bikini top', bottom:'bikini bottoms', hosiery:'', footwear:'flip flops' },
-  'Ski Lodge Set': { tags:['Travel', 'Winter'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'leggings', outerwear:'coat', hosiery:'wool socks', footwear:'snow boots' },
-  'Street Style Set': { tags:['Urban', 'Shopping'], clothingTheme:'Urban', clothingStyle:'Layered', top:'crop top', bottom:'jeans', outerwear:'leather jacket', hosiery:'ankle socks', footwear:'athletic sneakers' },
-  'Urban Night Set': { tags:['Urban', 'Nightlife'], clothingTheme:'Urban', clothingStyle:'Two-Piece', top:'halter top', bottom:'leather pants', hosiery:'', footwear:'stilettos' },
-  'Wedding Day Set': { tags:['Wedding', 'Events'], clothingTheme:'Wedding', clothingStyle:'One-Piece', onePiece:'wedding dress', hosiery:'sheer tights', footwear:'stilettos' },
-  'Winter Coat Set': { tags:['Travel', 'Seasons'], clothingTheme:'Travel', clothingStyle:'Layered', top:'turtleneck', bottom:'dress pants', outerwear:'trench coat', hosiery:'pantyhose', footwear:'ankle boots' }
-};
-
+// CLOTHING_PRESETS — see data-presets.js
 // ==========================================
-// THEMES (with aligned clothing values)
+// THEMES, STYLE_MODES, SEARCH_SYNONYMS — see data-themes.js
 // ==========================================
-const THEMES = {
-  'at-home':{ emoji:'🏠', name:'At Home', cameras:['soft natural light portrait photography','indoor natural light photography','candid lifestyle photography','documentary lifestyle photography','boudoir portrait photography','family portrait photography','romantic portrait photography'], props:['Coffee cup','Book','Pillow','Blanket','Candles','Tea cup','Journal notebook','Phone','Fairy lights','Stuffed animal','Teddy bear'], environments:['modern living room','cozy bedroom'], lighting:['warm window light','soft morning light','warm lamp light'], onePieces:['robe','nightgown','maxi dress'], tops:['sweater','hoodie','t-shirt'], bottoms:['leggings','joggers','yoga pants'], poses:['sitting comfortably','relaxed pose','lounging'], moods:['peaceful content mood','relaxed comfortable mood'], clothingPresets:['Cozy At-Home Set','Casual Coffee Run Set'] },
-  'at-office':{ emoji:'💼', name:'Office', cameras:['professional portrait photography','commercial campaign photography','environmental portrait photography','documentary lifestyle photography','editorial fashion photography','high-end lifestyle photography'], props:['Laptop','Briefcase','Phone','Book','Coffee cup','Journal notebook'], environments:['office','conference room'], lighting:['bright overhead lighting','soft professional lighting'], onePieces:['A-line dress','shift dress','jumpsuit'], tops:['blazer','blouse','shirt'], bottoms:['dress pants','skirt'], poses:['standing confidently','professional pose'], moods:['confident heroic mood','elegant sophisticated mood'], occupations:['businesswoman','lawyer','architect'], clothingPresets:['Classic Office Set','Smart Casual Office Set'] },
-  'on-vacation':{ emoji:'🏖️', name:'Vacation', cameras:['travel editorial photography','outdoor golden hour photography','candid lifestyle photography','high-end lifestyle photography','storytelling lifestyle photography','fashion catalog photography'], props:['Camera','Map','Luggage','Parasol','Flowers','Fruit bowl','Polaroid camera'], environments:['tropical beach','beach resort','ocean','cruise ship deck'], lighting:['golden hour sunset','bright natural sunlight','blue water reflections'], onePieces:['sundress','beach dress','maxi dress','swim cover-up','one-piece swimsuit'], tops:['tank top','camisole','bikini top','tankini top'], bottoms:['shorts','skirt','bikini bottoms','sarong'], poses:['standing confidently','walking naturally','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','happy relaxed mood'], clothingPresets:['Beach Cover-Up Set','Beach Lounge Set','Bikini Set','Resort Swim Set','Sunset Boardwalk Set'] },
-  'beach-day':{ emoji:'🌊', name:'Beach Day', cameras:['outdoor golden hour photography','travel editorial photography','candid lifestyle photography','fashion catalog photography','action sports photography','sports editorial photography'], props:['Surfboard','Towel','Parasol','Ice cream cone','Flowers','Kite','Bubbles'], environments:['beach','boardwalk','ocean','tropical beach'], lighting:['backlit sunset','bright natural sunlight','golden hour sunset'], onePieces:['beach cover-up','one-piece swimsuit','swim cover-up'], tops:['bikini top','tankini top','triangle bikini top'], bottoms:['bikini bottoms','sarong','swim skirt'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['carefree lighthearted mood','joyful happy mood','happy relaxed mood'], clothingPresets:['Beach Cover-Up Set','Bikini Set','Resort Swim Set','Sunset Boardwalk Set'] },
-  'prehistoric-jungle':{ emoji:'🦖', name:'Prehistoric / Jungle', cameras:['environmental portrait photography','documentary lifestyle photography','cinematic portrait photography','film-inspired portrait photography','storytelling lifestyle photography'], props:['Map','Lantern','Staff','Scroll','Artifact','Camp lantern'], environments:['dense jungle','jungle river','jungle ruins','prehistoric fern valley','rainforest waterfall','tropical jungle clearing','volcanic ridge'], lighting:['dappled sunlight through trees','golden hour sunset','humid misty light','soft diffused light'], onePieces:['explorer romper','survival wrap dress','utility jumpsuit'], tops:['linen shirt','mesh cover-up top','peasant blouse','tribal halter top','utility vest'], bottoms:['cargo pants','sarong','survival skirt','tailored shorts','utility shorts'], poses:['crouching slightly','standing confidently','strolling','walking naturally'], moods:['bold daring mood','fierce powerful mood','playful adventurous mood','wild untamed mood'], occupations:['adventurer','archaeologist','explorer','survivalist'], clothingPresets:['Explorer Jungle Set','Jungle Adventure Set','Prehistoric Huntress Set','Safari Linen Set','Tropical Waterfall Set'] },
-  'coffee-cafes':{ emoji:'☕', name:'Coffee & Cafes', cameras:['candid lifestyle photography','indoor natural light photography','soft natural light portrait photography','documentary lifestyle photography','storytelling lifestyle photography'], props:['Coffee cup','Book','Journal notebook','Tea cup','Phone','Flowers','Single flower'], environments:['cafe','coffee shop','bookstore'], lighting:['warm cafe lighting','warm window light','natural daylight'], onePieces:['sundress','wrap dress','midi dress'], tops:['sweater','cardigan','blouse'], bottoms:['jeans','skirt','leggings'], poses:['sitting comfortably','relaxed pose'], moods:['peaceful content mood','relaxed comfortable mood'], clothingPresets:['Casual Coffee Run Set'] },
-  'fitness':{ emoji:'🏋️', name:'Fitness', cameras:['action sports photography','sports editorial photography','documentary lifestyle photography','candid lifestyle photography','commercial campaign photography'], props:['Dumbbells','Yoga mat','Jump rope','Water bottle','Smoothie cup','Soccer ball','Tennis racket'], environments:['gym','yoga studio','spa'], lighting:['bright gym lighting','soft natural light'], onePieces:['bodysuit'], tops:['sports bra','tank top'], bottoms:['leggings','yoga pants','bike shorts'], poses:['yoga pose','stretching','standing confidently','warrior pose'], moods:['energetic vibrant mood','healthy active mood','fierce powerful mood'], clothingPresets:['Fitness Training Set'] },
-  'nature':{ emoji:'🌲', name:'Nature', cameras:['outdoor golden hour photography','environmental portrait photography','storytelling lifestyle photography','documentary lifestyle photography','fine art portrait photography','aerial drone photography'], props:['Flowers','Watering can','Bouquet','Single flower','Kite','Umbrella','Picnic basket','Basket of fruit'], environments:['forest','flower field','mountain trail with pine trees','garden','meadow','lavender field'], lighting:['golden hour sunset','soft morning light','dappled sunlight through trees'], onePieces:['sundress','maxi dress'], tops:['t-shirt','cardigan'], bottoms:['jeans','shorts'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['peaceful serene mood','joyful happy mood','calm tranquil mood'], clothingPresets:['Boho Festival Set','Explorer Jungle Set','Safari Linen Set','Sunset Boardwalk Set'] },
-  'creative':{ emoji:'🎭', name:'Creative', cameras:['fine art portrait photography','editorial fashion photography','film-inspired portrait photography','moody portrait photography','studio beauty photography','runway backstage photography'], props:['Paint palette','Sketchbook','Guitar','Violin','Acoustic guitar','Canvas painting','Film camera','Microphone','Pottery wheel','Musical instrument'], environments:['art studio','theater stage','art gallery','dance studio'], lighting:['soft studio lighting','stage lighting','warm lamp light'], onePieces:['wrap dress','jumpsuit','kimono'], tops:['blouse','crop top'], bottoms:['wide-leg pants','skirt'], poses:['standing confidently','dancing'], moods:['passionate intense mood','bold daring mood','dreamy ethereal mood'], occupations:['artist','dancer','musician','painter'], clothingPresets:['Boho Festival Set','Flowing Party Dress Set'] },
-  'shopping':{ emoji:'🛍️', name:'Shopping', cameras:['editorial fashion photography','fashion catalog photography','street style photography','commercial campaign photography','high-end lifestyle photography','candid lifestyle photography'], props:['Shopping bags','Designer shopping bags','Purse','Phone','Coffee cup'], environments:['boutique','urban street','hotel lobby'], lighting:['natural daylight','bright overhead lighting'], onePieces:['midi dress','cocktail dress','A-line dress'], tops:['blazer','blouse','cardigan'], bottoms:['jeans','skirt','dress pants'], poses:['walking confidently','standing with hand on hip'], moods:['joyful happy mood','confident heroic mood','playful adventurous mood'], clothingPresets:['Casual Coffee Run Set','Smart Casual Office Set','Sunset Boardwalk Set'] },
-  'fantasy':{ emoji:'🧚', name:'Fantasy', cameras:['cinematic portrait photography','fine art portrait photography','film-inspired portrait photography','moody portrait photography','editorial fashion photography'], props:['Staff','Scroll','Shield','Crystal ball','Lantern','Dreamcatcher','Candles','Flowers'], environments:['enchanted forest','gothic castle','medieval castle','throne room'], lighting:['magical glow','dramatic lighting','divine golden light','purple magical energy'], onePieces:['gown','robes','armor','costume','witch robes'], tops:['corset'], bottoms:['skirt'], poses:['standing powerfully','warrior pose','arms spread wide'], moods:['confident heroic mood','magical whimsical mood','regal majestic mood','fierce powerful mood'], occupations:['warrior','goddess','mage','witch','angel','princess','queen','sorceress'], clothingPresets:['Enchanted Grove Set','Fantasy Armor Set','Moonlit Sorceress Set'] },
-  'movies':{ emoji:'🎬', name:'Cinematic', cameras:['cinematic portrait photography','film-inspired portrait photography','moody portrait photography','editorial fashion photography','high-fashion editorial photography'], props:['Film camera','Polaroid camera','Microphone','Candles','Mirror'], environments:['movie set','cyberpunk alley','futuristic city','ruins'], lighting:['dramatic lighting','neon city lights','dramatic sunset','colorful neon lights'], onePieces:['evening gown','catsuit','superhero suit','tactical suit'], tops:['jacket','coat'], bottoms:['jeans','cargo pants'], poses:['standing powerfully','looking over shoulder'], moods:['fierce powerful mood','bold daring mood','mysterious enchanting mood'], occupations:['superhero','actress'] },
-  'nightlife':{ emoji:'🌃', name:'Nightlife', cameras:['moody portrait photography','glamour portrait photography','editorial fashion photography','high-fashion editorial photography','candid lifestyle photography','luxury campaign photography'], props:['Wine glass','Champagne glass','Microphone','Phone','Flowers'], environments:['rooftop bar','nightclub','concert hall'], lighting:['warm amber lighting','neon lights','colorful neon lights','chandelier glow'], onePieces:['cocktail dress','evening gown','bodycon dress','mini dress'], tops:['halter top','camisole'], bottoms:['skirt','dress pants'], poses:['standing elegantly','dancing'], moods:['elegant sophisticated mood','bold daring mood','energetic vibrant mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
-  'historical':{ emoji:'🏛️', name:'Historical', cameras:['fine art portrait photography','film-inspired portrait photography','editorial fashion photography','environmental portrait photography','documentary lifestyle photography','vintage film photography'], props:['Scroll','Candles','Bouquet','Mirror','Book','Staff','Lantern','Rose'], environments:['museum','cathedral','palace','monastery'], lighting:['soft diffused light','candlelight','warm amber lighting'], onePieces:['gown','elegant dress','sari','kimono'], tops:['blouse'], bottoms:['skirt'], poses:['standing elegantly','seated elegantly'], moods:['elegant sophisticated mood','contemplative thoughtful mood','regal majestic mood'], occupations:['queen','princess'] },
-  'travel':{ emoji:'🚗', name:'Travel', cameras:['travel editorial photography','documentary lifestyle photography','candid lifestyle photography','outdoor golden hour photography','storytelling lifestyle photography','aerial drone photography'], props:['Luggage','Suitcase','Map','Camera','Polaroid camera','Blanket'], environments:['airport','train station','harbor','boardwalk'], lighting:['natural daylight','bright natural sunlight'], onePieces:['jumpsuit','maxi dress','romper'], tops:['jacket','t-shirt','hoodie'], bottoms:['jeans','joggers','shorts'], poses:['walking confidently','strolling'], moods:['playful adventurous mood','joyful happy mood','carefree lighthearted mood'], occupations:['traveler','photographer'], clothingPresets:['Beach Lounge Set','Casual Coffee Run Set','Sunset Boardwalk Set','Travel Day Set'] },
-  'dining':{ emoji:'🍽️', name:'Dining', cameras:['candid lifestyle photography','indoor natural light photography','soft natural light portrait photography','documentary lifestyle photography','editorial fashion photography'], props:['Wine glass','Tea cup','Champagne glass','Flowers','Single flower','Candles'], environments:['restaurant','cafe','winery','hotel lobby'], lighting:['candlelight','warm amber lighting','warm cafe lighting'], onePieces:['elegant dress','cocktail dress','midi dress','slip dress'], tops:['blouse','camisole'], bottoms:['dress pants','skirt'], poses:['seated elegantly','sitting comfortably'], moods:['romantic cozy mood','elegant sophisticated mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
-  'events':{ emoji:'🎪', name:'Events', cameras:['editorial fashion photography','glamour portrait photography','commercial campaign photography','luxury campaign photography','high-fashion editorial photography','documentary lifestyle photography'], props:['Flowers','Bouquet','Champagne glass','Sparkler','Gift box','Trophy','Microphone','Balloons'], environments:['ballroom','concert hall','theater stage'], lighting:['chandelier glow','dramatic lighting','spotlights'], onePieces:['ball gown','evening gown','cocktail dress','elegant dress'], tops:['blazer','blouse'], bottoms:['dress pants','skirt'], poses:['celebrating','dancing','standing elegantly'], moods:['joyful happy mood','victorious triumphant mood','energetic vibrant mood'], clothingPresets:['Date Night Dress Set','Flowing Party Dress Set'] },
-  'game-show':{ emoji:'🎰', name:'Game Show', cameras:['commercial campaign photography','glamour portrait photography','magazine cover photography','editorial fashion photography','cinematic portrait photography'], props:['Microphone','Trophy','Gift box','Sparkler','Balloons','Deck of cards','Champagne glass'], environments:['theater stage','concert hall','ballroom','dance studio'], lighting:['spotlights','bright overhead lighting','colorful neon lights','chandelier glow'], onePieces:['sequin dress','cocktail dress','evening gown','bodycon dress'], tops:['blazer','halter top'], bottoms:['skirt','dress pants'], poses:['standing confidently','arms spread wide','celebrating','standing with hand on hip'], moods:['joyful happy mood','energetic vibrant mood','victorious triumphant mood','glamorous dazzling mood','festive celebratory mood'], occupations:['host','actress','model'] },
-  'mystery':{ emoji:'🔍', name:'Mystery & Noir', cameras:['cinematic portrait photography','film-inspired portrait photography','moody portrait photography','vintage film photography','fine art portrait photography'], props:['Film camera','Candles','Mirror','Envelope','Journal notebook','Map','Lantern','Umbrella'], environments:['rain-slicked street','cobblestone alley','underground speakeasy','victorian parlor','fog-covered moors','abandoned asylum','library'], lighting:['candlelight','dramatic low-key lighting','moody side lighting','single streetlamp glow','warm amber lighting','soft diffused light'], onePieces:['trench coat dress','pencil dress','vintage dress','silk slip dress'], tops:['blouse','camisole'], bottoms:['pencil skirt','midi skirt'], poses:['looking over shoulder','leaning against wall','seated contemplatively','standing confidently'], moods:['mysterious enchanting mood','contemplative thoughtful mood','bold daring mood','dramatic intense mood','noir brooding mood'], occupations:['detective','reporter','private investigator'] },
-  'seasons':{ emoji:'🍂', name:'Seasons', cameras:['outdoor golden hour photography','environmental portrait photography','candid lifestyle photography','fine art portrait photography','storytelling lifestyle photography','documentary lifestyle photography'], props:['Flowers','Umbrella','Kite','Single flower','Bouquet','Watering can','Blanket'], environments:['spring meadow','summer garden','sunflower field','autumn forest','snowy landscape','winter wonderland','flower field','meadow'], lighting:['golden hour sunset','soft morning light','bright natural sunlight','overcast light'], onePieces:['sundress','maxi dress','wrap dress'], tops:['sweater','cardigan','coat'], bottoms:['jeans','leggings','skirt'], poses:['walking naturally','standing confidently','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','carefree lighthearted mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Casual Coffee Run Set','Cozy At-Home Set'] },
-  'flowers':{ emoji:'🌸', name:'Floral', cameras:['fine art portrait photography','romantic portrait photography','outdoor golden hour photography','soft natural light portrait photography','editorial fashion photography'], props:['Bouquet','Single flower','Flowers','Watering can','Basket of fruit','Parasol','Rose'], environments:['garden','botanical garden','flower field','lavender field','sunflower field','wildflower meadow'], lighting:['golden hour sunset','soft morning light','dappled sunlight through trees'], onePieces:['sundress','maxi dress','wrap dress','slip dress'], tops:['blouse','camisole'], bottoms:['skirt','shorts'], poses:['standing confidently','walking naturally','relaxed pose'], moods:['joyful happy mood','peaceful serene mood','romantic cozy mood','dreamy ethereal mood'], clothingPresets:['Boho Festival Set','Sunset Boardwalk Set'] },
-  'studio':{ emoji:'📸', name:'Studio', cameras:['studio portrait photography','studio beauty photography','beauty editorial photography','fine art portrait photography','glamour portrait photography','professional portrait photography','petite studio portrait photography','magazine cover photography'], props:['Mirror','Flowers','Bouquet','Candles','Single flower','Polaroid camera'], environments:['art studio','home studio'], lighting:['soft studio lighting','soft diffused light','dramatic lighting','ring light'], onePieces:['elegant dress','gown','maternity dress','slip dress'], tops:['camisole','bralette'], bottoms:['skirt','leggings'], poses:['standing confidently','cradling belly'], moods:['elegant sophisticated mood','confident heroic mood','dreamy ethereal mood'], clothingPresets:['Flowing Party Dress Set','Maternity Studio Set','Studio Glam Set'] },
-  'wedding':{ emoji:'💍', name:'Wedding', cameras:['wedding portrait photography','romantic portrait photography','fine art portrait photography','outdoor golden hour photography','editorial fashion photography','soft natural light portrait photography'], props:['Bouquet','Flowers','Single flower','Rose','Champagne glass','Wine glass','Envelope'], environments:['ballroom','garden','cathedral','rose garden','botanical garden','vineyard','beach resort'], lighting:['chandelier glow','soft diffused light','golden hour sunset','divine golden light','fairy lights'], onePieces:['wedding dress','ball gown','slip dress','elegant dress','lace dress'], tops:['blouse','camisole'], bottoms:['skirt'], poses:['standing elegantly','holding flowers','twirling dress','seated elegantly'], moods:['romantic cozy mood','elegant sophisticated mood','joyful happy mood','dreamy ethereal mood','timeless classic mood'], occupations:['bride','model'], clothingPresets:['Wedding Day Set','Bridal Shower Set','Flowing Party Dress Set'] },
-  'urban':{ emoji:'🏙️', name:'Urban', cameras:['street style photography','raw street style photography','candid lifestyle photography','editorial fashion photography','moody portrait photography','documentary lifestyle photography'], props:['Phone','Shopping bags','Coffee cup','Camera','Skateboard'], environments:['city street','graffiti wall','urban loft','rooftop bar','cobblestone alley','night market','neon arcade'], lighting:['neon signs','colorful neon lights','warm amber lighting','sunset city lights','dramatic stage light'], onePieces:['bodycon dress','little black dress','catsuit','leather jumpsuit'], tops:['crop top','halter top','camisole'], bottoms:['jeans','leather pants','high-waisted shorts','skater skirt'], poses:['leaning against wall','standing confidently','walking confidently','looking over shoulder'], moods:['bold daring mood','fierce powerful mood','mysterious enchanting mood','energetic vibrant mood'], occupations:['content creator','influencer','DJ','photographer'], clothingPresets:['Street Style Set','Urban Night Set','Date Night Dress Set'] },
-  'autumn':{ emoji:'🍂', name:'Autumn', cameras:['outdoor golden hour photography','environmental portrait photography','documentary lifestyle photography','storytelling lifestyle photography','fine art portrait photography','vintage film photography','candid lifestyle photography'], props:['Umbrella','Candles','Kite','Blanket','Book','Coffee cup','Lantern','Flowers'], environments:['autumn forest','pumpkin patch','apple orchard','countryside','park','wheat field','covered bridge'], lighting:['golden hour sunset','warm amber lighting','overcast light','soft morning light'], onePieces:['maxi dress','sweater dress','midi dress','wrap dress'], tops:['flannel shirt','sweater','cardigan','turtleneck'], bottoms:['jeans','leggings','wide-leg pants','midi skirt'], poses:['walking naturally','standing confidently','picking flowers','throwing confetti'], moods:['carefree lighthearted mood','nostalgic reflective mood','peaceful serene mood','earthy grounded mood','cozy intimate mood'], clothingPresets:['Autumn Harvest Set','Fall Hiking Set','Cozy At-Home Set'] },
-  'water-sports':{ emoji:'🏄', name:'Water Sports', cameras:['action sports photography','sports editorial photography','outdoor golden hour photography','travel editorial photography','candid lifestyle photography'], props:['Surfboard','Towel','Water bottle','Kite','Parasol','Umbrella'], environments:['beach','ocean','tropical beach','swimming pool','lake dock','waterfall','tropical island'], lighting:['bright natural sunlight','backlit sunset','blue water reflections','golden hour sunset'], onePieces:['one-piece swimsuit','swimdress','beach cover-up'], tops:['bikini top','rash guard','tankini top','sports bra'], bottoms:['bikini bottoms','board shorts','surf shorts','sarong'], poses:['surfing wave','floating in water','jumping mid-air','standing confidently'], moods:['energetic vibrant mood','carefree lighthearted mood','adventurous exploratory mood','healthy active mood'], clothingPresets:['Bikini Set','Pool Party Set','Resort Swim Set','Tropical Waterfall Set'] },
-  'holiday':{ emoji:'🎄', name:'Holiday', cameras:['glamour portrait photography','editorial fashion photography','indoor natural light photography','commercial campaign photography','soft natural light portrait photography','luxury campaign photography'], props:['Gift box','Sparkler','Balloons','Candles','Champagne glass','Flowers','Teddy bear','Stuffed animal'], environments:['winter wonderland','cozy fireplace','snowy landscape','snowy cabin','ballroom'], lighting:['christmas lights','warm indoor lighting','candlelight','string lights','fairy lights'], onePieces:['sequin dress','velvet dress','ball gown','evening gown','velvet gown'], tops:['turtleneck','sweater'], bottoms:['leggings','skirt','dress pants'], poses:['standing elegantly','dancing','throwing confetti','holding flowers'], moods:['festive celebratory mood','joyful happy mood','magical whimsical mood','cozy intimate mood','glamorous dazzling mood'], clothingPresets:['Holiday Glam Set','Date Night Dress Set','Ski Lodge Set','Winter Coat Set'] }
-};
-
-const STYLE_MODES = { 'Default':'', 'Cinematic':'cinematic, dramatic', 'Fantasy':'whimsical, fantastical', 'Romantic':'romantic, dreamy', 'Epic':'epic, grand', 'Documentary':'documentary, realistic' };
-
-const SEARCH_SYNONYMS = {
-  'sunset':['golden hour','dusk'], 'beach':['seaside','shore','coast','ocean','vacation'],
-  'forest':['woods','jungle','nature','trees'], 'mountain':['alpine','peak','hiking'],
-  'city':['urban','downtown','street'], 'snow':['snowy','winter','christmas'],
-  'fantasy':['elf','fairy','dragon','enchanted','magic'], 'gym':['fitness','workout','yoga'],
-  'art':['creative','studio','gallery','paint'], 'food':['dining','restaurant','cafe','coffee'],
-  'wedding':['bridal','bride','marriage','ceremony'], 'autumn':['fall','harvest','leaves','pumpkin'],
-  'party':['holiday','celebration','festive','events'], 'swim':['pool','water','surfing','ocean'],
-  'street':['urban','graffiti','city','downtown']
-};
 
 // ==========================================
 // HELPERS
