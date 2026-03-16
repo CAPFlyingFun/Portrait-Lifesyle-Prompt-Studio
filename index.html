@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Portrait & Lifestyle Prompt Studio v1.25</title>
+<title>Portrait & Lifestyle Prompt Studio v1.30</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -948,7 +948,7 @@ margin-bottom: 4px;
 
 <div class="app-header">
   <h1>✨ Portrait &amp; Lifestyle Prompt Studio</h1>
-  <div class="version">v1.25 — Expanded Themes & Content Update</div>
+  <div class="version">v1.30 — World Expansion & Quality Features</div>
 </div>
 
 <div class="container" id="main-content">
@@ -1262,6 +1262,18 @@ margin-bottom: 4px;
       </select>
     </div>
     <div class="setting-group">
+      <div class="setting-label">Quality Keywords</div>
+      <select class="setting-select" id="pref-quality" onchange="setQualityPreset(this.value)">
+        <option value="None">None (manual control)</option>
+        <option value="Standard">Standard — photorealistic, high detail</option>
+        <option value="High Quality">High Quality — 4K, sharp focus</option>
+        <option value="Ultra">Ultra — 8K UHD, masterpiece</option>
+        <option value="Cinematic">Cinematic — film grain, depth of field</option>
+        <option value="Magazine">Magazine — editorial finish</option>
+      </select>
+      <div class="setting-hint">Auto-appended to every generated prompt. Does not count toward character limit display.</div>
+    </div>
+    <div class="setting-group">
       <div class="setting-label">App Theme</div>
       <div class="style-row" id="app-theme-row" style="margin-bottom:8px;"></div>
       <div id="custom-color-wrap" style="display:none;margin-top:8px;">
@@ -1339,7 +1351,9 @@ let STATE = {
     holdingItem:'', sceneProp:'', backgroundProp:'', magicProp:'',
     environment:'park', lighting:'golden hour sunset',
     pose:'standing confidently', mood:'joyful happy mood',
-    negative:''
+    bellyShape:'',
+    negative:'',
+    qualityTags:''
   },
   settings: { defaultGender:'', defaultPregnancy:'', defaultAge:'', promptFormat:'grouped' },
   favorites: [],
@@ -1360,6 +1374,15 @@ let STATE = {
 let undoStack = [];
 const MAX_UNDO = 15;
 
+const QUALITY_PRESETS = {
+  'None': '',
+  'Standard': 'photorealistic, high detail',
+  'High Quality': 'photorealistic, 4K, sharp focus, highly detailed, professional quality',
+  'Ultra': 'photorealistic, 8K UHD, masterpiece, sharp focus, highly detailed, professional photography, studio quality',
+  'Cinematic': 'cinematic quality, film grain, color grading, depth of field, bokeh',
+  'Magazine': 'magazine cover quality, retouched, professional lighting, editorial finish'
+};
+
 // ==========================================
 // EXPANDED FIELD DEFINITIONS
 // ==========================================
@@ -1379,7 +1402,9 @@ function applyAgeRestrictions() {
       STATE.prompt.expression = pick(CHILD_SAFE_EXPRESSIONS);
     }
     STATE.prompt.pregnancy = 'not pregnant';
+    STATE.prompt.bellyShape = '';
   }
+  if (STATE.prompt.pregnancy === 'not pregnant') STATE.prompt.bellyShape = '';
 }
 
 // RANDOMIZER_CORE — see data-fields.js
@@ -1842,6 +1867,9 @@ function randomizeAll() {
     if (STATE.locks[f]) return;
     STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
   });
+  if (!STATE.locks.bellyShape) {
+    STATE.prompt.bellyShape = STATE.prompt.pregnancy !== 'not pregnant' ? pick(nonEmpty(FIELDS.bellyShape)) : '';
+  }
   applyDefaults();
   applyAgeRestrictions();
   refresh();
@@ -1883,7 +1911,7 @@ function randomizeChaos() {
   // Fully random for remaining fields (no affinity — that's the chaos)
   const propCategories = ['holdingItem','sceneProp','backgroundProp','magicProp'];
   const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
-    'environment','lighting','pose','mood','occupation', ...propCategories];
+    'environment','lighting','pose','mood','occupation','bellyShape', ...propCategories];
   Object.keys(FIELDS).forEach(f => {
     if (skip.includes(f) || STATE.locks[f]) return;
     const opts = nonEmpty(FIELDS[f]);
@@ -1894,6 +1922,9 @@ function randomizeChaos() {
     if (STATE.locks[f]) return;
     STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
   });
+  if (!STATE.locks.bellyShape) {
+    STATE.prompt.bellyShape = STATE.prompt.pregnancy !== 'not pregnant' ? pick(nonEmpty(FIELDS.bellyShape)) : '';
+  }
   applyDefaults();
   applyAgeRestrictions();
   refresh();
@@ -2000,7 +2031,7 @@ function batchGenerate() {
   for (let i = 0; i < 5; i++) {
     const batchPropCats = ['holdingItem','sceneProp','backgroundProp','magicProp'];
     const skip = ['gender','pregnancy','age','clothingTheme','clothingStyle','clothingPreset','clothingPresetType','onePiece','onePieceColor','onePieceFabric','top','topColor','topFabric','bottom','bottomColor','bottomFabric','outerwear','outerwearColor','outerwearFabric',
-      'expression','hairStyle','footwear','accessories','props','makeup','environment',
+      'expression','hairStyle','footwear','accessories','props','makeup','environment','bellyShape',
       ...batchPropCats];
     Object.keys(FIELDS).forEach(f => {
       if (skip.includes(f) || STATE.locks[f]) return;
@@ -2022,6 +2053,9 @@ function batchGenerate() {
       if (STATE.locks[f]) return;
       STATE.prompt[f] = f === activeProp ? pick(nonEmpty(FIELDS[f])) : '';
     });
+    if (!STATE.locks.bellyShape) {
+      STATE.prompt.bellyShape = STATE.prompt.pregnancy !== 'not pregnant' ? pick(nonEmpty(FIELDS.bellyShape)) : '';
+    }
     randomizeClothing(STATE.currentTheme);
     applyDefaults();
     applyAgeRestrictions();
@@ -2048,7 +2082,7 @@ function copyAllBatch() {
 // ==========================================
 function assembleData(inputPrompt) {
   const p = inputPrompt || STATE.prompt;
-  const subject = [p.age, p.pregnancy!=='not pregnant'?p.pregnancy:'', p.gender, p.skin, p.occupation].filter(Boolean).join(', ');
+  const subject = [p.age, p.pregnancy!=='not pregnant'?p.pregnancy:'', p.bellyShape, p.gender, p.skin, p.occupation].filter(Boolean).join(', ');
   const hair = [p.hairLength, p.hairStyle, p.hairColor].filter(Boolean);
   const hairDesc = hair.length ? hair.join(' ') + ' hair' : '';
   const look = [p.expression, p.makeup].filter(Boolean).join(', ');
@@ -2179,11 +2213,20 @@ function generateBuilderPromptText() {
     const sd = STYLE_MODES[STATE.styleMode];
     if (sd) r = r.endsWith('.') ? r.slice(0,-1)+', '+sd+' style.' : r+', '+sd+' style';
   }
+  if (STATE.prompt.qualityTags) {
+    r = r.endsWith('.') ? r.slice(0,-1) + ', ' + STATE.prompt.qualityTags + '.' : r + ', ' + STATE.prompt.qualityTags;
+  }
   return r;
 }
 
 function generatePromptText() {
   return getActivePromptText();
+}
+
+function setQualityPreset(name) {
+  STATE.prompt.qualityTags = QUALITY_PRESETS[name] || '';
+  try { localStorage.setItem('maternity_quality_preset', name); } catch(e){}
+  updatePromptDisplay();
 }
 
 function getAutoNegativePrompt() {
@@ -2302,7 +2345,7 @@ function buildBuilder() {
   let h = '';
   const sections = [
     { title:'📸 Camera', fields:['camera','shot'] },
-    { title:'👤 Subject', fields:['gender','pregnancy','age','skin','occupation'], lockedFields:['gender','pregnancy','age'] },
+    { title:'👤 Subject', fields:['gender','pregnancy','bellyShape','age','skin','occupation'], lockedFields:['gender','pregnancy','age'] },
     { title:'💇 Hair & Look', fields:['hairColor','hairLength','hairStyle','expression','makeup'] },
     { title:'👗 Clothing', fields:['clothingTheme','clothingStyle'] },
     { title:'💍 Jewelry', fields:['jewelry'] },
@@ -2641,6 +2684,9 @@ function loadSettingsToPanel() {
   document.getElementById('pref-pregnancy').value = STATE.settings.defaultPregnancy||'';
   document.getElementById('pref-age').value = STATE.settings.defaultAge||'';
   document.getElementById('pref-format').value = STATE.settings.promptFormat||'grouped';
+  const savedQP = localStorage.getItem('maternity_quality_preset') || 'None';
+  const qpSelect = document.getElementById('pref-quality');
+  if (qpSelect) qpSelect.value = savedQP;
   document.getElementById('pref-api-key').value = getApiKey();
   buildAppThemeRow();
   // Show custom color controls if custom theme
@@ -2715,6 +2761,7 @@ function applyDefaults() {
     footwearColor: '',
     footwearFabric: '',
     mood: 'joyful happy mood',
+    bellyShape: '',
     negative: ''
   };
 
@@ -3989,6 +4036,7 @@ function init() {
     try { const p=localStorage.getItem('maternity_platform'); if(p)STATE.platform=p; } catch(e){}
     try { const pm=localStorage.getItem('maternity_prompt_mode'); if(pm)STATE.promptMode=pm; } catch(e){}
     try { const mp=localStorage.getItem('maternity_manual_prompt'); if(mp!==null)STATE.manualPrompt=mp; } catch(e){}
+    try { const qp=localStorage.getItem('maternity_quality_preset'); if(qp && QUALITY_PRESETS[qp]!==undefined) STATE.prompt.qualityTags=QUALITY_PRESETS[qp]; } catch(e){}
 
     // Build UI
     buildPlatformBar();
