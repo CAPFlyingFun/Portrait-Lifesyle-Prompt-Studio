@@ -2099,7 +2099,7 @@ function assembleData(inputPrompt) {
   } else if (p.clothingStyle === 'Layered') {
     baseClothing = [top, bottom].filter(Boolean).join(' and ');
   } else if (p.clothingStyle === 'Swimwear') {
-    baseClothing = [onePiece, [top, bottom].filter(Boolean).join(' and ')].filter(Boolean).join(' or ');
+    baseClothing = onePiece || [top, bottom].filter(Boolean).join(' and ');
   } else {
     baseClothing = [top, bottom].filter(Boolean).join(' and ');
   }
@@ -2128,9 +2128,11 @@ function generateBuilderPromptText() {
 
   // Helper: determine which clothing categories are active based on clothingStyle
   const cs = p.clothingStyle || 'One-Piece';
-  const showDress    = ['One-Piece','Fantasy / Armor','Swimwear'].includes(cs);
-  const showTopwear  = ['Two-Piece','Layered','Swimwear'].includes(cs);
-  const showBottomwear = ['Two-Piece','Layered','Swimwear'].includes(cs);
+  // For Swimwear: show dress-side OR top/bottom-side based on which is populated — never both
+  const swimwearHasOnePiece = cs === 'Swimwear' && !!p.onePiece;
+  const showDress    = ['One-Piece','Fantasy / Armor'].includes(cs) || swimwearHasOnePiece;
+  const showTopwear  = ['Two-Piece','Layered'].includes(cs) || (cs === 'Swimwear' && !swimwearHasOnePiece);
+  const showBottomwear = ['Two-Piece','Layered'].includes(cs) || (cs === 'Swimwear' && !swimwearHasOnePiece);
 
   if (fmt === 'standard') {
     const wearParts = [];
@@ -2272,9 +2274,10 @@ function updatePromptDisplay() {
     const p = STATE.prompt;
     const d = assembleData();
     const cs2 = p.clothingStyle || 'One-Piece';
-    const showD = ['One-Piece','Fantasy / Armor','Swimwear'].includes(cs2);
-    const showT = ['Two-Piece','Layered','Swimwear'].includes(cs2);
-    const showB = ['Two-Piece','Layered','Swimwear'].includes(cs2);
+    const sw2HasOnePiece = cs2 === 'Swimwear' && !!p.onePiece;
+    const showD = ['One-Piece','Fantasy / Armor'].includes(cs2) || sw2HasOnePiece;
+    const showT = ['Two-Piece','Layered'].includes(cs2) || (cs2 === 'Swimwear' && !sw2HasOnePiece);
+    const showB = ['Two-Piece','Layered'].includes(cs2) || (cs2 === 'Swimwear' && !sw2HasOnePiece);
     el.innerHTML = [
       `<span class="prompt-tag tag-camera">📸</span> ${esc(p.camera)}, ${esc(p.shot)}`,
       `<span class="prompt-tag tag-subject">👤</span> ${esc(d.subject)}`,
@@ -2434,8 +2437,9 @@ function updateClothingVis() {
     return;
   }
   const style = STATE.prompt.clothingStyle || 'One-Piece';
-  const showOnePiece = ['Fantasy / Armor','One-Piece','Swimwear'].includes(style);
-  const showTwoPiece = ['Layered','Swimwear','Two-Piece'].includes(style);
+  const swimVis = style === 'Swimwear' && !!STATE.prompt.onePiece;
+  const showOnePiece = ['Fantasy / Armor','One-Piece'].includes(style) || swimVis;
+  const showTwoPiece = ['Layered','Two-Piece'].includes(style) || (style === 'Swimwear' && !swimVis);
   const showOuterwear = style === 'Layered';
   op.classList.toggle('visible', showOnePiece);
   tp.classList.toggle('visible', showTwoPiece);
