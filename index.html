@@ -1660,41 +1660,41 @@ function randomizeClothing(themeId) {
     STATE.prompt.clothingStyle = style;
   }
 
-  if (style === 'One-Piece' || style === 'Fantasy / Armor' || style === 'Swimwear') {
+  // For Swimwear, randomly commit to one-piece swimsuit OR two-piece bikini — never both
+  const swimwearOnePiece = style === 'Swimwear' && Math.random() < 0.5;
+  const useOnePiece = style === 'One-Piece' || style === 'Fantasy / Armor' || swimwearOnePiece;
+  const useTwoPiece = style === 'Two-Piece' || style === 'Layered' || (style === 'Swimwear' && !swimwearOnePiece);
+
+  if (useOnePiece) {
     if (!STATE.locks.onePiece) STATE.prompt.onePiece = pick(nonEmpty(theme?.onePieces || FIELDS.onePiece));
     if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = pick(nonEmpty(FIELDS.onePieceColor));
     if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = pick(nonEmpty(FIELDS.onePieceFabric));
-  }
-
-  if (style === 'Two-Piece' || style === 'Layered' || style === 'Swimwear') {
-    if (!STATE.locks.top) STATE.prompt.top = pick(nonEmpty(theme?.tops || FIELDS.top));
-    if (!STATE.locks.topColor) STATE.prompt.topColor = pick(nonEmpty(FIELDS.topColor));
-    if (!STATE.locks.topFabric) STATE.prompt.topFabric = pick(nonEmpty(FIELDS.topFabric));
-    if (!STATE.locks.bottom) STATE.prompt.bottom = pick(nonEmpty(theme?.bottoms || FIELDS.bottom));
-    if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = pick(nonEmpty(FIELDS.bottomColor));
-    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = pick(nonEmpty(FIELDS.bottomFabric));
-  }
-
-  if (style === 'Layered') {
-    if (!STATE.locks.outerwear) STATE.prompt.outerwear = pick(nonEmpty(FIELDS.outerwear));
-    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = pick(nonEmpty(FIELDS.outerwearColor));
-    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = pick(nonEmpty(FIELDS.outerwearFabric));
-    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
-    if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = '';
-    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = '';
-  } else {
-    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
-    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = '';
-    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = '';
-  }
-
-  if (style === 'One-Piece' || style === 'Fantasy / Armor') {
     if (!STATE.locks.top) STATE.prompt.top = '';
     if (!STATE.locks.topColor) STATE.prompt.topColor = '';
     if (!STATE.locks.topFabric) STATE.prompt.topFabric = '';
     if (!STATE.locks.bottom) STATE.prompt.bottom = '';
     if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = '';
     if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = '';
+  } else if (useTwoPiece) {
+    if (!STATE.locks.top) STATE.prompt.top = pick(nonEmpty(theme?.tops || FIELDS.top));
+    if (!STATE.locks.topColor) STATE.prompt.topColor = pick(nonEmpty(FIELDS.topColor));
+    if (!STATE.locks.topFabric) STATE.prompt.topFabric = pick(nonEmpty(FIELDS.topFabric));
+    if (!STATE.locks.bottom) STATE.prompt.bottom = pick(nonEmpty(theme?.bottoms || FIELDS.bottom));
+    if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = pick(nonEmpty(FIELDS.bottomColor));
+    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = pick(nonEmpty(FIELDS.bottomFabric));
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
+    if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = '';
+    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = '';
+  }
+
+  if (style === 'Layered') {
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = pick(nonEmpty(FIELDS.outerwear));
+    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = pick(nonEmpty(FIELDS.outerwearColor));
+    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = pick(nonEmpty(FIELDS.outerwearFabric));
+  } else {
+    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
+    if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = '';
+    if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = '';
   }
 }
 
@@ -1703,6 +1703,18 @@ function setIfUnlocked(field, val) {
   STATE.prompt[field] = val;
 }
 
+function clearClothingMismatch(style) {
+  if (style === 'One-Piece' || style === 'Fantasy / Armor') {
+    ['top','topColor','topFabric','bottom','bottomColor','bottomFabric',
+     'outerwear','outerwearColor','outerwearFabric'].forEach(f => { if (!STATE.locks[f]) STATE.prompt[f] = ''; });
+  } else if (style === 'Two-Piece') {
+    ['onePiece','onePieceColor','onePieceFabric',
+     'outerwear','outerwearColor','outerwearFabric'].forEach(f => { if (!STATE.locks[f]) STATE.prompt[f] = ''; });
+  } else if (style === 'Layered') {
+    ['onePiece','onePieceColor','onePieceFabric'].forEach(f => { if (!STATE.locks[f]) STATE.prompt[f] = ''; });
+  }
+  // Swimwear: no auto-clear — randomizeClothing() picks a silhouette; manual edits are intentional
+}
 
 function getThemeClothingTheme(themeId) {
   const map = {
@@ -1758,16 +1770,7 @@ function applyClothingPreset(name, fromAutocomplete) {
   clothingFields.forEach(f => {
     if (!STATE.locks[f]) STATE.prompt[f] = preset[f] || '';
   });
-  if (preset.clothingStyle === 'One-Piece' || preset.clothingStyle === 'Fantasy / Armor') {
-    if (!STATE.locks.top) STATE.prompt.top = '';
-    if (!STATE.locks.bottom) STATE.prompt.bottom = '';
-    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
-  } else if (preset.clothingStyle === 'Two-Piece') {
-    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
-    if (!STATE.locks.outerwear) STATE.prompt.outerwear = '';
-  } else if (preset.clothingStyle === 'Layered') {
-    if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
-  }
+  if (preset.clothingStyle) clearClothingMismatch(preset.clothingStyle);
 
   updateClothingVis();
   syncBuilder();
@@ -2446,6 +2449,7 @@ function setClothingStyle(s) {
   if (!ensureBuilderModeForEdit('Builder Mode')) return;
   pushUndo();
   STATE.prompt.clothingStyle = s;
+  clearClothingMismatch(s);
   buildBuilder(); syncBuilder(); updatePromptDisplay();
 }
 
