@@ -988,6 +988,7 @@ margin-bottom: 4px;
       <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">
         <select id="preview-engine" onchange="setImageEngine(this.value)" style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);font-size:11px;padding:4px 8px;">
           <option value="auto">Auto (Recommended)</option>
+          <option value="local-sd">🖥️ Local SD (AUTOMATIC1111)</option>
           <option value="openai">OpenAI</option>
           <option value="pollinations">Pollinations</option>
           <option value="puter">Puter</option>
@@ -997,6 +998,7 @@ margin-bottom: 4px;
           <option value="portrait">2:3 Portrait</option>
           <option value="landscape">3:2 Landscape</option>
         </select>
+        <span id="sd-status-badge" onclick="checkSDStatus()" title="Click to check SD connection" style="font-size:10px;color:#555;padding:4px 6px;cursor:pointer;white-space:nowrap;border-radius:4px;border:1px solid var(--border-subtle);background:var(--bg-surface);">⚫ SD Offline</span>
       </div>
       <div style="position:relative;border-radius:var(--radius-md);overflow:hidden;background:#1a1815;min-height:60px;">
         <img id="preview-img" style="width:100%;border-radius:var(--radius-md);display:none;max-width:512px;">
@@ -1291,6 +1293,42 @@ margin-bottom: 4px;
         </div>
         <div class="setting-hint">Pick any colors you like. Saved locally.</div>
       </div>
+    </div>
+    <div class="setting-group">
+      <div class="setting-label">🖥️ Local Stable Diffusion</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span id="sd-status-badge-settings" style="font-size:11px;color:#555;"></span>
+        <button class="act-btn" onclick="checkSDStatus()" style="font-size:11px;padding:4px 10px;">🔍 Test Connection</button>
+      </div>
+      <div class="setting-hint" style="margin-bottom:8px;">Run AUTOMATIC1111 with: <code style="background:var(--bg-elevated);padding:1px 4px;border-radius:3px;font-size:10px;">--api --cors-allow-origins=*</code></div>
+      <div class="setting-label" style="font-size:11px;margin-top:6px;">API URL</div>
+      <input class="field-input" id="pref-sd-url" placeholder="http://localhost:7860" style="margin-bottom:6px;">
+      <div class="setting-label" style="font-size:11px;margin-top:4px;">Model Type</div>
+      <select class="setting-select" id="pref-sd-model" style="margin-bottom:6px;">
+        <option value="sdxl">SDXL (1024px — better quality)</option>
+        <option value="sd15">SD 1.5 (512px — faster)</option>
+      </select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
+        <div>
+          <div class="setting-label" style="font-size:11px;">Steps</div>
+          <input class="field-input" type="number" id="pref-sd-steps" min="10" max="150" style="width:100%;">
+        </div>
+        <div>
+          <div class="setting-label" style="font-size:11px;">CFG Scale</div>
+          <input class="field-input" type="number" id="pref-sd-cfg" min="1" max="30" step="0.5" style="width:100%;">
+        </div>
+      </div>
+      <div class="setting-label" style="font-size:11px;">Sampler</div>
+      <select class="setting-select" id="pref-sd-sampler" style="margin-bottom:6px;">
+        <option value="DPM++ 2M Karras">DPM++ 2M Karras (Recommended)</option>
+        <option value="DPM++ SDE Karras">DPM++ SDE Karras</option>
+        <option value="Euler a">Euler a</option>
+        <option value="Euler">Euler</option>
+        <option value="DDIM">DDIM</option>
+        <option value="UniPC">UniPC</option>
+      </select>
+      <div class="setting-label" style="font-size:11px;">Negative Prompt</div>
+      <textarea class="field-input" id="pref-sd-neg" rows="3" style="resize:vertical;font-size:11px;min-height:58px;"></textarea>
     </div>
     <div class="setting-group">
       <div class="setting-label">API Key</div>
@@ -2666,7 +2704,13 @@ function saveSettings() {
     defaultGender: g || STATE.settings.defaultGender || '',
     defaultPregnancy: p || STATE.settings.defaultPregnancy || '',
     defaultAge: a || STATE.settings.defaultAge || '',
-    promptFormat: f || STATE.settings.promptFormat || 'grouped'
+    promptFormat: f || STATE.settings.promptFormat || 'grouped',
+    sdUrl: (document.getElementById('pref-sd-url')?.value || '').trim() || 'http://localhost:7860',
+    sdModel: document.getElementById('pref-sd-model')?.value || 'sdxl',
+    sdSteps: parseInt(document.getElementById('pref-sd-steps')?.value) || 28,
+    sdCfg: parseFloat(document.getElementById('pref-sd-cfg')?.value) || 7,
+    sdSampler: document.getElementById('pref-sd-sampler')?.value || 'DPM++ 2M Karras',
+    sdNegPrompt: (document.getElementById('pref-sd-neg')?.value || '').trim() || 'blurry, deformed, bad anatomy, ugly, watermark, low quality, worst quality, cropped'
   };
 
   if (nextSettings.defaultGender === 'male' && (nextSettings.defaultPregnancy === 'pregnant' || nextSettings.defaultPregnancy === 'heavily pregnant')) {
@@ -2696,6 +2740,19 @@ function loadSettingsToPanel() {
   const qpSelect = document.getElementById('pref-quality');
   if (qpSelect) qpSelect.value = savedQP;
   document.getElementById('pref-api-key').value = getApiKey();
+  const sdUrlEl = document.getElementById('pref-sd-url');
+  if (sdUrlEl) sdUrlEl.value = STATE.settings.sdUrl || 'http://localhost:7860';
+  const sdModelEl = document.getElementById('pref-sd-model');
+  if (sdModelEl) sdModelEl.value = STATE.settings.sdModel || 'sdxl';
+  const sdStepsEl = document.getElementById('pref-sd-steps');
+  if (sdStepsEl) sdStepsEl.value = STATE.settings.sdSteps || 28;
+  const sdCfgEl = document.getElementById('pref-sd-cfg');
+  if (sdCfgEl) sdCfgEl.value = STATE.settings.sdCfg || 7;
+  const sdSamplerEl = document.getElementById('pref-sd-sampler');
+  if (sdSamplerEl) sdSamplerEl.value = STATE.settings.sdSampler || 'DPM++ 2M Karras';
+  const sdNegEl = document.getElementById('pref-sd-neg');
+  if (sdNegEl) sdNegEl.value = STATE.settings.sdNegPrompt || 'blurry, deformed, bad anatomy, ugly, watermark, low quality, worst quality, cropped';
+  updateSDStatusBadge();
   buildAppThemeRow();
   // Show custom color controls if custom theme
   const customWrap = document.getElementById('custom-color-wrap');
@@ -2721,7 +2778,13 @@ function applyDefaults() {
     defaultGender: '',
     defaultPregnancy: '',
     defaultAge: '',
-    promptFormat: 'grouped'
+    promptFormat: 'grouped',
+    sdUrl: 'http://localhost:7860',
+    sdModel: 'sdxl',
+    sdSteps: 28,
+    sdCfg: 7,
+    sdSampler: 'DPM++ 2M Karras',
+    sdNegPrompt: 'blurry, deformed, bad anatomy, ugly, watermark, low quality, worst quality, cropped'
   }, STATE.settings || {});
 
   const defaults = {
@@ -3119,6 +3182,39 @@ const PREVIEW_TIMEOUT = 45000; // 45 seconds
 
 let CURRENT_IMAGE_ENGINE = 'auto';
 let CURRENT_PREVIEW_SIZE = 'square';
+let SD_STATUS = 'unknown'; // 'available' | 'unavailable' | 'checking' | 'unknown'
+
+function updateSDStatusBadge() {
+  const map = {
+    available:   { text: '🟢 SD Ready', color: '#5cb85c' },
+    unavailable: { text: '⚫ SD Offline', color: '#666' },
+    checking:    { text: '⏳ Checking...', color: '#C4B49A' },
+    unknown:     { text: '⚫ SD Offline', color: '#555' }
+  };
+  const s = map[SD_STATUS] || map.unknown;
+  ['sd-status-badge', 'sd-status-badge-settings'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = s.text; el.style.color = s.color; }
+  });
+}
+
+async function checkSDStatus() {
+  const sdUrl = (STATE.settings && STATE.settings.sdUrl) || 'http://localhost:7860';
+  SD_STATUS = 'checking';
+  updateSDStatusBadge();
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3000);
+    const r = await fetch(sdUrl + '/sdapi/v1/sd-models', { signal: controller.signal });
+    clearTimeout(timer);
+    SD_STATUS = r.ok ? 'available' : 'unavailable';
+  } catch(e) {
+    SD_STATUS = 'unavailable';
+  }
+  updateSDStatusBadge();
+  if (SD_STATUS === 'available') toast('🟢 Local SD is running! Select "Local SD" engine to use it.');
+  else toast('⚫ Local SD not found. Make sure AUTOMATIC1111 is running.');
+}
 
 const PREVIEW_SIZES = {
   square: { width: 1024, height: 1024, openai: '1024x1024', label: '1:1 Square' },
@@ -3307,6 +3403,67 @@ function tryPuter(img, prompt) {
 }
 
 // ==========================================
+// ENGINE: LOCAL STABLE DIFFUSION (AUTOMATIC1111)
+// ==========================================
+
+async function tryLocalSD(img, prompt) {
+  const sdUrl = (STATE.settings && STATE.settings.sdUrl) || 'http://localhost:7860';
+  const isSDXL = !(STATE.settings && STATE.settings.sdModel === 'sd15');
+  const sdSizes = {
+    square:    isSDXL ? {w:1024, h:1024} : {w:512, h:512},
+    portrait:  isSDXL ? {w:832,  h:1216} : {w:512, h:768},
+    landscape: isSDXL ? {w:1216, h:832}  : {w:768, h:512}
+  };
+  const sz = sdSizes[CURRENT_PREVIEW_SIZE] || sdSizes.square;
+
+  const body = {
+    prompt,
+    negative_prompt: (STATE.settings && STATE.settings.sdNegPrompt) ||
+      'blurry, deformed, bad anatomy, ugly, watermark, low quality, worst quality, cropped',
+    steps: parseInt((STATE.settings && STATE.settings.sdSteps) || 28),
+    cfg_scale: parseFloat((STATE.settings && STATE.settings.sdCfg) || 7),
+    sampler_name: (STATE.settings && STATE.settings.sdSampler) || 'DPM++ 2M Karras',
+    width: sz.w,
+    height: sz.h,
+    batch_size: 1,
+    n_iter: 1,
+    seed: Math.floor(Math.random() * 2147483647)
+  };
+
+  let response;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 120000);
+    response = await fetch(sdUrl + '/sdapi/v1/txt2img', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    clearTimeout(timer);
+  } catch(e) {
+    if (e.name === 'AbortError') throw new Error('Local SD timed out after 2 minutes');
+    SD_STATUS = 'unavailable';
+    updateSDStatusBadge();
+    throw new Error('Local SD not reachable — start AUTOMATIC1111 with --api --cors-allow-origins=*');
+  }
+
+  if (!response.ok) {
+    const t = await response.text().catch(() => '');
+    throw new Error('SD API error ' + response.status + (t ? ': ' + t.slice(0, 100) : ''));
+  }
+
+  const data = await response.json();
+  if (!data.images || !data.images[0]) throw new Error('SD returned no image data');
+
+  return new Promise((resolve, reject) => {
+    img.onload = () => { SD_STATUS = 'available'; updateSDStatusBadge(); resolve('local-sd'); };
+    img.onerror = () => reject(new Error('SD image failed to display'));
+    img.src = 'data:image/png;base64,' + data.images[0];
+  });
+}
+
+// ==========================================
 // MASTER PREVIEW FUNCTION
 // ==========================================
 
@@ -3346,10 +3503,15 @@ async function generatePreview() {
   }, PREVIEW_TIMEOUT);
 
   const engines = CURRENT_IMAGE_ENGINE === 'auto'
-    ? (getApiKey() ? ['openai', 'pollinations', 'puter'] : ['pollinations', 'puter'])
+    ? [
+        ...(SD_STATUS === 'available' ? ['local-sd'] : []),
+        ...(getApiKey() ? ['openai'] : []),
+        'pollinations', 'puter'
+      ]
     : [CURRENT_IMAGE_ENGINE];
 
   const engineLabels = {
+    'local-sd': 'Local SD',
     openai: 'OpenAI',
     pollinations: 'Pollinations',
     puter: 'Puter'
@@ -3361,7 +3523,9 @@ async function generatePreview() {
     try {
       loading.textContent = 'Trying ' + (engineLabels[engine] || engine) + '...';
 
-      if (engine === 'openai') {
+      if (engine === 'local-sd') {
+        await tryLocalSD(img, prompt);
+      } else if (engine === 'openai') {
         await tryOpenAI(img, prompt);
       } else if (engine === 'pollinations') {
         await tryPollinations(img, prompt);
@@ -4074,6 +4238,9 @@ function init() {
       negEl.value = STATE.prompt.negative;
       onNegativeInput(STATE.prompt.negative);
     }
+
+    // Check local SD in background (silent — badge updates when done)
+    setTimeout(() => checkSDStatus(), 1500);
 
     // Welcome
     if (!STATE.settings.defaultGender) {
