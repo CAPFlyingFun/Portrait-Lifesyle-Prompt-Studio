@@ -988,7 +988,7 @@ margin-bottom: 4px;
       <div style="display:flex;gap:6px;justify-content:center;margin-bottom:6px;flex-wrap:wrap;">
         <select id="preview-engine" onchange="setImageEngine(this.value)" style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);font-size:11px;padding:4px 8px;">
           <option value="auto">Auto (Recommended)</option>
-          <option value="local-sd">🖥️ Local SD (AUTOMATIC1111)</option>
+          <option value="local-sd">🖥️ Local SD — PC only</option>
           <option value="openai">OpenAI</option>
           <option value="pollinations">Pollinations</option>
           <option value="puter">Puter</option>
@@ -3199,6 +3199,11 @@ function updateSDStatusBadge() {
 }
 
 async function checkSDStatus() {
+  if (/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)) {
+    SD_STATUS = 'unavailable';
+    updateSDStatusBadge();
+    return; // SD can't run on mobile — skip the network check entirely
+  }
   const sdUrl = (STATE.settings && STATE.settings.sdUrl) || 'http://localhost:7860';
   SD_STATUS = 'checking';
   updateSDStatusBadge();
@@ -3213,7 +3218,7 @@ async function checkSDStatus() {
   }
   updateSDStatusBadge();
   if (SD_STATUS === 'available') toast('🟢 Local SD is running! Select "Local SD" engine to use it.');
-  else toast('⚫ Local SD not found. Make sure AUTOMATIC1111 is running.');
+  else toast('⚫ Local SD not found. Make sure AUTOMATIC1111 is running with --api --cors-allow-origins=*');
 }
 
 const PREVIEW_SIZES = {
@@ -3445,7 +3450,10 @@ async function tryLocalSD(img, prompt) {
     if (e.name === 'AbortError') throw new Error('Local SD timed out after 2 minutes');
     SD_STATUS = 'unavailable';
     updateSDStatusBadge();
-    throw new Error('Local SD not reachable — start AUTOMATIC1111 with --api --cors-allow-origins=*');
+    const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+    throw new Error(isMobile
+      ? 'Local SD only works on a PC. Use Pollinations or Auto instead.'
+      : 'Local SD not reachable — start AUTOMATIC1111 with --api --cors-allow-origins=*');
   }
 
   if (!response.ok) {
