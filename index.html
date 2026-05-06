@@ -992,6 +992,7 @@ margin-bottom: 4px;
           <option value="stability">Stability AI</option>
           <option value="openai">OpenAI</option>
           <option value="pollinations">Pollinations</option>
+          <option value="puter-sd">Puter SD (Free)</option>
           <option value="puter">Puter</option>
         </select>
         <select id="preview-size" onchange="setPreviewSize(this.value)" style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:6px;color:var(--text-secondary);font-size:11px;padding:4px 8px;">
@@ -3418,6 +3419,41 @@ function tryPuter(img, prompt) {
   });
 }
 
+function tryPuterSD(img, prompt) {
+  return new Promise((resolve, reject) => {
+    if (typeof puter === 'undefined' || !puter.ai || !puter.ai.txt2img) {
+      reject(new Error('Puter not loaded'));
+      return;
+    }
+    const sdSizes = {
+      square:    { width: 1024, height: 1024 },
+      portrait:  { width: 832,  height: 1216 },
+      landscape: { width: 1216, height: 832  }
+    };
+    const sz = sdSizes[CURRENT_PREVIEW_SIZE] || sdSizes.square;
+    puter.ai.txt2img(prompt, {
+      model: 'stabilityai/stable-diffusion-3-medium',
+      width: sz.width,
+      height: sz.height,
+      steps: 30,
+      negative_prompt: 'blurry, deformed, bad anatomy, ugly, watermark, low quality, worst quality, cropped'
+    })
+      .then(result => {
+        if (result && result.src) {
+          img.onload = () => resolve('puter-sd');
+          img.onerror = () => reject(new Error('Puter SD image failed'));
+          img.src = result.src;
+        } else {
+          reject(new Error('Puter SD no result'));
+        }
+      })
+      .catch(err => {
+        console.log('Puter SD error:', err);
+        reject(err);
+      });
+  });
+}
+
 // ==========================================
 // ENGINE: LOCAL STABLE DIFFUSION (AUTOMATIC1111)
 // ==========================================
@@ -3557,7 +3593,7 @@ async function generatePreview() {
         ...(SD_STATUS === 'available' ? ['local-sd'] : []),
         ...(getStabilityApiKey() ? ['stability'] : []),
         ...(getApiKey() ? ['openai'] : []),
-        'pollinations', 'puter'
+        'pollinations', 'puter-sd', 'puter'
       ]
     : [CURRENT_IMAGE_ENGINE];
 
@@ -3566,6 +3602,7 @@ async function generatePreview() {
     stability: 'Stability AI',
     openai: 'OpenAI',
     pollinations: 'Pollinations',
+    'puter-sd': 'Puter SD',
     puter: 'Puter'
   };
 
@@ -3583,6 +3620,8 @@ async function generatePreview() {
         await tryOpenAI(img, prompt);
       } else if (engine === 'pollinations') {
         await tryPollinations(img, prompt);
+      } else if (engine === 'puter-sd') {
+        await tryPuterSD(img, prompt);
       } else if (engine === 'puter') {
         await tryPuter(img, prompt);
       } else {
