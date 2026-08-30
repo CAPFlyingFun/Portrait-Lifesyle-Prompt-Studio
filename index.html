@@ -466,6 +466,30 @@ padding: 0 16px 24px;
   border-bottom: 1px solid var(--border-subtle);
 }
 
+/* Quick-pick chip rows — one tap instead of typing into the field below. */
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin: 2px 0 8px; }
+.chip {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all .15s;
+}
+.chip:hover:not(.locked) { border-color: var(--border-accent); color: var(--text-primary); }
+.chip.on {
+  background: color-mix(in srgb, var(--accent-gold) 20%, transparent);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  font-weight: 600;
+}
+.chip.locked { opacity: .5; cursor: not-allowed; }
+.chip-note { font-size: 10px; color: var(--text-muted); margin: -4px 0 8px; }
+.chip-note.safe { color: #5cb85c; }
+
 .field-row {
   margin-bottom: 10px;
 }
@@ -1513,6 +1537,31 @@ function ageTierOf(age) {
 
 function ageTier() { return ageTierOf(STATE.prompt.age); }
 
+// Quick-pick chip row: tap an age instead of typing it. Also surfaces which
+// tier is active, so the narrowed clothing pools aren't a mystery.
+function buildAgeChips() {
+  const locked = STATE.locks.age;
+  const cur = STATE.prompt.age || '';
+  const chips = (FIELDS.age || []).map(a =>
+    `<button class="chip${sameVal(a, cur) ? ' on' : ''}${locked ? ' locked' : ''}"${locked ? ' disabled' : ''} onclick="setAge('${a.replace(/'/g, "\\'")}')">${a}</button>`
+  ).join('');
+  const tier = ageTier();
+  const note = tier === 'adult'
+    ? ''
+    : `<div class="chip-note safe">Youth mode — swimwear, sleepwear and body-conscious styles are off the menu for this age.</div>`;
+  return `<div class="chip-row">${chips}</div>${note}`;
+}
+
+function setAge(a) {
+  if (STATE.locks.age) return;
+  if (!ensureBuilderModeForEdit('Builder Mode')) return;
+  pushUndo();
+  STATE.prompt.age = a;
+  const cleared = enforceAgeSafety();
+  buildBuilder(); syncBuilder(); updatePromptDisplay();
+  if (cleared.length) toast('Adjusted ' + cleared.length + ' field' + (cleared.length > 1 ? 's' : '') + ' to suit that age');
+}
+
 const sameVal = (a, b) => String(a).toLowerCase().trim() === String(b).toLowerCase().trim();
 
 // Narrow a field's option pool to what suits the current subject's age.
@@ -2494,6 +2543,7 @@ function buildBuilder() {
     sec.fields.forEach(f => {
       const hardLocked = sec.lockedFields?.includes(f);
       h += buildFieldHTML(f, hardLocked);
+      if (f === 'age') h += buildAgeChips();
     });
     if (sec.title.includes('Clothing')) {
       const cpLocked = STATE.locks.clothingPreset;
