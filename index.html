@@ -940,7 +940,16 @@ margin-bottom: 4px;
 }
 </style>
 
-  <script src="https://js.puter.com/v2/"></script>
+  <script>
+    // Puter.js hard-fails with a full-page error overlay when a page is opened
+    // directly from disk (file://). Only load it when we're served over http(s).
+    window.PUTER_BLOCKED = (location.protocol === 'file:');
+    if (!window.PUTER_BLOCKED) {
+      var _puterScript = document.createElement('script');
+      _puterScript.src = 'https://js.puter.com/v2/';
+      document.head.appendChild(_puterScript);
+    }
+  </script>
 </head>
 <body>
 
@@ -3239,6 +3248,22 @@ const PREVIEW_SIZES = {
   landscape: { width: 1536, height: 1024, openai: '1536x1024', label: '3:2 Landscape' }
 };
 
+// Grey out the Puter engines when the page is opened from disk (file://),
+// where Puter.js cannot run.
+function applyPuterAvailability() {
+  if (!window.PUTER_BLOCKED) return;
+  const sel = document.getElementById('preview-engine');
+  if (!sel) return;
+  ['puter', 'puter-sd'].forEach(v => {
+    const opt = sel.querySelector('option[value="' + v + '"]');
+    if (opt) {
+      opt.disabled = true;
+      opt.textContent = opt.textContent.replace(/\s*—.*$/, '') + ' — needs a web server';
+    }
+  });
+  if (sel.value === 'puter' || sel.value === 'puter-sd') sel.value = 'auto';
+}
+
 function setImageEngine(engine) {
   CURRENT_IMAGE_ENGINE = engine;
   try { localStorage.setItem('maternity_preview_engine', engine); } catch(e){}
@@ -3396,6 +3421,10 @@ function tryPuter(img, prompt) {
   return new Promise((resolve, reject) => {
     console.log('Trying Puter...');
 
+    if (window.PUTER_BLOCKED) {
+      reject(new Error('Puter engines need the page served over http(s) — open it from GitHub Pages or a local server instead of a file:// link.'));
+      return;
+    }
     if (typeof puter === 'undefined' || !puter.ai || !puter.ai.txt2img) {
       console.log('Puter not available');
       reject(new Error('Puter not loaded'));
@@ -3421,6 +3450,10 @@ function tryPuter(img, prompt) {
 
 function tryPuterSD(img, prompt) {
   return new Promise((resolve, reject) => {
+    if (window.PUTER_BLOCKED) {
+      reject(new Error('Puter engines need the page served over http(s) — open it from GitHub Pages or a local server instead of a file:// link.'));
+      return;
+    }
     if (typeof puter === 'undefined' || !puter.ai || !puter.ai.txt2img) {
       reject(new Error('Puter not loaded'));
       return;
@@ -3593,7 +3626,8 @@ async function generatePreview() {
         ...(SD_STATUS === 'available' ? ['local-sd'] : []),
         ...(getStabilityApiKey() ? ['stability'] : []),
         ...(getApiKey() ? ['openai'] : []),
-        'pollinations', 'puter-sd', 'puter'
+        'pollinations',
+        ...(window.PUTER_BLOCKED ? [] : ['puter-sd', 'puter'])
       ]
     : [CURRENT_IMAGE_ENGINE];
 
@@ -4290,6 +4324,9 @@ function localImagePromptFallback(file, mode = 'literal') {
 // ==========================================
 function init() {
   try { CURRENT_IMAGE_ENGINE = localStorage.getItem('maternity_preview_engine') || 'auto'; } catch(e){}
+  if (window.PUTER_BLOCKED && (CURRENT_IMAGE_ENGINE === 'puter' || CURRENT_IMAGE_ENGINE === 'puter-sd')) {
+    CURRENT_IMAGE_ENGINE = 'auto';
+  }
   try { CURRENT_PREVIEW_SIZE = localStorage.getItem('maternity_preview_size') || 'square'; } catch(e){}
   try {
     // Load saved state
@@ -4334,6 +4371,7 @@ function init() {
 
     // Check local SD in background (silent — badge updates when done)
     setTimeout(() => checkSDStatus(), 1500);
+    applyPuterAvailability();
 
     // Welcome
     if (!STATE.settings.defaultGender) {
