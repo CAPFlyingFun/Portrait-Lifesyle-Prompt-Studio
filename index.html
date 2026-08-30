@@ -1498,6 +1498,73 @@ function pickAffinity(field, envCategory) {
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const nonEmpty = arr => [...new Set((arr||[]).filter(Boolean))];
 
+// ==========================================
+// AGE-APPROPRIATE CLOTHING
+// ==========================================
+// Three tiers: 'young' (baby-preteen), 'minor' (teens), 'adult'.
+// See MINOR_AGES / ADULT_ONLY / YOUNG_PREFERRED in data-fields.js.
+function ageTierOf(age) {
+  const a = (age || '').toLowerCase().trim();
+  if (!a) return 'adult';
+  if (YOUNG_AGES.includes(a)) return 'young';
+  if (MINOR_AGES.includes(a)) return 'minor';
+  return 'adult';
+}
+
+function ageTier() { return ageTierOf(STATE.prompt.age); }
+
+const sameVal = (a, b) => String(a).toLowerCase().trim() === String(b).toLowerCase().trim();
+
+// Narrow a field's option pool to what suits the current subject's age.
+// Feeds both the randomizer and the Builder autocomplete, so blocked items
+// are never generated and never offered.
+function ageFilter(field, arr) {
+  const tier = ageTier();
+  if (tier === 'adult') return arr;
+  const blocked = ADULT_ONLY[field];
+  const out = blocked ? arr.filter(v => !blocked.some(b => sameVal(b, v))) : arr.slice();
+  if (tier === 'young' && YOUNG_PREFERRED[field]) {
+    const preferred = out.filter(v => YOUNG_PREFERRED[field].some(p => sameVal(p, v)));
+    if (preferred.length) return preferred;
+  }
+  return out;
+}
+
+// Age-safe view of any prompt object, including ones that never touched
+// STATE — a saved favorite, a history entry, an imported prompt. Pure: it
+// returns a copy rather than mutating the caller's object.
+function ageSafeCopy(p) {
+  if (ageTierOf(p && p.age) === 'adult') return p;
+  const out = Object.assign({}, p);
+  Object.keys(ADULT_ONLY).forEach(field => {
+    const cur = out[field];
+    if (!cur || !ADULT_ONLY[field].some(b => sameVal(b, cur))) return;
+    if (field === 'pregnancy') out[field] = 'not pregnant';
+    else if (field === 'clothingStyle') out[field] = 'Layered';
+    else out[field] = '';
+  });
+  return out;
+}
+
+// Purge adult-only values already sitting in STATE.prompt. This is the
+// backstop for values that never passed through ageFilter — a loaded
+// favorite, a restored session, a theme preset, or typed input. Returns the
+// field names it cleared.
+function enforceAgeSafety() {
+  if (ageTier() === 'adult') return [];
+  const cleared = [];
+  Object.keys(ADULT_ONLY).forEach(field => {
+    const cur = STATE.prompt[field];
+    if (!cur) return;
+    if (!ADULT_ONLY[field].some(b => sameVal(b, cur))) return;
+    if (field === 'pregnancy') STATE.prompt[field] = 'not pregnant';
+    else if (field === 'clothingStyle') STATE.prompt[field] = 'Layered';
+    else STATE.prompt[field] = '';
+    cleared.push(field);
+  });
+  return cleared;
+}
+
 function toast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
@@ -1711,6 +1778,11 @@ function randomizeClothing(themeId) {
     style = themeToStyle[preferredTheme] || (Math.random() > 0.5 ? 'One-Piece' : 'Layered');
     STATE.prompt.clothingStyle = style;
   }
+  // Swimwear is never generated for a subject who isn't an adult.
+  if (style === 'Swimwear' && ageTier() !== 'adult') {
+    style = 'Layered';
+    STATE.prompt.clothingStyle = style;
+  }
 
   // For Swimwear, randomly commit to one-piece swimsuit OR two-piece bikini — never both
   const swimwearOnePiece = style === 'Swimwear' && Math.random() < 0.5;
@@ -1718,9 +1790,9 @@ function randomizeClothing(themeId) {
   const useTwoPiece = style === 'Two-Piece' || style === 'Layered' || (style === 'Swimwear' && !swimwearOnePiece);
 
   if (useOnePiece) {
-    if (!STATE.locks.onePiece) STATE.prompt.onePiece = pick(nonEmpty(theme?.onePieces || FIELDS.onePiece));
+    if (!STATE.locks.onePiece) STATE.prompt.onePiece = pick(ageFilter('onePiece', nonEmpty(theme?.onePieces || FIELDS.onePiece)));
     if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = pick(nonEmpty(FIELDS.onePieceColor));
-    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = pick(nonEmpty(FIELDS.onePieceFabric));
+    if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = pick(ageFilter('onePieceFabric', nonEmpty(FIELDS.onePieceFabric)));
     if (!STATE.locks.top) STATE.prompt.top = '';
     if (!STATE.locks.topColor) STATE.prompt.topColor = '';
     if (!STATE.locks.topFabric) STATE.prompt.topFabric = '';
@@ -1728,12 +1800,12 @@ function randomizeClothing(themeId) {
     if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = '';
     if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = '';
   } else if (useTwoPiece) {
-    if (!STATE.locks.top) STATE.prompt.top = pick(nonEmpty(theme?.tops || FIELDS.top));
+    if (!STATE.locks.top) STATE.prompt.top = pick(ageFilter('top', nonEmpty(theme?.tops || FIELDS.top)));
     if (!STATE.locks.topColor) STATE.prompt.topColor = pick(nonEmpty(FIELDS.topColor));
-    if (!STATE.locks.topFabric) STATE.prompt.topFabric = pick(nonEmpty(FIELDS.topFabric));
-    if (!STATE.locks.bottom) STATE.prompt.bottom = pick(nonEmpty(theme?.bottoms || FIELDS.bottom));
+    if (!STATE.locks.topFabric) STATE.prompt.topFabric = pick(ageFilter('topFabric', nonEmpty(FIELDS.topFabric)));
+    if (!STATE.locks.bottom) STATE.prompt.bottom = pick(ageFilter('bottom', nonEmpty(theme?.bottoms || FIELDS.bottom)));
     if (!STATE.locks.bottomColor) STATE.prompt.bottomColor = pick(nonEmpty(FIELDS.bottomColor));
-    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = pick(nonEmpty(FIELDS.bottomFabric));
+    if (!STATE.locks.bottomFabric) STATE.prompt.bottomFabric = pick(ageFilter('bottomFabric', nonEmpty(FIELDS.bottomFabric)));
     if (!STATE.locks.onePiece) STATE.prompt.onePiece = '';
     if (!STATE.locks.onePieceColor) STATE.prompt.onePieceColor = '';
     if (!STATE.locks.onePieceFabric) STATE.prompt.onePieceFabric = '';
@@ -1748,6 +1820,9 @@ function randomizeClothing(themeId) {
     if (!STATE.locks.outerwearColor) STATE.prompt.outerwearColor = '';
     if (!STATE.locks.outerwearFabric) STATE.prompt.outerwearFabric = '';
   }
+
+  // Backstop for anything a locked field or theme pool slipped through.
+  enforceAgeSafety();
 }
 
 function setIfUnlocked(field, val) {
@@ -1824,6 +1899,7 @@ function applyClothingPreset(name, fromAutocomplete) {
   });
   if (preset.clothingStyle) clearClothingMismatch(preset.clothingStyle);
 
+  enforceAgeSafety();
   updateClothingVis();
   syncBuilder();
   updatePromptDisplay();
@@ -2136,7 +2212,8 @@ function copyAllBatch() {
 // PROMPT GENERATION
 // ==========================================
 function assembleData(inputPrompt) {
-  const p = inputPrompt || STATE.prompt;
+  if (!inputPrompt) enforceAgeSafety();
+  const p = ageSafeCopy(inputPrompt || STATE.prompt);
   const subject = [p.age, p.pregnancy!=='not pregnant'?p.pregnancy:'', p.bellyShape, p.gender, p.skin, p.occupation].filter(Boolean).join(', ');
   const hair = [p.hairLength, p.hairStyle, p.hairColor].filter(Boolean);
   const hairDesc = hair.length ? hair.join(' ') + ' hair' : '';
@@ -2538,6 +2615,13 @@ function updateField(f, v) {
     return;
   }
   STATE.prompt[f] = v;
+  if (f === 'age') {
+    const cleared = enforceAgeSafety();
+    if (cleared.length) {
+      buildBuilder(); syncBuilder();
+      toast('Adjusted ' + cleared.length + ' field' + (cleared.length > 1 ? 's' : '') + ' to suit that age');
+    }
+  }
   if (f === 'clothingTheme') {
     if (!STATE.locks.clothingPreset) {
       STATE.prompt.clothingPreset = '';
@@ -2575,7 +2659,7 @@ function showAC(field, q, showAll) {
   const list = document.getElementById('ac-'+field);
   if (!list || STATE.locks[field]) { hideAC(field); return; }
   q = (q||'').toLowerCase().trim();
-  const raw = field === 'clothingPreset' ? getAvailableClothingPresets() : nonEmpty(FIELDS[field]||[]);
+  const raw = ageFilter(field, field === 'clothingPreset' ? getAvailableClothingPresets() : nonEmpty(FIELDS[field]||[]));
   let results;
   if (!q) {
     results = showAll ? raw : raw.slice(0, 30);
@@ -2862,8 +2946,8 @@ function applyDefaults() {
   if (STATE.settings.defaultPregnancy) STATE.prompt.pregnancy = STATE.settings.defaultPregnancy;
   if (STATE.settings.defaultAge) STATE.prompt.age = STATE.settings.defaultAge;
   if (STATE.prompt.gender === 'male') STATE.prompt.pregnancy = 'not pregnant';
-  const underage = ['baby','toddler','young child','child','preteen','early teen','mid teen'];
-  if (underage.includes(STATE.prompt.age)) STATE.prompt.pregnancy = 'not pregnant';
+  // Covers pregnancy plus clothing, fabrics and camera style — see ADULT_ONLY.
+  enforceAgeSafety();
 }
 
 // ==========================================
