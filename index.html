@@ -3,8 +3,21 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Portrait & Lifestyle Prompt Studio v1.30</title>
+
+<!-- Installable web app. Paths are relative so this works both at a domain
+     root and under a GitHub Pages project subpath. -->
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#12100E">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="application-name" content="Prompt Studio">
+<!-- iOS ignores the manifest for home-screen launches and reads these instead. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Prompt Studio">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -52,7 +65,9 @@ overscroll-behavior: none;
 /* ===== HEADER ===== */
 .app-header {
 text-align: center;
-padding: 24px 16px 16px;
+/* The extra top inset keeps the title clear of the notch when launched from
+   the home screen, where the status bar is translucent over the page. */
+padding: calc(24px + env(safe-area-inset-top, 0px)) 16px 16px;
 background: linear-gradient(180deg, rgba(212,168,83,0.08) 0%, transparent 100%);
 }
 .app-header h1 {
